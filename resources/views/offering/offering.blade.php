@@ -143,7 +143,7 @@
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
                                         style="position: absolute; left: -100%; min-width: 200px;">
                                         <li>
-                                            <a class="dropdown-item" href="{{ route('detailRequester', [$data->id]) }}">
+                                            <a class="dropdown-item" href="{{ route('detailOffering', [$data->id]) }}">
                                                 <i class="bi bi-eye me-2"></i>Lihat data detail
                                             </a>
                                         </li>
@@ -154,7 +154,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="{{ route('updateInterview', [$data->id]) }}">
+                                            <a class="dropdown-item" href="{{ route('updateOffering', [$data->id]) }}">
                                                 <i class="bi bi-pencil me-2"></i>Edit data
                                             </a>
                                         </li>

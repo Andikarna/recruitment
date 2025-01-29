@@ -21,6 +21,7 @@
             border: none;
             box-shadow: none;
             background-color: transparent;
+            /* Opsional untuk membuat latar belakang lebih bersih */
         }
 
         /* Atur hover untuk tab */
@@ -72,721 +73,941 @@
         .table input[type="checkbox"] {
             width: auto;
         }
+
+        .section-line {
+            border-bottom: 2px solid #ddd;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .timeline {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            padding: 0.6rem;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        .timeline-item:hover {
+            background-color: #e9f7ef;
+        }
+
+        .timeline-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .timeline-title {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .text-muted {
+            font-size: 0.7rem;
+            color: #6c757d;
+        }
+
+        .bg-success {
+            background-color: #28a745 !important;
+        }
+
+        .bg-warning {
+            background-color: #ffc107 !important;
+        }
+
+        .bg-secondary {
+            background-color: #6c757d !important;
+        }
+
+        .text-white {
+            color: #fff !important;
+        }
+
+        .text-dark {
+            color: #343a40 !important;
+        }
     </style>
 @endsection
 
 @section('content')
-
-    <div class="modal-content" style="display: flex; flex-direction: column; p-0 m-0">
-        <div class="modal-header d-flex justify-content-start align-items-center gap-2">
-            <div>
-                <a href="/requester" class="btn btn-link p-0" aria-label="Back">
-                    <i class="bi bi-arrow-left-circle" style="font-size: 1.5rem;"></i>
-                </a>
-                <h5 class="modal-title" id="addRequestModalLabel">Update Offering</h5>
-            </div>
-        </div>
-        <div class="modal-body" style="overflow-y: auto; flex: 1;">
-
-            <!-- Tabs Navigation -->
-            <ul class="nav nav-tabs" id="requestTabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="details-tab" data-bs-toggle="tab" data-bs-target="#details"
-                        type="button" role="tab" aria-controls="details" aria-selected="true">Umum</button>
-                </li>
-
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="positions-tab" data-bs-toggle="tab" data-bs-target="#positions"
-                        type="button" role="tab" aria-controls="positions" aria-selected="true">Kebutuhan
-                        Posisi</button>
-                </li>
-
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="salary-tab" data-bs-toggle="tab" data-bs-target="#salary" type="button"
-                        role="tab" aria-controls="salary" aria-selected="true">Gaji dan Fasilitas</button>
-                </li>
-
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="interview-tab" data-bs-toggle="tab" data-bs-target="#interview"
-                        type="button" role="tab" aria-controls="interview" aria-selected="true">Wawancara</button>
-                </li>
-
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="additional-tab" data-bs-toggle="tab" data-bs-target="#additional"
-                        type="button" role="tab" aria-controls="additional" aria-selected="false">Verifikasi
-                        Informasi</button>
-                </li>
-            </ul>
-
-            <form id="addRequestForm" action="{{ route('saveRequester', [$resourceDetail->id]) }}" method="POST">
-                @csrf
-
-                <!-- Tab Content -->
-                <div class="tab-content" id="requestTabsContent">
-                    <div class="tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
-                        <div class="mb-3 mt-3">
-                            <label for="name" class="form-label">Nama Permintaan</label>
-                            <textarea class="form-control" id="name" name="name">{{ $resourceDetail->name }}</textarea>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="client" class="form-label">Klien</label>
-                                <input type="text" class="form-control" id="client" name="client"
-                                    value="{{ $resourceDetail->client }}">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="project" class="form-label">Proyek</label>
-                                <input type="text" class="form-control" id="project" name="project"
-                                    value="{{ $resourceDetail->project }}">
-                            </div>
-                        </div>
-
-                        <div class="row mb-3 mt-3">
-                            <div class="col-md-4">
-                                <label for="level_priority" class="form-label">Level Prioritas</label>
-                                <div class="custom-select-wrapper">
-                                    <select class="form-control" id="level_priority" name="level_priority" required>
-                                        <option value="Biasa"
-                                            {{ $resourceDetail->level_priority == 'Biasa' ? 'selected' : '' }}>Biasa
-                                        </option>
-                                        <option value="Urgent"
-                                            {{ $resourceDetail->level_priority == 'Urgent' ? 'selected' : '' }}>Urgent
-                                        </option>
-                                        <option value="Sangat Urgent"
-                                            {{ $resourceDetail->level_priority == 'Sangat Urgent' ? 'selected' : '' }}>
-                                            Sangat Urgent</option>
-                                    </select>
-                                    <i class="fas fa-chevron-down select-icon"></i>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="target_date" class="form-label">Tanggal Target</label>
-                                <input type="date" class="form-control" id="target_date" name="target_date"
-                                    value="{{ $resourceDetail->target_date ? \Carbon\Carbon::parse($resourceDetail->target_date)->format('Y-m-d') : '' }}">
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="requirment" class="form-label">Jenis Kebutuhan</label>
-                                <div class="custom-select-wrapper">
-                                    <select class="form-control" id="requirment" name="requirment" required>
-                                        <option value="Recruitment"
-                                            {{ $resourceDetail->requirment == 'Recruitment' ? 'selected' : '' }}>Recruitment
-                                        </option>
-                                        <option value="Client"
-                                            {{ $resourceDetail->requirment == 'Client' ? 'selected' : '' }}>Client</option>
-                                    </select>
-                                    <i class="fas fa-chevron-down select-icon"></i>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label for="document_file" class="form-label">Dokumen Pendukung</label>
-                                <input type="file" class="form-control" id="document_file" name="document_file"
-                                    accept=".pdf,.doc,.docx,.xlsx">
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="requester" class="form-label">Peminta</label>
-                                <input type="text" class="form-control" id="requester" name="requester" disabled
-                                    value="{{ $resourceDetail->created_by }}">
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="recruiter_assign" class="form-label">Recruiter</label>
-                                <select class="tags form-control" id="tasklist" name="tasklist[]" multiple>
-                                    @foreach ($user as $key => $data)
-                                        <option value="{{ $data->id }}"
-                                            @foreach ($tasklist as $task)
-                                        @if ($task->user_id == $data->id)  
-                                            selected
-                                        @endif @endforeach>
-                                            {{ $data->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                        </div>
-
+    <div class="row bg-white p-3" style="border-radius: 20px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+        <form id="addRequestForm" action="" method="POST">
+            @csrf
+            <div style="display: flex; flex-direction: column; p-0 m-0">
+                <div class="modal-header d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-2">
+                        <a href="/offering" class="btn btn-link p-0" aria-label="Back">
+                            <i class="bi bi-arrow-left-circle" style="font-size: 1.5rem;"></i>
+                        </a>
+                        <h5 class="modal-title" id="addRequestModalLabel">Update Offering</h5>
                     </div>
 
-                    <!-- Tab 2: Position -->
-                    <div class="tab-pane fade show" id="positions" role="tabpanel" aria-labelledby="positions-tab">
-
-                        <div class="row mb-3 mt-3">
-                            <div class="col-md-4">
-                                <label for="position" class="form-label">Posisi yang Dibutuhkan</label>
-                                <div class="custom-select-wrapper">
-                                    <select class="form-control" id="position" name="position">
-                                        <option value="Software Developer"
-                                            {{ $positionDetail->position == 'Software Developer' ? 'selected' : '' }}>
-                                            Software Developer</option>
-                                        <option value="Web Developer"
-                                            {{ $positionDetail->position == 'Web Developer' ? 'selected' : '' }}>Web
-                                            Developer</option>
-                                        <option value="Mobile Developer"
-                                            {{ $positionDetail->position == 'Mobile Developer' ? 'selected' : '' }}>Mobile
-                                            Developer</option>
-                                        <option value="Data Scientist"
-                                            {{ $positionDetail->position == 'Data Scientist' ? 'selected' : '' }}>Data
-                                            Scientist</option>
-                                        <option value="UI/UX Designer"
-                                            {{ $positionDetail->position == 'UI/UX Designer' ? 'selected' : '' }}>UI/UX
-                                            Designer</option>
-                                        <option value="Network Engineer"
-                                            {{ $positionDetail->position == 'Network Engginer' ? 'selected' : '' }}>Network
-                                            Engineer</option>
-                                        <option value="System Administrator"
-                                            {{ $positionDetail->position == 'System Administrator' ? 'selected' : '' }}>
-                                            System Administrator</option>
-                                        <option value="DevOps Engineer"
-                                            {{ $positionDetail->position == 'DevOps Engineer' ? 'selected' : '' }}>DevOps
-                                            Engineer</option>
-                                        <option value="Product Manager"
-                                            {{ $positionDetail->position == 'Product Manager' ? 'selected' : '' }}>Product
-                                            Manager</option>
-                                        <option value="Project Manager"
-                                            {{ $positionDetail->position == 'Project Manager' ? 'selected' : '' }}>Project
-                                            Manager</option>
-                                        <option value="QA Engineer"
-                                            {{ $positionDetail->position == 'QA Engineer' ? 'selected' : '' }}>QA Engineer
-                                        </option>
-                                        <option value="Cybersecurity Analyst"
-                                            {{ $positionDetail->position == 'Cybersecurity Analyst' ? 'selected' : '' }}>
-                                            Cybersecurity Analyst</option>
-                                    </select>
-                                    <i class="fas fa-chevron-down select-icon"></i>
-                                </div>
-                            </div>
-
-
-
-                            <div class="col-md-4">
-                                <label for="skill" class="form-label">Skill yang dibutuhkan</label>
-                                <input type="text" class="form-control" id="skill" name="skill"
-                                    value="{{ $positionDetail->skill }}">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="quantity" class="form-label">Jumlah</label>
-                                <input type="number" class="form-control" id="quantity" name="quantity"
-                                    value="{{ $positionDetail->quantity }}">
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label for="education" class="form-label">Jenjang Pendidikan</label>
-                                <div class="custom-select-wrapper">
-                                    <select class="form-control" id="education" name="education">
-                                        <option value="SD" {{ $positionDetail->education == 'SD' ? 'selected' : '' }}>
-                                            Sekolah Dasar (SD)</option>
-                                        <option value="SMP"
-                                            {{ $positionDetail->education == 'SMP' ? 'selected' : '' }}>Sekolah Menengah
-                                            Pertama (SMP)</option>
-                                        <option value="SMA"
-                                            {{ $positionDetail->education == 'SMA' ? 'selected' : '' }}>Sekolah Menengah
-                                            Atas (SMA)</option>
-                                        <option value="D3" {{ $positionDetail->education == 'D3' ? 'selected' : '' }}>
-                                            Diploma 3 (D3)</option>
-                                        <option value="S1" {{ $positionDetail->education == 'S1' ? 'selected' : '' }}>
-                                            Sarjana (S1)</option>
-                                        <option value="S2" {{ $positionDetail->education == 'S2' ? 'selected' : '' }}>
-                                            Magister (S2)</option>
-                                        <option value="S3" {{ $positionDetail->education == 'S3' ? 'selected' : '' }}>
-                                            Doktor (S3)</option>
-                                    </select>
-                                    <i class="fas fa-chevron-down select-icon"></i>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="qualification" class="form-label">Kualifikasi</label>
-                                <input type="text" class="form-control" id="qualification" name="qualification"
-                                    value="{{ $positionDetail->qualification }}">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="experience" class="form-label">Pengalaman(tahun)</label>
-                                <input type="number" class="form-control" id="experience" name="experience"
-                                    value="{{ $positionDetail->experience }}">
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="contract" class="form-label">Durasi Kontrak</label>
-                            <input type="number" class="form-control" id="contract" name="contract"
-                                value={{ (int) $positionDetail->contract }}>
-                        </div>
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Keterangan</label>
-                            <textarea class="form-control" id="description" name="description">{{ $positionDetail->description }}</textarea>
-                        </div>
-
+                    <div class="d-flex justify-content-between align-items-center">
+                        <ul class="timeline d-flex  gap-3">
+                            @foreach ($interviewDetail as $data)
+                                @if ($data->interview_date != null || $data->name_progress == 'Wawancara Final')
+                                    <li class="timeline-item d-flex align-items-center gap-2">
+                                        <span
+                                            class="timeline-icon 
+                                        @if ($data->interview_status == 'Diterima') bg-success text-white 
+                                        @elseif ($data->interview_status == 'Baru') 
+                                            bg-warning text-dark 
+                                        @else 
+                                            bg-secondary text-white @endif">
+                                            <i
+                                                class="
+                                            @if ($data->interview_status == 'Diterima') bi bi-check-circle-fill 
+                                            @elseif ($data->interview_status == 'Baru') 
+                                                bi bi-hourglass-split 
+                                            @else 
+                                                bi bi-circle @endif"></i>
+                                        </span>
+                                        <div>
+                                            <h6 class="timeline-title mb-0">{{ $data->name_progress }}</h6>
+                                            <small
+                                                class="text-muted">{{ $data->interview_date ? \Carbon\Carbon::parse($data->interview_date)->format('d F Y') : 'Tanggal tidak tersedia' }}</small>
+                                        </div>
+                                    </li>
+                                @endif
+                            @endforeach
+                        </ul>
                     </div>
 
-                    <!-- Tab 3: Wawancara -->
-                    <div class="tab-pane fade show" id="interview" role="tabpanel" aria-labelledby="interview-tab">
+                </div>
+                <div class="modal-body" style="overflow-y: auto; flex: 1;">
 
-                        <div class="p-3">
-                            <h3>Wawancara</h3>
-                            <p>Tahapan yang akan dilalui kandidat</p>
-                        </div>
+                    <!-- Tabs Navigation -->
+                    <ul class="nav nav-tabs" id="requestTabs" role="tablist">
 
-                        <div class="p-3">
-                            <!-- Table Header -->
-                            <!-- Tombol Tambah dan Hapus -->
-                            <div class="d-flex justify-content-end mb-3">
-                                <button type="button" id="addInterviewStageButton" class="btn btn-primary mt-2">Tambah
-                                    Tahap Wawancara</button>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="details-tab" data-bs-toggle="tab" data-bs-target="#details"
+                                type="button" role="tab" aria-controls="details" aria-selected="true">Kandidat</button>
+                        </li>
+
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="salary-tab" data-bs-toggle="tab" data-bs-target="#salary"
+                                type="button" role="tab" aria-controls="salary" aria-selected="true">Gaji & Fasilitas
+                                Posisi</button>
+                        </li>
+
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="interview-tab" data-bs-toggle="tab" data-bs-target="#interview"
+                                type="button" role="tab" aria-controls="interview"
+                                aria-selected="true">Wawancara</button>
+                        </li>
+
+
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="offering-tab" data-bs-toggle="tab" data-bs-target="#offering"
+                                type="button" role="tab" aria-controls="offering"
+                                aria-selected="true">Offering</button>
+                        </li>
+
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="additional-tab" data-bs-toggle="tab" data-bs-target="#additional"
+                                type="button" role="tab" aria-controls="additional" aria-selected="false">Verifikasi
+                                Informasi</button>
+                        </li>
+                    </ul>
+
+                    <!-- Tab -->
+                    <div class="tab-content" id="requestTabsContent">
+                        {{-- Tab 1: Informasi Kandidat --}}
+                        <div class="tab-pane fade show active p-2" id="details" role="tabpanel"
+                            aria-labelledby="details-tab">
+
+                            <h3 class="pt-4">Informasi Kandidat</h3>
+                            <p>Informasi mengenai kandidat yang akan direkrut</p>
+
+                            <div class="row mb-3">
+
+                                <div class="col-md-6">
+                                    <label for="name" class="form-label">Nama</label>
+                                    <input class="form-control" type="text" id="name" name="name" disabled
+                                        value="{{ $offering->name }}">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="gender" class="form-label">Jenis Kelamin</label>
+                                    <div class="custom-select-wrapper">
+                                        <select class="form-control" id="gender" name="gender" disabled>
+                                            <option value="Laki Laki"
+                                                {{ $candidate->gender == 'Laki Laki' ? 'selected' : '' }}>
+                                                Laki
+                                                Laki</option>
+                                            <option value="Perempuan"
+                                                {{ $candidate->gender == 'Perempuan' ? 'selected' : '' }}>
+                                                Perempuan</option>
+                                        </select>
+                                        <i class="fas fa-chevron-down select-icon"></i>
+                                    </div>
+                                </div>
+
                             </div>
 
-                            <div id="interviewStagesContainer">
-                                @foreach ($interviewDetail as $data)
-                                    <input class="resource-id" name="interviewProgress_id[]" value="{{ $data->id }}"
-                                        hidden>
+                            <div class="row mb-3">
 
-                                    <div class="d-flex align-items-center mb-3 interview-stage">
-                                        <div class="flex-grow-1">
-                                            <div class="text-start mb-2 border-bottom">
-                                                <label class="form-label">Tahap Wawancara</label>
-                                            </div>
-                                            <select class="form-select" name="interview_stage[]" style="width: 200px;">
-                                                <option value="Wawancara Hr"
-                                                    {{ $data->name_progress == 'Wawancara Hr' ? 'selected' : '' }}>
-                                                    Wawancara
-                                                    Hr</option>
-                                                <option value="Wawancara User"
-                                                    {{ $data->name_progress == 'Wawancara User' ? 'selected' : '' }}>
-                                                    Wawancara
-                                                    User</option>
-                                                <option value="Wawancara Technical"
-                                                    {{ $data->name_progress == 'Wawancara Technical' ? 'selected' : '' }}>
-                                                    Wawancara
-                                                    Technical</option>
-                                            </select>
-                                        </div>
+                                <div class="col-md-6">
+                                    <label for="project" class="form-label">Pengalaman (Tahun)</label>
+                                    <input type="text" class="form-control" id="experience" name="experience"
+                                        disabled value="{{ $candidate->experience }}">
+                                </div>
 
-                                        <div class="flex-grow-1 me-2">
-                                            <div class="text-start mb-2 border-bottom">
-                                                <label class="form-label">Klien</label>
-                                            </div>
-                                            <div
-                                                class="form-check d-flex align-items-center  justify-content-start p-0 m-0">
-                                                <select class="form-select" name="isClient[]" style="width: 150px;">
-                                                    <option value="1" {{ $data->isClient == 1 ? 'selected' : '' }}>Ya
-                                                    </option>
-                                                    <option value="0" {{ $data->isClient == 0 ? 'selected' : '' }}>
-                                                        Tidak</option>
-                                                </select>
-                                                <label class="form-check-label ms-2">Terlibat Client?</label>
-                                            </div>
-                                        </div>
+                                <div class="col-md-6">
+                                    <label for="education" class="form-label">Pendidikan</label>
+                                    <div class="input-group">
+                                        <select class="form-control" id="education" name="education" disabled>
+                                            <option value="SD" {{ $candidate->education == 'SD' ? 'selected' : '' }}>
+                                                SD</option>
+                                            <option value="SMP" {{ $candidate->education == 'SMP' ? 'selected' : '' }}>
+                                                SMP</option>
+                                            <option value="SMA" {{ $candidate->education == 'SMA' ? 'selected' : '' }}>
+                                                SMA</option>
+                                            <option value="D3" {{ $candidate->education == 'D3' ? 'selected' : '' }}>
+                                                D3</option>
+                                            <option value="S1" {{ $candidate->education == 'S1' ? 'selected' : '' }}>
+                                                S1</option>
+                                            <option value="S2" {{ $candidate->education == 'S2' ? 'selected' : '' }}>
+                                                S2</option>
+                                            <option value="S3" {{ $candidate->education == 'S3' ? 'selected' : '' }}>
+                                                S3</option>
+                                        </select>
+                                        <i class="fas fa-chevron-down select-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
 
-                                        <div class="flex-grow-1 me-2">
-                                            <div class="text-start mb-2 border-bottom">
-                                                <label class="form-label">Keterangan</label>
+                            <div class="row mb-3">
+
+                                <div class="col-md-6">
+                                    <label for="major" class="form-label">Jurusan</label>
+                                    <input type="text" class="form-control" id="major" name="major" disabled
+                                        value="{{ $candidate->major }}">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="source" class="form-label">Sumber</label>
+                                    <input type="text" class="form-control" id="source" name="source" disabled
+                                        value="{{ $candidate->source }}">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+
+                                <div class="col-md-6">
+                                    <label for="project" class="form-label">Proyek</label>
+                                    <input type="text" class="form-control" id="project" name="project" disabled
+                                        value="{{ $resource->project }}">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="position" class="form-label">Posisi</label>
+                                    <input type="text" class="form-control" id="position" name="position" disabled
+                                        value="{{ $resourceDetail->position }}">
+                                </div>
+
+                            </div>
+
+                            <div class="row mb-3">
+
+                                <div class="col-md-12">
+                                    <label for="url" class="form-label">Url</label>
+                                    <input type="text" class="form-control" id="url" name="url" disabled
+                                        value="{{ $candidate->url }}">
+                                </div>
+
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label d-block">Khusus</label>
+                                        <div class="p-2 d-flex gap-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" id="special_candidate"
+                                                    name="special_candidate" value="yes"
+                                                    {{ $candidate->isSpecial === 1 ? 'checked' : '' }} disabled required>
+                                                <label class="form-check-label" for="special_candidate">Ya</label>
                                             </div>
-                                            <input class="form-control" name="isDescription[]" rows="1"
-                                                placeholder="Masukkan keterangan" value="{{ $data->description }}">
-                                            </input>
-                                        </div>
-                                        <div class="flex-grow-1 me-2">
-                                            <div class="text-center align-middle mb-2 border-bottom">
-                                                <label class="form-label">Aksi</label>
-                                            </div>
-                                            <div class="text-center align-middle ">
-                                                <button type="button" class="btn btn-danger removeStageButton">
-                                                    <i class="fas fa-trash-alt removeStageButton"></i>
-                                                </button>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" id="special_candidate_no"
+                                                    name="special_candidate" value="no"
+                                                    {{ $candidate->isSpecial === 0 ? 'checked' : '' }} disabled>
+                                                <label class="form-check-label" for="special_candidate_no">Tidak</label>
                                             </div>
                                         </div>
                                     </div>
-                                @endforeach
+                                </div>
 
+                                <div class="col-md-6">
+                                    <label for="uniq_code" class="form-label">Kode Unik</label>
+                                    <input type="text" class="form-control" id="uniq_code" name="uniq_code" disabled
+                                        value="{{ $candidate->uniq_code }}">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="recruiter" class="form-label">Recruiter</label>
+                                    <input type="text" class="form-control" id="recruiter" name="recruiter" disabled
+                                        value="{{ $candidate->created_by }}">
+                                </div>
                             </div>
 
                         </div>
 
-                    </div>
+                        <!-- Tab 2: Salary -->
+                        <div class="tab-pane fade show" id="salary" role="tabpanel" aria-labelledby="salary-tab">
 
-                    <!-- Tab 4: salary -->
-                    <div class="tab-pane fade show" id="salary" role="tabpanel" aria-labelledby="salary-tab">
+                            <div class="p-3">
+                                <h3>Gaji & Fasilitas</h3>
+                                <p>Informasi Gaji & Fasilitas yang akan didapatkan kandidat jika direkrut</p>
+                            </div>
 
-                        <div class="p-3">
-                            <h3>Gaji & Fasilitas</h3>
-                            <p>Informasi Gaji & Fasilitas yang akan didapatkan kandidat jika direkrut</p>
-                        </div>
-
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>{{ '' }}</th>
-                                    <th class="text-center align-middle">Nominal</th>
-                                    <th class="text-center align-middle">Gross|Nett</th>
-                                    <th class="text-center align-middle">Keterangan</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="align-middle">Gaji Pokok</td>
-                                    <td class="d-flex align-items-center justify-content-center gap-2">
-                                        <!-- Input Minimal Nominal -->
-                                        <div class="nominal-container">
-                                            <div class="input-group">
-                                                <span class="input-group-text">Rp</span>
-                                                <input type="text" id="minimalNominal" class="form-control"
-                                                    name="min_salary" placeholder="Minimal Nominal"
-                                                    value="{{ $salary->min_salary ?? '' }}">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>{{ '' }}</th>
+                                        <th class="text-center align-middle">Nominal</th>
+                                        <th class="text-center align-middle">Gross|Nett</th>
+                                        <th class="text-center align-middle">Keterangan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="align-middle">Range Gaji</td>
+                                        <td class="d-flex align-items-center justify-content-center gap-2">
+                                            <!-- Input Minimal Nominal -->
+                                            <div class="nominal-container">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">Rp</span>
+                                                    <input type="text" id="minimalNominal" class="form-control"
+                                                        disabled name="min_salary" placeholder="Minimal Nominal"
+                                                        value="{{ $salary->min_salary ?? '' }}">
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <!-- Tanda "-" -->
-                                        <div>
-                                            <span class="d-flex align-items-center justify-content-center">-</span>
-                                        </div>
-
-                                        <!-- Input Maximal Nominal -->
-                                        <div class="nominal-container">
-                                            <div class="input-group">
-                                                <span class="input-group-text">Rp</span>
-                                                <input type="text" id="maximalNominal" class="form-control"
-                                                    name="max_salary" placeholder="Maximal Nominal"
-                                                    value="{{ $salary->max_salary ?? '' }}">
+                                            <!-- Tanda "-" -->
+                                            <div>
+                                                <span class="d-flex align-items-center justify-content-center">-</span>
                                             </div>
-                                        </div>
-                                    </td>
 
-                                    <td class="text-center align-middle">{{ '' }}</td>
-                                    <td class="text-center align-middle">
-                                        <input type="text" name="ket_salary" id="ket_salary" class="form-control"
-                                            placeholder="Masukan Catatan" value="{{ $salary->ket_salary ?? '' }}">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="align-middle">PPH 21</td>
-                                    <td>{{ '' }}</td>
-                                    <td class="text-center align-middle">
-                                        <div class="form-check form-switch d-flex justify-content-center"
-                                            style="gap: 10px;">
-                                            @if (isset($salary) && $salary->pph21 !== null)
-                                                <input class="form-check-input" type="checkbox" role="switch"
-                                                    {{ $salary->pph21 == 1 ? 'checked' : '' }}
-                                                    style="width: 50px; height: 25px;" name="pph21" id="pph21">
-                                            @else
-                                                <input class="form-check-input" type="checkbox" role="switch"
-                                                    name="pph21" id="pph21" style="width: 50px; height: 25px;">
-                                            @endif
-                                        </div>
-                                    </td>
-                                    <td class="text-center align-middle">
-                                        <input type="text" class="form-control" name="ket_pph21" id="ket_pph21"
-                                            placeholder="Masukan Catatan" value="{{ $salary->ket_pph21 ?? '' }}">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="align-middle">BPJS Ketenagakerjaan</td>
-                                    <td class="text-center align-middle">{{ '' }}</td>
-                                    <td class="text-center align-middle">
-                                        <div class="form-check form-switch d-flex justify-content-center"
-                                            style="gap: 10px;">
-                                            @if (isset($salary) && $salary->bpjs_ket !== null)
-                                                <input class="form-check-input" type="checkbox" role="switch"
-                                                    name="bpjs_ket" id="bpjs_ket" style="width: 50px; height: 25px;"
-                                                    {{ $salary->bpjs_ket == 1 ? 'checked' : '' }}>
-                                            @else
-                                                <input class="form-check-input" type="checkbox" role="switch"
-                                                    name="bpjs_ket" id="bpjs_ket" style="width: 50px; height: 25px;">
-                                            @endif
-                                        </div>
-                                    </td>
-                                    <td class="text-center align-middle">
-                                        <input type="text" class="form-control" name="ket_bpjsket" id="ket_bpjsket"
-                                            placeholder="Masukan Catatan" value="{{ $salary->ket_bpjsket ?? '' }}">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="align-middle">BPJS Kesehatan</td>
-                                    <td>{{ '' }}</td>
-                                    <td class="text-center align-middle">
-                                        <div class="form-check form-switch d-flex justify-content-center"
-                                            style="gap: 10px;">
-                                            @if (isset($salary) && $salary->bpjs_kes !== null)
-                                                <input class="form-check-input" type="checkbox" role="switch"
-                                                    name="bpjs_kes" id="bpjs_kes" style="width: 50px; height: 25px;"
-                                                    {{ $salary->bpjs_kes == 1 ? 'checked' : '' }}>
-                                            @else
-                                                <input class="form-check-input" type="checkbox" role="switch"
-                                                    name="bpjs_kes" id="bpjs_kes" style="width: 50px; height: 25px;">
-                                            @endif
-                                        </div>
-                                    </td class="text-center align-middle">
-                                    <td class="text-center align-middle">
-                                        <input type="text" class="form-control" name="ket_bpjskes" id="ket_bpjskes"
-                                            placeholder="Masukan Catatan" value="{{ $salary->ket_bpjskes ?? '' }}">
-                                    </td>
-                                </tr>
-                            </tbody>
-
-                        </table>
-
-                        <div class="d-flex justify-content-end mb-3">
-                            <button type="button" id="addFasilitasStageButton" class="btn btn-primary mt-2">Tambah
-                                Fasilitas</button>
-                        </div>
-
-
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th class="text-center align-middle">Fasilitas</th>
-                                    <th class="text-center align-middle">Catatan</th>
-                                    <th class="text-start align-middle">{{ '' }}</th>
-                                </tr>
-                            </thead>
-                            <tbody id="fasilitasStageContainer">
-                                @foreach ($fasilitas as $data)
-                                    <tr class="fasilitas-stage">
-                                        <input name="fasilitas_id[]" value="{{ $data->id }}" hidden>
-                                        <td class="text-center align-middle ">
-                                            <select class="form-control" name="fasilitas[]" required>
-                                                <option value="Tunjangan Makan"
-                                                    {{ $data->fasilitas_name == 'Tunjangan Makan' ? 'selected' : '' }}>
-                                                    Tunjangan Makan</option>
-                                                <option value="Tunjangan Lembur"
-                                                    {{ $data->fasilitas_name == 'Tunjangan Lembur' ? 'selected' : '' }}>
-                                                    Tunjangan Lembur</option>
-                                                <option value="Tunjangan Cuti"
-                                                    {{ $data->fasilitas_name == 'Tunjangan Cuti' ? 'selected' : '' }}>
-                                                    Tunjangan Cuti</option>
-                                                <option value="Tunjangan Kesehatan"
-                                                    {{ $data->fasilitas_name == 'Tunjangan Kesehatan' ? 'selected' : '' }}>
-                                                    Tunjangan Kesehatan</option>
-                                                <option value="Tunjangan Kacamata"
-                                                    {{ $data->fasilitas_name == 'Tunjangan Kacamata' ? 'selected' : '' }}>
-                                                    Tunjangan Kaca Mata</option>
-                                            </select>
+                                            <!-- Input Maximal Nominal -->
+                                            <div class="nominal-container">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">Rp</span>
+                                                    <input type="text" id="maximalNominal" class="form-control"
+                                                        disabled name="max_salary" placeholder="Maximal Nominal" disabled
+                                                        value="{{ $salary->max_salary ?? '' }}">
+                                                </div>
+                                            </div>
                                         </td>
-                                        <td class="text-center align-middle ">
-                                            <input type="text" class="form-control" name="ket_fasilitas[]"
-                                                placeholder="Masukkan keterangan" value="{{ $data->ket_fasilitas }}" />
-                                        </td>
-                                        <td class="text-center align-middle ">
-                                            <button type="button" class="btn btn-danger removeStageButton">
-                                                <i class="fas fa-trash-alt removeStageButton"></i>
-                                            </button>
+
+                                        <td class="text-center align-middle">{{ '' }}</td>
+                                        <td class="text-center align-middle">
+                                            <input type="text" name="ket_salary" id="ket_salary" class="form-control"
+                                                disabled placeholder="Masukan Catatan"
+                                                value="{{ $salary->ket_salary ?? '' }}">
                                         </td>
                                     </tr>
+
+                                    <tr>
+                                        <td class="align-middle">Gaji Pokok</td>
+                                        <td class="d-flex align-items-center justify-content-center align-middle">
+                                            <div class="nominal-container">
+                                                <div class="input-group w-100">
+                                                    <span class="input-group-text">Rp</span>
+                                                    <input required type="text" id="offeringSalary"
+                                                        class="form-control" name="offeringSalary"
+                                                        placeholder="Gaji Pokok"
+                                                        value="{{ $offeringSalary->salary ?? '' }}">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td></td>
+                                        <td class="text-center align-middle">
+                                            <input type="text" name="ket_salary" id="ket_offeringSalary"
+                                                class="form-control" placeholder="Masukan Catatan"
+                                                value="{{ $offeringSalary->ket_salary ?? '' }}">
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="align-middle">PPH 21</td>
+                                        <td>{{ '' }}</td>
+                                        <td class="text-center align-middle">
+                                            <div class="form-check form-switch d-flex justify-content-center"
+                                                style="gap: 10px;">
+                                                @if (isset($offeringSalary) && $offeringSalary->pph21 !== null)
+                                                    <input class="form-check-input" type="checkbox" role="switch"
+                                                        {{ $offeringSalary->pph21 == 1 ? 'checked' : '' }}
+                                                        style="width: 50px; height: 25px;" name="pph21" id="pph21">
+                                                @else
+                                                    <input class="form-check-input" type="checkbox" role="switch"
+                                                        name="pph21" id="pph21" style="width: 50px; height: 25px;">
+                                                @endif
+                                            </div>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <input type="text" class="form-control" name="ket_pph21" id="ket_pph21"
+                                                placeholder="Masukan Catatan"
+                                                value="{{ $offeringSalary->ket_pph21 ?? '' }}">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="align-middle">BPJS Ketenagakerjaan</td>
+                                        <td class="text-center align-middle">{{ '' }}</td>
+                                        <td class="text-center align-middle">
+                                            <div class="form-check form-switch d-flex justify-content-center"
+                                                style="gap: 10px;">
+                                                @if (isset($offeringSalary) && $offeringSalary->bpjs_ket !== null)
+                                                    <input class="form-check-input" type="checkbox" role="switch"
+                                                        name="bpjs_ket" id="bpjs_ket" style="width: 50px; height: 25px;"
+                                                        {{ $offeringSalary->bpjs_ket == 1 ? 'checked' : '' }}>
+                                                @else
+                                                    <input class="form-check-input" type="checkbox" role="switch"
+                                                        name="bpjs_ket" id="bpjs_ket"
+                                                        style="width: 50px; height: 25px;">
+                                                @endif
+                                            </div>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <input type="text" class="form-control" name="ket_bpjsket"
+                                                id="ket_bpjsket" placeholder="Masukan Catatan"
+                                                value="{{ $offeringSalary->ket_bpjsket ?? '' }}">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="align-middle">BPJS Kesehatan</td>
+                                        <td>{{ '' }}</td>
+                                        <td class="text-center align-middle">
+                                            <div class="form-check form-switch d-flex justify-content-center"
+                                                style="gap: 10px;">
+                                                @if (isset($offeringSalary) && $offeringSalary->bpjs_kes !== null)
+                                                    <input class="form-check-input" type="checkbox" role="switch"
+                                                        name="bpjs_kes" id="bpjs_kes" style="width: 50px; height: 25px;"
+                                                        {{ $offeringSalary->bpjs_kes == 1 ? 'checked' : '' }}>
+                                                @else
+                                                    <input class="form-check-input" type="checkbox" role="switch"
+                                                        name="bpjs_kes" id="bpjs_kes"
+                                                        style="width: 50px; height: 25px;">
+                                                @endif
+                                            </div>
+                                        </td class="text-center align-middle">
+                                        <td class="text-center align-middle">
+                                            <input type="text" class="form-control" name="ket_bpjskes"
+                                                id="ket_bpjskes" placeholder="Masukan Catatan"
+                                                value="{{ $offeringSalary->ket_bpjskes ?? '' }}">
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                            <div class="d-flex justify-content-end mb-3">
+                                <button type="button" id="addFasilitasStageButton" class="btn btn-primary mt-2">Tambah
+                                    Fasilitas</button>
+                            </div>
+
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center align-middle">Fasilitas</th>
+                                        <th class="text-center align-middle">Catatan</th>
+                                        <th class="text-start align-middle">{{ '' }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="fasilitasStageContainer">
+                                    @foreach ($offeringFasilitas as $data)
+                                        <tr class="fasilitas-stage">
+                                            <input name="fasilitas_id[]" value="{{ $data->id }}" hidden>
+                                            <td class="text-center align-middle ">
+                                                <select class="form-control" name="fasilitas[]">
+                                                    <option value="Tunjangan Makan"
+                                                        {{ $data->fasilitas_name == 'Tunjangan Makan' ? 'selected' : '' }}>
+                                                        Tunjangan Makan</option>
+                                                    <option value="Tunjangan Lembur"
+                                                        {{ $data->fasilitas_name == 'Tunjangan Lembur' ? 'selected' : '' }}>
+                                                        Tunjangan Lembur</option>
+                                                    <option value="Tunjangan Cuti"
+                                                        {{ $data->fasilitas_name == 'Tunjangan Cuti' ? 'selected' : '' }}>
+                                                        Tunjangan Cuti</option>
+                                                    <option value="Tunjangan Kesehatan"
+                                                        {{ $data->fasilitas_name == 'Tunjangan Kesehatan' ? 'selected' : '' }}>
+                                                        Tunjangan Kesehatan</option>
+                                                    <option value="Tunjangan Kacamata"
+                                                        {{ $data->fasilitas_name == 'Tunjangan Kacamata' ? 'selected' : '' }}>
+                                                        Tunjangan Kaca Mata</option>
+                                                </select>
+                                            </td>
+                                            <td class="text-center align-middle ">
+                                                <input type="text" class="form-control" name="ket_fasilitas[]"
+                                                    placeholder="Masukkan keterangan"
+                                                    value="{{ $data->ket_fasilitas }}" />
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <button type="button" class="btn btn-danger removeStageButton">
+                                                    <i class="fas fa-trash-alt removeStageButton"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                        <!-- Tab 3: Wawancara -->
+                        <div class="tab-pane fade show" id="interview" role="tabpanel" aria-labelledby="interview-tab">
+                            <div class="p-3">
+                                <h3 class="pt-4">Wawancara</h3>
+                                <p>Tahapan yang akan dilalui oleh kandidat</p>
+
+                                @foreach ($interviewDetail as $data)
+                                    @if ($data->interview_status == 'Baru' || $data->interview_status == 'Diterima')
+                                        <h5 class="pt-2">{{ $data->name_progress }}</h5>
+                                        <div class="section-line"></div>
+                                        <div class="row mb-3">
+
+                                            <div class="col-md-4">
+                                                <label for="interview_date" class="form-label">Tanggal Wawancara</label>
+                                                <input class="form-control" type="date" id="interview_date" disabled
+                                                    name="interview_date" disabled
+                                                    value="{{ $data->interview_date ? \Carbon\Carbon::parse($data->interview_date)->format('Y-m-d') : '' }}">
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="interview_time" class="form-label">Jam Wawancara</label>
+                                                <input class="form-control" type="time" id="interview_time" disabled
+                                                    disabled name="interview_time" value="{{ $data->interview_time }}">
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="interview_user" class="form-label">User</label>
+                                                <input class="form-control" type="text" id="interview_user" disabled
+                                                    disabled name="interview_user" placeholder="Masukan nama user"
+                                                    value="{{ $data->user }}">
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+
+                                            <div class="col-md-4">
+                                                <label for="interview_file" class="form-label">Dokumen</label>
+                                                <input class="form-control" type="file" id="interview_file" disabled
+                                                    disabled name="interview_file" value="{{ $data->file }}">
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="interview_client" class="form-label">Klien</label>
+                                                <input class="form-control" type="text" id="interview_client" disabled
+                                                    name="interview_client"
+                                                    value="{{ $data->name_progress == 1 ? 'Ya' : 'Tidak' }}">
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="interview_link" class="form-label">Url Link</label>
+                                                <input class="form-control" type="text" id="interview_link" disabled
+                                                    disabled name="interview_link" placeholder="Masukan Link Url"
+                                                    value="{{ $data->url }}">
+                                            </div>
+                                        </div>
+
+                                        @if ($data->interview_date != null)
+                                            <div class="row mb-3">
+                                                <div class="col-md-4">
+                                                    <label for="interview_status" class="form-label">Status
+                                                        Wawancara</label>
+                                                    <div class="custom-select-wrapper">
+                                                        <select class="form-control" id="interview_status" disabled
+                                                            name="interview_status" disabled>
+                                                            <option value="Pilih status wawancara" selected>Pilih status
+                                                                wawancara
+                                                            </option>
+                                                            <option value="Ditolak"
+                                                                {{ $data->interview_status == 'Ditolak' ? 'selected' : '' }}>
+                                                                Ditolak</option>
+                                                            <option value="Reschedule"
+                                                                {{ $data->interview_status == 'Reschedule' ? 'selected' : '' }}>
+                                                                Reschedule</option>
+                                                            <option value="Setuju"
+                                                                {{ $data->interview_status == 'Setuju' ? 'selected' : '' }}>
+                                                                Setuju</option>
+                                                            <option value="Diterima"
+                                                                {{ $data->interview_status == 'Diterima' ? 'selected' : '' }}>
+                                                                Diterima</option>
+                                                        </select>
+                                                        <i class="fas fa-chevron-down select-icon"></i>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4" style="display: none;" id="value_wrapper">
+                                                    <label for="interview_value" class="form-label">Nilai</label>
+                                                    <input class="form-control" type="text" id="interview_value"
+                                                        name="interview_value" value="" disabled>
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                        <div class="row mb-3">
+                                            <div class="col-md-12">
+                                                <label for="interview_ket" class="form-label">Keterangan</label>
+                                                <input class="form-control" type="text" id="interview_ket"
+                                                    name="interview_ket" disabled value="{{ $data->description }}">
+                                            </div>
+                                        </div>
+                                    @endif
                                 @endforeach
-                            </tbody>
+                            </div>
+                        </div>
 
-                        </table>
+                        {{-- Tab Offering --}}
+                        <div class="tab-pane fade show" id="offering" role="tabpanel" aria-labelledby="offering-tab">
+                            <div class="container py-4">
+                                <h3 class="pt-4">Offering</h3>
+                                <p class="mb-4">Informasi approval manajemen untuk kandidat</p>
+
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="py-2 text-center">Nama</th>
+                                                <th class="py-2 text-center">Status</th>
+                                                <th class="py-2 text-center">Feedback</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($offeringApproval as $data)
+                                                <tr>
+                                                    <td class="py-2 text-center">
+                                                        {{ \App\Models\User::find($data->manajemen_id)->name ?? 'Tidak Diketahui' }}
+                                                    </td>
+                                                    <td class="py-2 text-center">
+                                                        {{ $data->status == 'Baru' ? '-' : $data->status }}
+                                                    </td>
+                                                    <td class="py-2 text-center">
+                                                        {{ $data->feedback ?? 'Belum ada feedback' }}
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="form-group mt-4">
+                                    <label for="managerApproval" class="form-label">Staus Offering</label>
+                                    <select class="form-select w-25" id="managerApproval" aria-label="Pilih Status">
+                                        <option disabled selected>Pilih Status</option>
+                                        <option value="Approve">Approve</option>
+                                        <option value="Reject">Reject</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Tab Verifikasi --}}
+                        <div class="tab-pane fade show" id="additional" role="tabpanel"
+                            aria-labelledby="additional-tab">
+
+                            <h3 class="pt-4">Informasi Kandidat</h3>
+                            <p>Informasi mengenai kandidat yang akan direkrut</p>
+
+                            <div class="row mb-3">
+
+                                <div class="col-md-6">
+                                    <label for="name" class="form-label">Nama</label>
+                                    <input class="form-control" type="text" id="name" name="name" disabled
+                                        value="{{ $offering->name }}">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="gender" class="form-label">Jenis Kelamin</label>
+                                    <div class="custom-select-wrapper">
+                                        <select class="form-control" id="gender" name="gender" disabled>
+                                            <option value="Laki Laki"
+                                                {{ $candidate->gender == 'Laki Laki' ? 'selected' : '' }}>
+                                                Laki
+                                                Laki</option>
+                                            <option value="Perempuan"
+                                                {{ $candidate->gender == 'Perempuan' ? 'selected' : '' }}>
+                                                Perempuan</option>
+                                        </select>
+                                        <i class="fas fa-chevron-down select-icon"></i>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row mb-3">
+
+                                <div class="col-md-6">
+                                    <label for="project" class="form-label">Pengalaman (Tahun)</label>
+                                    <input type="text" class="form-control" id="experience" name="experience"
+                                        disabled value="{{ $candidate->experience }}">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="education" class="form-label">Pendidikan</label>
+                                    <div class="input-group">
+                                        <select class="form-control" id="education" name="education" disabled>
+                                            <option value="SD" {{ $candidate->education == 'SD' ? 'selected' : '' }}>
+                                                SD</option>
+                                            <option value="SMP" {{ $candidate->education == 'SMP' ? 'selected' : '' }}>
+                                                SMP</option>
+                                            <option value="SMA" {{ $candidate->education == 'SMA' ? 'selected' : '' }}>
+                                                SMA</option>
+                                            <option value="D3" {{ $candidate->education == 'D3' ? 'selected' : '' }}>
+                                                D3</option>
+                                            <option value="S1" {{ $candidate->education == 'S1' ? 'selected' : '' }}>
+                                                S1</option>
+                                            <option value="S2" {{ $candidate->education == 'S2' ? 'selected' : '' }}>
+                                                S2</option>
+                                            <option value="S3" {{ $candidate->education == 'S3' ? 'selected' : '' }}>
+                                                S3</option>
+                                        </select>
+                                        <i class="fas fa-chevron-down select-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+
+                                <div class="col-md-6">
+                                    <label for="major" class="form-label">Jurusan</label>
+                                    <input type="text" class="form-control" id="major" name="major" disabled
+                                        value="{{ $candidate->major }}">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="source" class="form-label">Sumber</label>
+                                    <input type="text" class="form-control" id="source" name="source" disabled
+                                        value="{{ $candidate->source }}">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+
+                                <div class="col-md-6">
+                                    <label for="project" class="form-label">Proyek</label>
+                                    <input type="text" class="form-control" id="project" name="project" disabled
+                                        value="{{ $resource->project }}">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="position" class="form-label">Posisi</label>
+                                    <input type="text" class="form-control" id="position" name="position" disabled
+                                        value="{{ $resourceDetail->position }}">
+                                </div>
+
+                            </div>
+
+                            <div class="row mb-3">
+
+                                <div class="col-md-12">
+                                    <label for="url" class="form-label">Url</label>
+                                    <input type="text" class="form-control" id="url" name="url" disabled
+                                        value="{{ $candidate->url }}">
+                                </div>
+
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Khusus</label>
+                                        <div class="p-2 d-flex gap-3 ml-3">
+                                            <div class="verifikasi-form-check">
+                                                <input class="form-check-input" type="radio" value="yes"
+                                                    {{ $candidate->isSpecial === 1 ? 'checked' : '' }} disabled required>
+                                                <label class="form-check-label" for="special_candidate">Ya</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" value="no"
+                                                    {{ $candidate->isSpecial === 0 ? 'checked' : '' }} disabled>
+                                                <label class="form-check-label" for="special_candidate_no">Tidak</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="uniq_code" class="form-label">Kode Unik</label>
+                                    <input type="text" class="form-control" id="uniq_code" name="uniq_code" disabled
+                                        value="{{ $candidate->uniq_code }}">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="recruiter" class="form-label">Recruiter</label>
+                                    <input type="text" class="form-control" id="recruiter" name="recruiter" disabled
+                                        value="{{ $candidate->created_by }}">
+                                </div>
+                            </div>
+
+                            {{-- gaji fasilitas --}}
+                            <div class="pt-3">
+                                <h3>Gaji & Fasilitas</h3>
+                                <p>Informasi Gaji & Fasilitas yang akan didapatkan kandidat jika direkrut</p>
+                            </div>
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>{{ '' }}</th>
+                                        <th class="text-center align-middle">Nominal</th>
+                                        <th class="text-center align-middle">Gross|Nett</th>
+                                        <th class="text-center align-middle">Keterangan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="align-middle">Range Pokok</td>
+                                        <td class="d-flex align-items-center justify-content-center gap-2">
+                                            <!-- Input Minimal Nominal -->
+                                            <div class="nominal-container">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">Rp</span>
+                                                    <input type="text" id="verifikasi_minimalNominal"
+                                                        class="form-control" placeholder="Minimal Nominal" disabled>
+                                                </div>
+                                            </div>
+
+                                            <!-- Tanda "-" -->
+                                            <div>
+                                                <span class="d-flex align-items-center justify-content-center">-</span>
+                                            </div>
+
+                                            <!-- Input Maximal Nominal -->
+                                            <div class="nominal-container">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">Rp</span>
+                                                    <input type="text" id="verifikasi_maximalNominal"
+                                                        class="form-control" placeholder="Maximal Nominal" disabled>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td class="text-center align-middle">{{ '' }}</td>
+                                        <td class="text-center align-middle">
+                                            <input type="text" id="verifikasi_ket_salary" class="form-control"
+                                                placeholder="Masukan Catatan" disabled>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="align-middle">Gaji Pokok</td>
+                                        <td class="d-flex align-items-center justify-content-center align-middle">
+                                            <div class="nominal-container">
+                                                <div class="input-group w-100">
+                                                    <span class="input-group-text">Rp</span>
+                                                    <input type="text" id="verifikasi_offeringSalary"
+                                                        class="form-control" disabled name="salary"
+                                                        placeholder="Gaji Pokok">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td></td>
+                                        <td class="text-center align-middle">
+                                            <input type="text" name="ket_salary" id="verifikasi_ket_offeringSalary"
+                                                class="form-control" placeholder="Masukan Catatan" disabled>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="align-middle">PPH 21</td>
+                                        <td>{{ '' }}</td>
+                                        <td class="text-center align-middle">
+                                            <div class="form-check form-switch d-flex justify-content-center"
+                                                style="gap: 10px;">
+                                                <input class="form-check-input" type="checkbox" role="switch"
+                                                    id="verifikasi_pph21" style="width: 50px; height: 25px;" disabled>
+                                            </div>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <input type="text" class="form-control" id="verifikasi_ket_pph21"
+                                                placeholder="Masukan Catatan" disabled>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="align-middle">BPJS Ketenagakerjaan</td>
+                                        <td class="text-center align-middle">{{ '' }}</td>
+                                        <td class="text-center align-middle">
+                                            <div class="form-check form-switch d-flex justify-content-center"
+                                                style="gap: 10px;">
+                                                <input class="form-check-input" type="checkbox" role="switch"
+                                                    id="verifikasi_bpjs_ket" style="width: 50px; height: 25px;" disabled>
+                                            </div>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <input type="text" class="form-control" id="verifikasi_ket_bpjsket"
+                                                placeholder="Masukan Catatan" disabled>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="align-middle">BPJS Kesehatan</td>
+                                        <td>{{ '' }}</td>
+                                        <td class="text-center align-middle">
+                                            <div class="form-check form-switch d-flex justify-content-center"
+                                                style="gap: 10px;">
+                                                <input class="form-check-input" type="checkbox" role="switch"
+                                                    id="verifikasi_bpjs_kes" style="width: 50px; height: 25px;" disabled>
+                                            </div>
+                                        </td class="text-center align-middle">
+                                        <td class="text-center align-middle">
+                                            <input type="text" class="form-control" id="verifikasi_ket_bpjskes"
+                                                placeholder="Masukan Catatan" disabled>
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-start align-middle">Fasilitas</th>
+                                        <th class="text-center align-middle">Catatan</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="fasilitasStageContainerVerification">
+                                </tbody>
+                            </table>
+                        </div>
 
                     </div>
 
-                    <!-- Tab 5: Verifikasi Informasi -->
-                    <div class="tab-pane fade" id="additional" role="tabpanel" aria-labelledby="additional-tab">
-                        {{-- umum --}}
-                        <div class="mb-3 mt-3">
-                            <label for="verifikasi_name" class="form-label">Nama Permintaan</label>
-                            <input type="text" class="form-control" id="verifikasi_name" disabled>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="verifikasi_client" class="form-label">Klien</label>
-                                <input type="text" class="form-control" id="verifikasi_client" disabled>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="verifikasi_project" class="form-label">Proyek</label>
-                                <input type="text" class="form-control" id="verifikasi_project" disabled>
-                            </div>
-                        </div>
-                        <div class="row mb-3 mt-3">
-                            <div class="col-md-4">
-                                <label for="verifikasi_priority" class="form-label">Level Prioritas</label>
-                                <input type="text" class="form-control" id="verifikasi_priority" disabled>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="verifikasi_target_date" class="form-label">Tanggal Target</label>
-                                <input type="text" class="form-control" id="verifikasi_target_date" disabled>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="verifikasi_requirment" class="form-label">Jenis Kebutuhan</label>
-                                <input type="text" class="form-control" id="verifikasi_requirment" disabled>
-                            </div>
-                        </div>
-
-                        <h3>Kebutuhan Posisi</h3>
-                        <div class="row mb-3 mt-3">
-                            <div class="col-md-4">
-                                <label for="verifikasi_position" class="form-label">Posisi yang
-                                    dibutuhkan</label>
-                                <input type="text" class="form-control" id="verifikasi_position" disabled>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="verifikasi_skill" class="form-label">Skill yang dibutuhkan</label>
-                                <input type="text" class="form-control" id="verifikasi_skill" disabled>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="verifikasi_quantity" class="form-label">Jumlah</label>
-                                <input type="number" class="form-control" id="verifikasi_quantity" disabled>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label for="verifikasi_education" class="form-label">Jenjang
-                                    Pendidikan</label>
-                                <input type="text" class="form-control" id="verifikasi_education" disabled>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="verifikasi_qualification" class="form-label">Kualifikasi</label>
-                                <input type="text" class="form-control" id="verifikasi_qualification" disabled>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="verifikasi_experience" class="form-label">Pengalaman(tahun)</label>
-                                <input type="number" class="form-control" id="verifikasi_experience" disabled>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="verifikasi_contract" class="form-label">Durasi Kontrak</label>
-                            <input type="text" class="form-control" id="verifikasi_contract" disabled>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="verifikasi_description" class="form-label">Keterangan</label>
-                            <input class="form-control" id="verifikasi_description" rows="3" disabled></input>
-                        </div>
-
-                        {{-- gaji fasilitas --}}
-                        <div class="pt-3">
-                            <h3>Gaji & Fasilitas</h3>
-                            <p>Informasi Gaji & Fasilitas yang akan didapatkan kandidat jika direkrut</p>
-                        </div>
-
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>{{ '' }}</th>
-                                    <th class="text-center align-middle">Nominal</th>
-                                    <th class="text-center align-middle">Gross|Nett</th>
-                                    <th class="text-center align-middle">Keterangan</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="align-middle">Gaji Pokok</td>
-                                    <td class="d-flex align-items-center justify-content-center gap-2">
-                                        <!-- Input Minimal Nominal -->
-                                        <div class="nominal-container">
-                                            <div class="input-group">
-                                                <span class="input-group-text">Rp</span>
-                                                <input type="text" id="verifikasi_minimalNominal" class="form-control"
-                                                    placeholder="Minimal Nominal" disabled>
-                                            </div>
-                                        </div>
-
-                                        <!-- Tanda "-" -->
-                                        <div>
-                                            <span class="d-flex align-items-center justify-content-center">-</span>
-                                        </div>
-
-                                        <!-- Input Maximal Nominal -->
-                                        <div class="nominal-container">
-                                            <div class="input-group">
-                                                <span class="input-group-text">Rp</span>
-                                                <input type="text" id="verifikasi_maximalNominal" class="form-control"
-                                                    placeholder="Maximal Nominal" disabled>
-                                            </div>
-                                        </div>
-                                    </td>
-
-                                    <td class="text-center align-middle">{{ '' }}</td>
-                                    <td class="text-center align-middle">
-                                        <input type="text" id="verifikasi_ket_salary" class="form-control"
-                                            placeholder="Masukan Catatan" disabled>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="align-middle">PPH 21</td>
-                                    <td>{{ '' }}</td>
-                                    <td class="text-center align-middle">
-                                        <div class="form-check form-switch d-flex justify-content-center"
-                                            style="gap: 10px;">
-                                            <input class="form-check-input" type="checkbox" role="switch"
-                                                id="verifikasi_pph21" style="width: 50px; height: 25px;" disabled>
-                                        </div>
-                                    </td>
-                                    <td class="text-center align-middle">
-                                        <input type="text" class="form-control" id="verifikasi_ket_pph21"
-                                            placeholder="Masukan Catatan" disabled>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="align-middle">BPJS Ketenagakerjaan</td>
-                                    <td class="text-center align-middle">{{ '' }}</td>
-                                    <td class="text-center align-middle">
-                                        <div class="form-check form-switch d-flex justify-content-center"
-                                            style="gap: 10px;">
-                                            <input class="form-check-input" type="checkbox" role="switch"
-                                                id="verifikasi_bpjs_ket" style="width: 50px; height: 25px;" disabled>
-                                        </div>
-                                    </td>
-                                    <td class="text-center align-middle">
-                                        <input type="text" class="form-control" id="verifikasi_ket_bpjsket"
-                                            placeholder="Masukan Catatan" disabled>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="align-middle">BPJS Kesehatan</td>
-                                    <td>{{ '' }}</td>
-                                    <td class="text-center align-middle">
-                                        <div class="form-check form-switch d-flex justify-content-center"
-                                            style="gap: 10px;">
-                                            <input class="form-check-input" type="checkbox" role="switch"
-                                                id="verifikasi_bpjs_kes" style="width: 50px; height: 25px;" disabled>
-                                        </div>
-                                    </td class="text-center align-middle">
-                                    <td class="text-center align-middle">
-                                        <input type="text" class="form-control" id="verifikasi_ket_bpjskes"
-                                            placeholder="Masukan Catatan" disabled>
-                                    </td>
-                                </tr>
-                            </tbody>
-
-                        </table>
-
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th class="text-start align-middle">Fasilitas</th>
-                                    <th class="text-center align-middle">Catatan</th>
-                                </tr>
-                            </thead>
-                            <tbody id="fasilitasStageContainerVerification">
-                            </tbody>
-                        </table>
-
-                        {{-- interviewProgress --}}
-                        <h3>Wawancara</h3>
-                        <div id="verificationContainer" class="mt-3"></div>
-
-                    </div>
                 </div>
-        </div>
 
-        <!-- Modal Footer -->
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" id="backButton" style="display: none;">Kembali</button>
-            <button type="button" class="btn btn-primary" id="nextButton">Lanjut</button>
-            <button type="submit" class="btn btn-success" form="addRequestForm" id="saveButton"
-                style="display: none;">Simpan</button>
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="backButton"
+                        style="display: none;">Kembali</button>
+                    <button type="button" class="btn btn-primary" id="nextButton">Lanjut</button>
+                    <button type="submit" class="btn btn-success" form="addRequestForm" id="saveButton"
+                        style="display: none;">Simpan</button>
 
-        </div>
+                </div>
 
         </form>
-
     </div>
 
 @endsection
@@ -803,7 +1024,9 @@
             const backButton = document.getElementById('backButton');
             const saveButton = document.getElementById('saveButton');
             const tabs = document.querySelectorAll('#requestTabs .nav-link');
+
             const detailsForm = document.getElementById('addRequestForm');
+
             const verificationForm = document.getElementById('additionalForm');
 
             const stages = document.getElementsByClassName('interview-stage');
@@ -824,83 +1047,12 @@
                     nextButton.style.display = 'none';
                     saveButton.style.display = 'inline-block';
 
-                    document.getElementById('verifikasi_name').value = document.getElementById('name').value;
-                    document.getElementById('verifikasi_client').value = document.getElementById('client').value;
-                    document.getElementById('verifikasi_project').value = document.getElementById('project').value;
-                    document.getElementById('verifikasi_priority').value = document.getElementById('level_priority')
-                        .value;
+                    var verifikasiInterviewDates = document.querySelectorAll('[id^="verifikasi_interview_date"]');
 
-                    document.getElementById('verifikasi_target_date').value = document.getElementById('target_date')
-                        .value;
+                    verifikasiInterviewDates.forEach(function(element) {
+                        element.value = document.getElementById('interview_date').value;
+                    });
 
-
-                    document.getElementById('verifikasi_requirment').value = document.getElementById('requirment')
-                        .value;
-
-                    // kebutuhan posisi verifikasi
-                    document.getElementById('verifikasi_position').value = document.getElementById('position')
-                        .value;
-
-                    document.getElementById('verifikasi_skill').value = document.getElementById('skill').value;
-                    document.getElementById('verifikasi_quantity').value = document.getElementById('quantity')
-                        .value;
-
-                    document.getElementById('verifikasi_education').value = document.getElementById('education')
-                        .value;
-
-                    document.getElementById('verifikasi_qualification').value = document.getElementById(
-                            'qualification')
-                        .value;
-
-                    document.getElementById('verifikasi_experience').value = document.getElementById('experience')
-                        .value;
-
-                    document.getElementById('verifikasi_contract').value = document.getElementById('contract')
-                        .value;
-
-                    document.getElementById('verifikasi_description').value = document.getElementById('description')
-                        .value;
-
-
-                    //salary
-                    document.getElementById('verifikasi_minimalNominal').value = document.getElementById(
-                            'minimalNominal')
-                        .value;
-
-                    document.getElementById('verifikasi_maximalNominal').value = document.getElementById(
-                            'maximalNominal')
-                        .value;
-
-                    document.getElementById('verifikasi_ket_salary').value = document.getElementById(
-                            'ket_salary')
-                        .value;
-
-                    document.getElementById('verifikasi_pph21').checked = document.getElementById(
-                            'pph21')
-                        .checked;
-
-                    document.getElementById('verifikasi_ket_pph21').value = document.getElementById(
-                            'ket_pph21')
-                        .value;
-
-                    document.getElementById('verifikasi_bpjs_ket').checked = document.getElementById(
-                            'bpjs_ket')
-                        .checked;
-
-                    document.getElementById('verifikasi_ket_bpjsket').value = document.getElementById(
-                            'ket_bpjsket')
-                        .value;
-
-                    document.getElementById('verifikasi_bpjs_kes').checked = document.getElementById(
-                            'bpjs_kes')
-                        .checked;
-
-                    document.getElementById('verifikasi_ket_bpjskes').value = document.getElementById(
-                            'ket_bpjskes')
-                        .value;
-
-                    //verifikasi wawancara 
-                    verificationContainer.innerHTML = ''; // Reset konten
 
                     Array.from(stages).forEach((stage, index) => {
 
@@ -980,6 +1132,52 @@
                     `);
                     });
 
+                    //salary
+                    document.getElementById('verifikasi_minimalNominal').value = document.getElementById(
+                            'minimalNominal')
+                        .value;
+
+                    document.getElementById('verifikasi_maximalNominal').value = document.getElementById(
+                            'maximalNominal')
+                        .value;
+
+                    document.getElementById('verifikasi_ket_salary').value = document.getElementById(
+                            'ket_salary')
+                        .value;
+
+                    document.getElementById('verifikasi_offeringSalary').value = document.getElementById(
+                            'offeringSalary')
+                        .value;
+
+                    document.getElementById('verifikasi_ket_offeringSalary').value = document.getElementById(
+                            'ket_offeringSalary')
+                        .value;
+
+                    document.getElementById('verifikasi_pph21').checked = document.getElementById(
+                            'pph21')
+                        .checked;
+
+                    document.getElementById('verifikasi_ket_pph21').value = document.getElementById(
+                            'ket_pph21')
+                        .value;
+
+                    document.getElementById('verifikasi_bpjs_ket').checked = document.getElementById(
+                            'bpjs_ket')
+                        .checked;
+
+                    document.getElementById('verifikasi_ket_bpjsket').value = document.getElementById(
+                            'ket_bpjsket')
+                        .value;
+
+                    document.getElementById('verifikasi_bpjs_kes').checked = document.getElementById(
+                            'bpjs_kes')
+                        .checked;
+
+                    document.getElementById('verifikasi_ket_bpjskes').value = document.getElementById(
+                            'ket_bpjskes')
+                        .value;
+
+
                 } else {
                     backButton.style.display = 'inline-block';
                     nextButton.style.display = 'inline-block';
@@ -1021,100 +1219,13 @@
     </script>
 
     <script>
-        document.getElementById('addInterviewStageButton').addEventListener('click', function() {
-            const container = document.getElementById('interviewStagesContainer');
-
-            const newStage = `
-                <div class="d-flex align-items-center mb-3 interview-stage">
-                    <input class="resource-id" name="interviewProgress_id[]"
-                                          value="0" hidden>
-                    <div class="flex-grow-1">
-                        <div class="text-start mb-2 border-bottom">
-                            <label class="form-label">Tahap Wawancara</label>
-                        </div>
-                        <select class="form-select" name="interview_stage[]" style="width: 200px;">
-                            <option value="Wawancara Hr">Wawancara Hr</option>
-                            <option value="Wawancara User">Wawancara User</option>
-                            <option value="Wawancara Technical">Wawancara Technical</option>
-                        </select>
-                    </div>
-
-                  <div class="flex-grow-1 me-2">
-                        <div class="text-start mb-2 border-bottom">
-                            <label class="form-label">Klien</label>
-                        </div>
-                        <div class="form-check d-flex align-items-center  justify-content-start p-0 m-0">
-                            <select class="form-select" name="isClient[]" style="width: 150px;">
-                                <option value="1">Ya</option>
-                                <option value="0" selected>Tidak</option>
-                            </select>
-                            <label class="form-check-label ms-2">Terlibat Client?</label>
-                        </div>
-                    </div>
-
-                    <div class="flex-grow-1 me-2">
-                      <div class="text-start mb-2 border-bottom">
-                            <label class="form-label">Keterangan</label>
-                        </div>
-                        <input class="form-control" name="isDescription[]" rows="1"
-                            placeholder="Masukkan keterangan"></input>
-                    </div>
-                    <div class="flex-grow-1 me-2">
-                        <div class="text-center align-middle mb-2 border-bottom">
-                            <label class="form-label">Aksi</label>
-                        </div>
-                        <div class="text-center align-middle"> 
-                            <button type="button"
-                            class="btn btn-danger removeStageButton">Hapus</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            container.insertAdjacentHTML('beforeend', newStage);
-        });
-
-        // Hapus Tahapan Wawancara
-        document.getElementById('interviewStagesContainer').addEventListener('click', function(e) {
-            if (e.target.classList.contains('removeStageButton')) {
-                e.target.closest('.interview-stage').remove();
+        document.getElementById("interview_status").addEventListener("change", function() {
+            const valueWrapper = document.getElementById("value_wrapper");
+            if (this.value === "Diterima") {
+                valueWrapper.style.display = "block"; // Tampilkan form nilai
+            } else {
+                valueWrapper.style.display = "none"; // Sembunyikan form nilai
             }
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const tasklist = new Choices('#tasklist', {
-                removeItemButton: true,
-                maxItemCount: 5,
-                placeholderValue: 'Pilih Recruiter',
-                searchPlaceholderValue: 'Cari Recruiter',
-            });
-        });
-    </script>
-
-    <script>
-        document.getElementById('submit').addEventListener('click', function() {
-            const tasklist = document.getElementById('tasklist');
-            const selectedValues = Array.from(tasklist.selectedOptions).map(option => option.value);
-
-            // Send the selected values to the server via AJAX
-            fetch("{{ route('saveRequester', [$resourceDetail->id]) }}", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}", // CSRF Token for Laravel
-                    },
-                    body: JSON.stringify({
-                        tasklist: selectedValues
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Recruiters have been submitted:', data);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
         });
     </script>
 
@@ -1123,28 +1234,28 @@
             const container = document.getElementById('fasilitasStageContainer');
 
             const newStage = `
-            <tr class="fasilitas-stage">
-                  <input name="fasilitas_id[]" value="0" hidden>
-                <td>
-                    <select class="form-control" name="fasilitas[]" required>
-                        <option value="" disabled selected>Pilih Fasilitas</option>
-                        <option value="Tunjangan Makan">Tunjangan Makan</option>
-                        <option value="Tunjangan Lembur">Tunjangan Lembur</option>
-                        <option value="Tunjangan Cuti">Tunjangan Cuti</option>
-                        <option value="Tunjangan Kesehatan">Tunjangan Kesehatan</option>
-                        <option value="Tunjangan Kacamata">Tunjangan Kacamata</option>
-                    </select>
-                </td>
-                <td>
-                    <input type="text" class="form-control" name="ket_fasilitas[]" placeholder="Masukkan keterangan" />
-                </td>
-                <td>
-                    <button type="button" class="btn btn-danger removeStageButton">
-                        <i class="fas fa-trash-alt removeStageButton"></i>
-                    </button>
-                </td>
-            </tr>           
-        `;
+        <tr class="fasilitas-stage">
+              <input name="fasilitas_id[]" value="0" hidden>
+            <td>
+                <select class="form-control" name="fasilitas[]" required>
+                    <option value="" disabled selected>Pilih Fasilitas</option>
+                    <option value="Tunjangan Makan">Tunjangan Makan</option>
+                    <option value="Tunjangan Lembur">Tunjangan Lembur</option>
+                    <option value="Tunjangan Cuti">Tunjangan Cuti</option>
+                    <option value="Tunjangan Kesehatan">Tunjangan Kesehatan</option>
+                    <option value="Tunjangan Kacamata">Tunjangan Kacamata</option>
+                </select>
+            </td>
+            <td>
+                <input type="text" class="form-control" name="ket_fasilitas[]" placeholder="Masukkan keterangan" />
+            </td>
+            <td class="text-center align-middle">
+                <button type="button" class="btn btn-danger removeStageButton">
+                    <i class="fas fa-trash-alt removeStageButton"></i>
+                </button>
+            </td>
+        </tr>           
+    `;
             container.insertAdjacentHTML('beforeend', newStage);
         });
 
@@ -1157,43 +1268,37 @@
     </script>
 
     <script>
-        // Function to format number as Rupiah
         function formatRupiah(value) {
             if (!value) return '';
             return value.replace(/\D/g, '') // Remove non-numeric characters
                 .replace(/\B(?=(\d{3})+(?!\d))/g, '.'); // Add periods for thousands
         }
 
-        // Get elements
-        const minimalNominal = document.getElementById('minimalNominal');
-        const maximalNominal = document.getElementById('maximalNominal');
-        let timeout;
+        document.getElementById('offeringSalary').addEventListener('input', function() {
+            const minSalary = parseInt(document.getElementById('minimalNominal').value || 0, 10);
+            const maxSalary = parseInt(document.getElementById('maximalNominal').value || 0, 10);
 
-        // Event listener for Minimal Nominal
-        minimalNominal.addEventListener('input', function() {
-            const rawValue = this.value.replace(/\D/g, '');
-            const formattedValue = formatRupiah(rawValue);
+            let offeringSalary = this.value.replace(/\D/g, ''); // Hanya angka
+            const formattedValue = formatRupiah(offeringSalary);
             this.value = `${formattedValue}`;
 
-            const minimalValue = parseInt(rawValue);
-            maximalNominal.value = formatRupiah(minimalValue.toString());
-        });
+            offeringSalary = parseInt(offeringSalary || 0, 10); // Hanya angka
 
-        maximalNominal.addEventListener('input', function() {
-            clearTimeout(timeout); // Clear the previous timeout
+            const errorElement = document.getElementById('offeringSalaryError');
 
-            timeout = setTimeout(function() { // Set a new timeout for 5 seconds
-                const rawMaxValue = maximalNominal.value.replace(/\D/g, ''); // Extract numeric value
-                const rawMinValue = minimalNominal.value.replace(/\D/g,
-                    ''); // Extract Minimal Nominal value
+            this.classList.remove('is-invalid');
+            errorElement.classList.add('d-none');
+            errorElement.textContent = '';
 
-                if (rawMaxValue && rawMinValue && parseInt(rawMaxValue) <= parseInt(rawMinValue)) {
-                    maximalNominal.value = formatRupiah((parseInt(rawMinValue)).toString());
-                } else {
-                    const formattedValue = formatRupiah(rawMaxValue);
-                    maximalNominal.value = formattedValue;
-                }
-            }, 5000); // 5000 milliseconds = 5 seconds delay
+            if (offeringSalary < minSalary) {
+                this.classList.add('is-invalid');
+                errorElement.classList.remove('d-none');
+                errorElement.textContent = 'Offering salary tidak boleh kurang dari minimal salary.';
+            } else if (offeringSalary > maxSalary) {
+                this.classList.add('is-invalid');
+                errorElement.classList.remove('d-none');
+                errorElement.textContent = 'Offering salary tidak boleh lebih dari maximal salary.';
+            }
         });
     </script>
 

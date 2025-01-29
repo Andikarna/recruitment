@@ -1139,7 +1139,7 @@
                 <td>
                     <input type="text" class="form-control" name="ket_fasilitas[]" placeholder="Masukkan keterangan" />
                 </td>
-                <td>
+                <td class="text-center align-middle">
                     <button type="button" class="btn btn-danger removeStageButton">
                         <i class="fas fa-trash-alt removeStageButton"></i>
                     </button>
@@ -1161,8 +1161,8 @@
         // Function to format number as Rupiah
         function formatRupiah(value) {
             if (!value) return '';
-            return value.replace(/\D/g, '') // Remove non-numeric characters
-                .replace(/\B(?=(\d{3})+(?!\d))/g, '.'); // Add periods for thousands
+            return value.replace(/\D/g, '')
+                .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
 
         // Get elements

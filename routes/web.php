@@ -47,5 +47,8 @@ Route::post('/interview/save/{id}', [InterviewController::class, 'saveInterview'
 
 Route::get('/offering', action: [OfferingController::class, 'offering'])->name('offering')->middleware('auth');
 Route::post('/offering/addApporval/{id}', action: [OfferingController::class, 'addApproval'])->name('addApproval')->middleware('auth');
+Route::get('/offering/detail/{id}', [OfferingController::class, 'detailOffering'])->name('detailOffering')->middleware('auth');
+Route::get('/offering/update/{id}', [OfferingController::class, 'updatedOffering'])->name('updateOffering')->middleware('auth');
+
 
 Route::get('/onboarding', [OnboardingController::class, 'onboarding'])->name('onboarding')->middleware('auth');

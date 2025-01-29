@@ -4,16 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Offering;
 use App\Models\Resource;
+use App\Models\TaksList;
 use App\Models\Candidate;
 use App\Models\Interview;
-use App\Models\InterviewDetail;
-use App\Models\InterviewProgress;
 use Illuminate\Http\Request;
+use App\Models\OfferingSalary;
 use App\Models\ResourceDetail;
 use App\Models\ResourceSalary;
 use Illuminate\Support\Carbon;
+use App\Models\InterviewDetail;
+use App\Models\OfferingFasility;
 use App\Models\ResourceFacility;
-use App\Models\TaksList;
+use App\Models\InterviewProgress;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -217,6 +219,7 @@ class InterviewController extends Controller
             $newOffering->candidate_id = $interviewId->candidate_id;
             $newOffering->resource_id = $interviewId->resource_id;
             $newOffering->resource_detail_id = $interviewId->resource_detail_id;
+            $newOffering->interview_id = $interviewId->id;
             $newOffering->name = $interviewId->name;
             $newOffering->position = $interviewId->position;
             $newOffering->qualification = $interviewId->qualification;
@@ -228,6 +231,38 @@ class InterviewController extends Controller
             $newOffering->created_by = Auth::user()->name;
             $newOffering->save();
 
+            $resourceSalary = ResourceSalary::where('resource_id', $interviewId->resource_id)
+            ->where('resource_detail_id',$interviewId->resource_detail_id)
+            ->first();
+            $resourceFacility = ResourceFacility::where('resource_id', $interviewId->resource_id)
+            ->where('resource_detail_id',$interviewId->resource_detail_id)
+            ->get();
+
+            $newOfferingSalary = new OfferingSalary();
+            $newOfferingSalary->offering_id = $newOffering->id;
+            // $newOfferingSalary->salary =    
+            //$newOfferingSalary->ket_salary = 
+            $newOfferingSalary->pph21 = $resourceSalary->pph21;
+            $newOfferingSalary->ket_pph21 = $resourceSalary->ket_pph21;
+            $newOfferingSalary->bpjs_ket = $resourceSalary->bpjs_ket;
+            $newOfferingSalary->ket_bpjsket = $resourceSalary->ket_bpjsket;
+            $newOfferingSalary->bpjs_kes = $resourceSalary->bpjs_kes;
+            $newOfferingSalary->ket_bpjskes = $resourceSalary->ket_bpjskes;
+            $newOfferingSalary->created_date = Carbon::now('Asia/Jakarta');
+            $newOfferingSalary->created_id = Auth::user()->id;
+            $newOfferingSalary->created_by = Auth::user()->name;
+            $newOfferingSalary->save();
+
+            foreach($resourceFacility as $data){
+                $newOfferingFacility = new OfferingFasility();
+                $newOfferingFacility->offering_id = $newOffering->id;
+                $newOfferingFacility->fasilitas_name = $data->fasilitas_name;
+                $newOfferingFacility->ket_fasilitas = $data->ket_fasilitas;
+                $newOfferingFacility->created_date = Carbon::now('Asia/Jakarta');
+                $newOfferingFacility->created_id = Auth::user()->id;
+                $newOfferingFacility->created_by = Auth::user()->name;
+                $newOfferingFacility->save();
+            }
         }
 
          

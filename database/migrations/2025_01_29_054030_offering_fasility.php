@@ -11,17 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('offering', function(Blueprint $table){
+        Schema::create('offering_facility', function(Blueprint $table){
             $table->id();
-            $table->bigInteger('resource_id')->nullable();
-            $table->bigInteger('resource_detail_id')->nullable();
-            $table->bigInteger('interview_id')->nullable();
-            $table->string(column: 'name')->nullable();
-            $table->string(column: 'position')->nullable();
-            $table->string(column: 'qualification')->nullable();
-            $table->string(column: 'project')->nullable();
-            $table->string(column: 'interview_progress')->nullable();
-            $table->string(column: 'status')->nullable();
+            $table->bigInteger('offering_id')->nullable();
+            $table->string(column: 'fasilitas_name')->nullable();
+            $table->string(column: 'ket_fasilitas')->nullable();
+            
             $table->timestamp('created_date')->nullable();
             $table->bigInteger(column: 'created_id')->nullable();
             $table->string('created_by')->nullable();
@@ -36,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('offering');
+        //
     }
 };
