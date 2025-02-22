@@ -147,7 +147,7 @@
 
 @section('content')
     <div class="row bg-white p-3" style="border-radius: 20px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
-        <form id="addRequestForm" action="" method="POST">
+        <form id="saveOffering" action="{{ route('saveOffering', [$offering->id]) }}" method="POST">
             @csrf
             <div style="display: flex; flex-direction: column; p-0 m-0">
                 <div class="modal-header d-flex justify-content-between align-items-center">
@@ -219,11 +219,7 @@
                                 aria-selected="true">Offering</button>
                         </li>
 
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="additional-tab" data-bs-toggle="tab" data-bs-target="#additional"
-                                type="button" role="tab" aria-controls="additional" aria-selected="false">Verifikasi
-                                Informasi</button>
-                        </li>
+                        
                     </ul>
 
                     <!-- Tab -->
@@ -391,7 +387,7 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td class="align-middle">Gaji Pokok</td>
+                                        <td class="align-middle">Range Gaji</td>
                                         <td class="d-flex align-items-center justify-content-center gap-2">
                                             <!-- Input Minimal Nominal -->
                                             <div class="nominal-container">
@@ -413,7 +409,7 @@
                                                 <div class="input-group">
                                                     <span class="input-group-text">Rp</span>
                                                     <input type="text" id="maximalNominal" class="form-control"
-                                                        name="max_salary" placeholder="Maximal Nominal" disabled
+                                                        disabled name="max_salary" placeholder="Maximal Nominal" disabled
                                                         value="{{ $salary->max_salary ?? '' }}">
                                                 </div>
                                             </div>
@@ -426,27 +422,49 @@
                                                 value="{{ $salary->ket_salary ?? '' }}">
                                         </td>
                                     </tr>
+
+                                    <tr>
+                                        <td class="align-middle">Gaji Pokok</td>
+                                        <td class="d-flex align-items-center justify-content-center align-middle">
+                                            <div class="nominal-container">
+                                                <div class="input-group w-100">
+                                                    <span class="input-group-text">Rp</span>
+                                                    <input required type="text" id="offeringSalary"
+                                                        class="form-control" name="offeringSalary" disabled
+                                                        placeholder="Gaji Pokok"
+                                                        value="{{ $offeringSalary->salary ?? '' }}">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td></td>
+                                        <td class="text-center align-middle">
+                                            <input type="text" name="ket_salary" id="ket_offeringSalary" disabled
+                                                class="form-control" placeholder="Masukan Catatan"
+                                                value="{{ $offeringSalary->ket_salary ?? '' }}">
+                                        </td>
+                                    </tr>
+
                                     <tr>
                                         <td class="align-middle">PPH 21</td>
                                         <td>{{ '' }}</td>
                                         <td class="text-center align-middle">
                                             <div class="form-check form-switch d-flex justify-content-center"
                                                 style="gap: 10px;">
-                                                @if (isset($salary) && $salary->pph21 !== null)
-                                                    <input class="form-check-input" type="checkbox" role="switch"
-                                                        disabled {{ $salary->pph21 == 1 ? 'checked' : '' }}
+                                                @if (isset($offeringSalary) && $offeringSalary->pph21 !== null)
+                                                    <input disabled class="form-check-input" type="checkbox" role="switch"
+                                                        {{ $offeringSalary->pph21 == 1 ? 'checked' : '' }}
                                                         style="width: 50px; height: 25px;" name="pph21" id="pph21">
                                                 @else
                                                     <input class="form-check-input" type="checkbox" role="switch"
-                                                        disabled name="pph21" id="pph21"
-                                                        style="width: 50px; height: 25px;">
+                                                    disabled
+                                                        name="pph21" id="pph21" style="width: 50px; height: 25px;">
                                                 @endif
                                             </div>
                                         </td>
                                         <td class="text-center align-middle">
-                                            <input type="text" class="form-control" name="ket_pph21" id="ket_pph21"
-                                                disabled placeholder="Masukan Catatan"
-                                                value="{{ $salary->ket_pph21 ?? '' }}">
+                                            <input disabled type="text" class="form-control" name="ket_pph21" id="ket_pph21"
+                                                placeholder="Masukan Catatan"
+                                                value="{{ $offeringSalary->ket_pph21 ?? '' }}">
                                         </td>
                                     </tr>
                                     <tr>
@@ -455,22 +473,21 @@
                                         <td class="text-center align-middle">
                                             <div class="form-check form-switch d-flex justify-content-center"
                                                 style="gap: 10px;">
-                                                @if (isset($salary) && $salary->bpjs_ket !== null)
-                                                    <input class="form-check-input" type="checkbox" role="switch"
-                                                        disabled name="bpjs_ket" id="bpjs_ket"
-                                                        style="width: 50px; height: 25px;"
-                                                        {{ $salary->bpjs_ket == 1 ? 'checked' : '' }}>
+                                                @if (isset($offeringSalary) && $offeringSalary->bpjs_ket !== null)
+                                                    <input disabled class="form-check-input" type="checkbox" role="switch"
+                                                        name="bpjs_ket" id="bpjs_ket" style="width: 50px; height: 25px;"
+                                                        {{ $offeringSalary->bpjs_ket == 1 ? 'checked' : '' }}>
                                                 @else
-                                                    <input class="form-check-input" type="checkbox" role="switch"
-                                                        disabled name="bpjs_ket" id="bpjs_ket"
+                                                    <input disabled class="form-check-input" type="checkbox" role="switch"
+                                                        name="bpjs_ket" id="bpjs_ket"
                                                         style="width: 50px; height: 25px;">
                                                 @endif
                                             </div>
                                         </td>
                                         <td class="text-center align-middle">
-                                            <input type="text" class="form-control" name="ket_bpjsket"
-                                                id="ket_bpjsket" disabled placeholder="Masukan Catatan"
-                                                value="{{ $salary->ket_bpjsket ?? '' }}">
+                                            <input disabled type="text" class="form-control" name="ket_bpjsket"
+                                                id="ket_bpjsket" placeholder="Masukan Catatan"
+                                                value="{{ $offeringSalary->ket_bpjsket ?? '' }}">
                                         </td>
                                     </tr>
                                     <tr>
@@ -479,21 +496,21 @@
                                         <td class="text-center align-middle">
                                             <div class="form-check form-switch d-flex justify-content-center"
                                                 style="gap: 10px;">
-                                                @if (isset($salary) && $salary->bpjs_kes !== null)
-                                                    <input class="form-check-input" type="checkbox" role="switch"
+                                                @if (isset($offeringSalary) && $offeringSalary->bpjs_kes !== null)
+                                                    <input disabled class="form-check-input" type="checkbox" role="switch"
                                                         name="bpjs_kes" id="bpjs_kes" style="width: 50px; height: 25px;"
-                                                        disabled {{ $salary->bpjs_kes == 1 ? 'checked' : '' }}>
+                                                        {{ $offeringSalary->bpjs_kes == 1 ? 'checked' : '' }}>
                                                 @else
-                                                    <input class="form-check-input" type="checkbox" role="switch"
-                                                        disabled name="bpjs_kes" id="bpjs_kes"
+                                                    <input disabled class="form-check-input" type="checkbox" role="switch"
+                                                        name="bpjs_kes" id="bpjs_kes"
                                                         style="width: 50px; height: 25px;">
                                                 @endif
                                             </div>
                                         </td class="text-center align-middle">
                                         <td class="text-center align-middle">
-                                            <input type="text" class="form-control" name="ket_bpjskes"
-                                                id="ket_bpjskes" disabled placeholder="Masukan Catatan"
-                                                value="{{ $salary->ket_bpjskes ?? '' }}">
+                                            <input disabled type="text" class="form-control" name="ket_bpjskes"
+                                                id="ket_bpjskes" placeholder="Masukan Catatan"
+                                                value="{{ $offeringSalary->ket_bpjskes ?? '' }}">
                                         </td>
                                     </tr>
                                 </tbody>
@@ -508,11 +525,10 @@
                                     </tr>
                                 </thead>
                                 <tbody id="fasilitasStageContainer">
-                                    @foreach ($fasilitas as $data)
+                                    @foreach ($offeringFasilitas as $data)
                                         <tr class="fasilitas-stage">
-                                            <input name="fasilitas_id[]" value="{{ $data->id }}" hidden>
                                             <td class="text-center align-middle ">
-                                                <select class="form-control" name="fasilitas[]" disabled>
+                                                <select disabled class="form-control" name="fasilitas[]">
                                                     <option value="Tunjangan Makan"
                                                         {{ $data->fasilitas_name == 'Tunjangan Makan' ? 'selected' : '' }}>
                                                         Tunjangan Makan</option>
@@ -531,8 +547,8 @@
                                                 </select>
                                             </td>
                                             <td class="text-center align-middle ">
-                                                <input type="text" class="form-control" name="ket_fasilitas[]"
-                                                    disabled placeholder="Masukkan keterangan"
+                                                <input disabled type="text" class="form-control" name="ket_fasilitas[]"
+                                                    placeholder="Masukkan keterangan"
                                                     value="{{ $data->ket_fasilitas }}" />
                                             </td>
                                         </tr>
@@ -652,7 +668,7 @@
                             <div class="container py-4">
                                 <h3 class="pt-4">Offering</h3>
                                 <p class="mb-4">Informasi approval manajemen untuk kandidat</p>
-                        
+
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-hover">
                                         <thead class="table-light">
@@ -669,30 +685,31 @@
                                                         {{ \App\Models\User::find($data->manajemen_id)->name ?? 'Tidak Diketahui' }}
                                                     </td>
                                                     <td class="py-2 text-center">
-                                                        {{ $data->status == "Baru" ? "-" : $data->status }}
+                                                        {{ $data->status == 'Baru' ? '-' : $data->status }}
                                                     </td>
                                                     <td class="py-2 text-center">
-                                                        {{ $data->feedback ?? "Belum ada feedback" }}
+                                                        {{ $data->feedback ?? 'Belum ada feedback' }}
                                                     </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
                                 </div>
-                        
+
                                 <div class="form-group mt-4">
-                                    <label for="managerApproval" class="form-label">Staus Offering</label>
-                                    <select class="form-select w-25" id="managerApproval" aria-label="Pilih Status">
+                                    <label for="approval" class="form-label">Staus Offering</label>
+                                    <select class="form-select w-25" id="approval"  disabled name="approval"
+                                        aria-label="Pilih Status"
+                                        {{ $offering->status == 'Approve' || $offering->status == 'Reject' ? 'disabled' : '' }}>
                                         <option disabled selected>Pilih Status</option>
-                                        <option value="Approve">Approve</option>
-                                        <option value="Reject">Reject</option>
+                                        <option value="Approve" {{ $offering->status == 'Approve' || $offering->status == 'Onboard' ? 'selected' : '' }}>
+                                            Approve</option>
+                                        <option value="Reject" {{ $offering->status == 'Reject' ? 'selected' : '' }}>
+                                            Reject</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
-
-                        {{-- Tab Verifikasi --}}
-                        
 
                     </div>
 
@@ -703,8 +720,8 @@
                     <button type="button" class="btn btn-secondary" id="backButton"
                         style="display: none;">Kembali</button>
                     <button type="button" class="btn btn-primary" id="nextButton">Lanjut</button>
-                    <button type="submit" class="btn btn-success" form="addRequestForm" id="saveButton"
-                        style="display: none;">Simpan</button>
+                    {{-- <button type="submit" class="btn btn-success" form="saveOffering" id="saveButton"
+                        style="display: none;">Selesai</button> --}}
 
                 </div>
 
@@ -717,7 +734,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -833,6 +849,56 @@
                     `);
                     });
 
+                    //salary
+                    document.getElementById('verifikasi_minimalNominal').value = document.getElementById(
+                            'minimalNominal')
+                        .value;
+
+                    document.getElementById('verifikasi_maximalNominal').value = document.getElementById(
+                            'maximalNominal')
+                        .value;
+
+                    document.getElementById('verifikasi_ket_salary').value = document.getElementById(
+                            'ket_salary')
+                        .value;
+
+                    document.getElementById('verifikasi_offeringSalary').value = document.getElementById(
+                            'offeringSalary')
+                        .value;
+
+                    document.getElementById('verifikasi_ket_offeringSalary').value = document.getElementById(
+                            'ket_offeringSalary')
+                        .value;
+
+                    document.getElementById('verifikasi_pph21').checked = document.getElementById(
+                            'pph21')
+                        .checked;
+
+                    document.getElementById('verifikasi_ket_pph21').value = document.getElementById(
+                            'ket_pph21')
+                        .value;
+
+                    document.getElementById('verifikasi_bpjs_ket').checked = document.getElementById(
+                            'bpjs_ket')
+                        .checked;
+
+                    document.getElementById('verifikasi_ket_bpjsket').value = document.getElementById(
+                            'ket_bpjsket')
+                        .value;
+
+                    document.getElementById('verifikasi_bpjs_kes').checked = document.getElementById(
+                            'bpjs_kes')
+                        .checked;
+
+                    document.getElementById('verifikasi_ket_bpjskes').value = document.getElementById(
+                            'ket_bpjskes')
+                        .value;
+
+                    //approval
+                    document.getElementById('verifikasi_approval').value = document.getElementById(
+                            'approval')
+                        .value;
+
                 } else {
                     backButton.style.display = 'inline-block';
                     nextButton.style.display = 'inline-block';
@@ -883,5 +949,79 @@
             }
         });
     </script>
+
+    <script>
+        document.getElementById('addFasilitasStageButton').addEventListener('click', function() {
+            const container = document.getElementById('fasilitasStageContainer');
+
+            const newStage = `
+        <tr class="fasilitas-stage">
+              <input name="fasilitas_id[]" value="0" hidden>
+            <td>
+                <select class="form-control" name="fasilitas[]" required>
+                    <option value="" disabled selected>Pilih Fasilitas</option>
+                    <option value="Tunjangan Makan">Tunjangan Makan</option>
+                    <option value="Tunjangan Lembur">Tunjangan Lembur</option>
+                    <option value="Tunjangan Cuti">Tunjangan Cuti</option>
+                    <option value="Tunjangan Kesehatan">Tunjangan Kesehatan</option>
+                    <option value="Tunjangan Kacamata">Tunjangan Kacamata</option>
+                </select>
+            </td>
+            <td>
+                <input type="text" class="form-control" name="ket_fasilitas[]" placeholder="Masukkan keterangan" />
+            </td>
+            <td class="text-center align-middle">
+                <button type="button" class="btn btn-danger removeStageButton">
+                    <i class="fas fa-trash-alt removeStageButton"></i>
+                </button>
+            </td>
+        </tr>           
+    `;
+            container.insertAdjacentHTML('beforeend', newStage);
+        });
+
+        // Hapus Tahapan Wawancara
+        document.getElementById('fasilitasStageContainer').addEventListener('click', function(e) {
+            if (e.target.classList.contains('removeStageButton')) {
+                e.target.closest('.fasilitas-stage').remove();
+            }
+        });
+    </script>
+
+    <script>
+        function formatRupiah(value) {
+            if (!value) return '';
+            return value.replace(/\D/g, '') // Remove non-numeric characters
+                .replace(/\B(?=(\d{3})+(?!\d))/g, '.'); // Add periods for thousands
+        }
+
+        document.getElementById('offeringSalary').addEventListener('input', function() {
+            const minSalary = parseInt(document.getElementById('minimalNominal').value || 0, 10);
+            const maxSalary = parseInt(document.getElementById('maximalNominal').value || 0, 10);
+
+            let offeringSalary = this.value.replace(/\D/g, ''); // Hanya angka
+            const formattedValue = formatRupiah(offeringSalary);
+            this.value = `${formattedValue}`;
+
+            offeringSalary = parseInt(offeringSalary || 0, 10); // Hanya angka
+
+            const errorElement = document.getElementById('offeringSalaryError');
+
+            this.classList.remove('is-invalid');
+            errorElement.classList.add('d-none');
+            errorElement.textContent = '';
+
+            if (offeringSalary < minSalary) {
+                this.classList.add('is-invalid');
+                errorElement.classList.remove('d-none');
+                errorElement.textContent = 'Offering salary tidak boleh kurang dari minimal salary.';
+            } else if (offeringSalary > maxSalary) {
+                this.classList.add('is-invalid');
+                errorElement.classList.remove('d-none');
+                errorElement.textContent = 'Offering salary tidak boleh lebih dari maximal salary.';
+            }
+        });
+    </script>
+
 
 @endsection

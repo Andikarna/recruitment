@@ -163,6 +163,22 @@ class InterviewController extends Controller
         $interviewId->updated_by = Auth::user()->name;
         $interviewId->save();
 
+        if($status == "Diterima" && $interviewId->interview_progress == "Wawancara Final"){
+            $interviewId->status = "Selesai";
+            $interviewId->updated_date = Carbon::now('Asia/Jakarta');
+            $interviewId->updated_id = Auth::user()->id;
+            $interviewId->updated_by = Auth::user()->name;
+            $interviewId->save();
+
+            $interviewDetail->interview_status = "Diterima";
+            $interviewDetail->updated_date = Carbon::now('Asia/Jakarta');
+            $interviewDetail->updated_id = Auth::user()->id;
+            $interviewDetail->updated_by = Auth::user()->name;
+            $interviewDetail->save();
+
+            return redirect('/interview');
+        }
+
         if ($status == "Setuju") {
             $interviewId->interview_progress = $interviewNextStepId->name_progress;
             $interviewId->interview_date = null;

@@ -49,6 +49,10 @@ Route::get('/offering', action: [OfferingController::class, 'offering'])->name('
 Route::post('/offering/addApporval/{id}', action: [OfferingController::class, 'addApproval'])->name('addApproval')->middleware('auth');
 Route::get('/offering/detail/{id}', [OfferingController::class, 'detailOffering'])->name('detailOffering')->middleware('auth');
 Route::get('/offering/update/{id}', [OfferingController::class, 'updatedOffering'])->name('updateOffering')->middleware('auth');
+Route::post('/offering/save/{id}', [OfferingController::class, 'saveOffering'])->name('saveOffering')->middleware('auth');
 
-
+Route::post('/onboarding/add/{id}', [OnboardingController::class, 'addOnboarding'])->name('addOnboarding')->middleware('auth');
 Route::get('/onboarding', [OnboardingController::class, 'onboarding'])->name('onboarding')->middleware('auth');
+Route::get('/onboarding/update/{id}', [OnboardingController::class, 'updateOnboarding'])->name('updateOnboarding')->middleware('auth');
+Route::put('/onboarding/save/{id}', [OnboardingController::class, 'saveOnboarding'])->name('saveOnboarding')->middleware('auth');
+Route::get('/onboarding/detail/{id}', [OnboardingController::class, 'detailOnboarding'])->name('detailOnboarding')->middleware('auth');

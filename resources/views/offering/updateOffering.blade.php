@@ -147,7 +147,7 @@
 
 @section('content')
     <div class="row bg-white p-3" style="border-radius: 20px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
-        <form id="addRequestForm" action="" method="POST">
+        <form id="saveOffering" action="{{ route('saveOffering', [$offering->id]) }}" method="POST">
             @csrf
             <div style="display: flex; flex-direction: column; p-0 m-0">
                 <div class="modal-header d-flex justify-content-between align-items-center">
@@ -713,11 +713,11 @@
                                 </div>
 
                                 <div class="form-group mt-4">
-                                    <label for="managerApproval" class="form-label">Staus Offering</label>
-                                    <select class="form-select w-25" id="managerApproval" aria-label="Pilih Status">
+                                    <label for="approval" class="form-label">Staus Offering</label>
+                                    <select class="form-select w-25" id="approval" name="approval" aria-label="Pilih Status" {{ $offering->status == "Approve" || $offering->status == "Reject"  ? "disabled" : '' }}>
                                         <option disabled selected>Pilih Status</option>
-                                        <option value="Approve">Approve</option>
-                                        <option value="Reject">Reject</option>
+                                        <option value="Approve" {{ $offering->status == "Approve" ? "selected" : '' }}>Approve</option>
+                                        <option value="Reject" {{ $offering->status == "Reject" ? "selected" : '' }}>Reject</option>
                                     </select>
                                 </div>
                             </div>
@@ -991,6 +991,123 @@
                                 <tbody id="fasilitasStageContainerVerification">
                                 </tbody>
                             </table>
+
+                            {{-- wawancara --}}
+                            <div>
+                                <h3 class="pt-4">Wawancara</h3>
+                                <p>Tahapan yang akan dilalui oleh kandidat</p>
+                                @foreach ($interviewDetail as $data)
+                                    @if ($data->interview_status == 'Baru' || $data->interview_status == 'Diterima')
+                                        <h5 class="pt-2">{{ $data->name_progress }}</h5>
+                                        <div class="section-line"></div>
+                                        <div class="row mb-3">
+
+                                            <div class="col-md-4">
+                                                <label for="interview_date" class="form-label">Tanggal Wawancara</label>
+                                                <input class="form-control" type="date" id="interview_date" disabled
+                                                    name="interview_date" disabled
+                                                    value="{{ $data->interview_date ? \Carbon\Carbon::parse($data->interview_date)->format('Y-m-d') : '' }}">
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="interview_time" class="form-label">Jam Wawancara</label>
+                                                <input class="form-control" type="time" id="interview_time" disabled
+                                                    disabled name="interview_time" value="{{ $data->interview_time }}">
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="interview_user" class="form-label">User</label>
+                                                <input class="form-control" type="text" id="interview_user" disabled
+                                                    disabled name="interview_user" placeholder="Masukan nama user"
+                                                    value="{{ $data->user }}">
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+
+                                            <div class="col-md-4">
+                                                <label for="interview_file" class="form-label">Dokumen</label>
+                                                <input class="form-control" type="file" id="interview_file" disabled
+                                                    disabled name="interview_file" value="{{ $data->file }}">
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="interview_client" class="form-label">Klien</label>
+                                                <input class="form-control" type="text" id="interview_client" disabled
+                                                    name="interview_client"
+                                                    value="{{ $data->name_progress == 1 ? 'Ya' : 'Tidak' }}">
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="interview_link" class="form-label">Url Link</label>
+                                                <input class="form-control" type="text" id="interview_link" disabled
+                                                    disabled name="interview_link" placeholder="Masukan Link Url"
+                                                    value="{{ $data->url }}">
+                                            </div>
+                                        </div>
+
+                                        @if ($data->interview_date != null)
+                                            <div class="row mb-3">
+                                                <div class="col-md-4">
+                                                    <label for="interview_status" class="form-label">Status
+                                                        Wawancara</label>
+                                                    <div class="custom-select-wrapper">
+                                                        <select class="form-control" id="interview_status" disabled
+                                                            name="interview_status" disabled>
+                                                            <option value="Pilih status wawancara" selected>Pilih status
+                                                                wawancara
+                                                            </option>
+                                                            <option value="Ditolak"
+                                                                {{ $data->interview_status == 'Ditolak' ? 'selected' : '' }}>
+                                                                Ditolak</option>
+                                                            <option value="Reschedule"
+                                                                {{ $data->interview_status == 'Reschedule' ? 'selected' : '' }}>
+                                                                Reschedule</option>
+                                                            <option value="Setuju"
+                                                                {{ $data->interview_status == 'Setuju' ? 'selected' : '' }}>
+                                                                Setuju</option>
+                                                            <option value="Diterima"
+                                                                {{ $data->interview_status == 'Diterima' ? 'selected' : '' }}>
+                                                                Diterima</option>
+                                                        </select>
+                                                        <i class="fas fa-chevron-down select-icon"></i>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4" style="display: none;" id="value_wrapper">
+                                                    <label for="interview_value" class="form-label">Nilai</label>
+                                                    <input class="form-control" type="text" id="interview_value"
+                                                        name="interview_value" value="" disabled>
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                        <div class="row mb-3">
+                                            <div class="col-md-12">
+                                                <label for="interview_ket" class="form-label">Keterangan</label>
+                                                <input class="form-control" type="text" id="interview_ket"
+                                                    name="interview_ket" disabled value="{{ $data->description }}">
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </div>
+
+                            {{-- offering --}}
+                            <div>
+                                <h3 class="pt-4">Offering</h3>
+                                <p class="mb-4">Informasi approval manajemen untuk kandidat</p>
+
+                                <div class="form-group mt-4">
+                                    <label for="managerApproval" class="form-label">Staus Offering</label>
+                                    <select class="form-select w-25" id="verifikasi_approval" aria-label="Pilih Status"
+                                        disabled>
+                                        <option disabled selected>Pilih Status</option>
+                                        <option value="Approve">Approve</option>
+                                        <option value="Reject">Reject</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -1002,7 +1119,7 @@
                     <button type="button" class="btn btn-secondary" id="backButton"
                         style="display: none;">Kembali</button>
                     <button type="button" class="btn btn-primary" id="nextButton">Lanjut</button>
-                    <button type="submit" class="btn btn-success" form="addRequestForm" id="saveButton"
+                    <button type="submit" class="btn btn-success" form="saveOffering" id="saveButton"
                         style="display: none;">Simpan</button>
 
                 </div>
@@ -1016,7 +1133,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -1177,6 +1293,10 @@
                             'ket_bpjskes')
                         .value;
 
+                    //approval
+                    document.getElementById('verifikasi_approval').value = document.getElementById(
+                            'approval')
+                        .value;
 
                 } else {
                     backButton.style.display = 'inline-block';

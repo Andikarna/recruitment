@@ -96,7 +96,7 @@
                         <th class="nowrap">Kualifikasi</th>
                         <th class="nowrap">Proyek</th>
                         <th class="nowrap">Jenis Wawancara</th>
-                        <th class="nowrap">Tanggal</th>
+                        <th class="nowrap text-center">Tanggal</th>
                         <th class="nowrap text-center">Status</th>
                         <th class="actions-column text-center bg-white" style="min-width: 20px">Aksi</th>
                     </tr>
@@ -115,7 +115,7 @@
                             </td>
                             <td class="nowrap align-middle text-center">{{ $data->interview_progress ?: '-' }}</td>
                             <td class="nowrap align-middle text-center">
-                                {{ $data->interview_date ? \Carbon\Carbon::parse($data->interview_date)->format('Y-m-d') : '-' }}
+                                {{ $data->created_date ? \Carbon\Carbon::parse($data->created_date)->format('d M Y') : '-' }}
                             </td>
                             <th class="align-middle text-center">
                                 @if ($data->status == 'Baru')
@@ -127,12 +127,15 @@
                                 @elseif($data->status == 'Diproses')
                                     <button class="btn btn-warning btn-md text-white shadow-sm"
                                         style="width: 100px; font-size: 0.875rem;">Diproses</button>
-                                @elseif($data->status == 'Selesai')
+                                @elseif($data->status == 'Approve')
                                     <button class="btn btn-success btn-md text-white shadow-sm"
-                                        style="width: 100px; font-size: 0.875rem;">Selesai</button>
+                                        style="width: 100px; font-size: 0.875rem;">Approve</button>
+                                @elseif($data->status == 'Onboard')
+                                    <button class="btn btn-success btn-md text-white shadow-sm"
+                                        style="width: 100px; font-size: 0.875rem;">Onboard</button>
                                 @else
-                                    <button class="btn btn-secondary btn-md text-white shadow-sm"
-                                        style="width: 100px; font-size: 0.875rem;">Unknown</button>
+                                    <button class="btn btn-danger btn-md text-white shadow-sm"
+                                        style="width: 100px; font-size: 0.875rem;">Reject</button>
                                 @endif
                             </th>
 

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ResourceDetail extends Model
 {
     use HasFactory;
-    
+
     public $table = 'resource_detail';
     public $timestamps = false;
     protected $fillable = [
@@ -33,4 +33,5 @@ class ResourceDetail extends Model
     {
         return $this->belongsTo(Resource::class, 'resource_id');
     }
+
 }

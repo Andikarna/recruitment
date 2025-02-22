@@ -209,12 +209,6 @@
                                 type="button" role="tab" aria-controls="interview"
                                 aria-selected="true">Wawancara</button>
                         </li>
-
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="additional-tab" data-bs-toggle="tab" data-bs-target="#additional"
-                                type="button" role="tab" aria-controls="additional" aria-selected="false">Verifikasi
-                                Informasi</button>
-                        </li>
                     </ul>
 
 
