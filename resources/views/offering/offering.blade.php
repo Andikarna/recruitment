@@ -63,6 +63,8 @@
     </style>
 @endsection
 
+@section('title-content',"Offering")
+
 @section('content')
     <div class="row bg-white p-3" style="border-radius: 20px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
         <div class="col-12 d-flex justify-content-between align-items-center">
@@ -133,6 +135,9 @@
                                 @elseif($data->status == 'Onboard')
                                     <button class="btn btn-success btn-md text-white shadow-sm"
                                         style="width: 100px; font-size: 0.875rem;">Onboard</button>
+                                @elseif($data->status == 'Selesai')
+                                    <button class="btn btn-success btn-md text-white shadow-sm"
+                                        style="background-color: #155724; width: 100px; font-size: 0.875rem;">Selesai</button>
                                 @else
                                     <button class="btn btn-danger btn-md text-white shadow-sm"
                                         style="width: 100px; font-size: 0.875rem;">Reject</button>

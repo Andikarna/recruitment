@@ -63,6 +63,8 @@
     </style>
 @endsection
 
+@section('title-content',"Permintaan SDM")
+
 @section('content')
     <div class="row bg-white p-3" style="border-radius: 20px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
         <div class="col-12 d-flex justify-content-between align-items-center">
@@ -141,15 +143,15 @@
                                 @if ($data->status == 'Baru')
                                     <button class="btn btn-primary btn-md text-white shadow-sm"
                                         style="width: 100px; font-size: 0.875rem;">Baru</button>
+                                @elseif($data->status == 'Penugasan' && $data->resource_detail?->quantity == $data->resource_detail?->fulfilled)
+                                    <button class="btn btn-success btn-md text-white shadow-sm"
+                                        style="background-color: #155724; width: 100px; font-size: 0.875rem;">Selesai</button>
                                 @elseif($data->status == 'Penugasan')
                                     <button class="btn btn-warning btn-md text-white shadow-sm"
                                         style="width: 100px; font-size: 0.875rem;">Penugasan</button>
                                 @elseif($data->status == 'Diproses')
                                     <button class="btn btn-warning btn-md text-white shadow-sm"
                                         style="width: 100px; font-size: 0.875rem;">Diproses</button>
-                                @elseif($data->status == 'Selesai')
-                                    <button class="btn btn-success btn-md text-white shadow-sm"
-                                        style="width: 100px; font-size: 0.875rem;">Selesai</button>
                                 @else
                                     <button class="btn btn-secondary btn-md text-white shadow-sm"
                                         style="width: 100px; font-size: 0.875rem;">Unknown</button>
@@ -158,13 +160,9 @@
 
                             <td class="actions-column align-middle text-center bg-white">
                                 <div class="dropdown" style="position: relative;">
-                                    <i class="bi bi-three-dots hover icon-behind" 
-                                        id="dropdownMenuButton" 
-                                        data-bs-toggle="dropdown" 
-                                        aria-expanded="false" 
-                                        style="cursor: pointer;"></i>
-                                    <ul class="dropdown-menu" 
-                                        aria-labelledby="dropdownMenuButton" 
+                                    <i class="bi bi-three-dots hover icon-behind" id="dropdownMenuButton"
+                                        data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;"></i>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
                                         style="position: absolute; left: -100%; min-width: 200px;">
                                         <li>
                                             <a class="dropdown-item" href="{{ route('detailRequester', [$data->id]) }}">
@@ -179,7 +177,7 @@
                                     </ul>
                                 </div>
                             </td>
-                            
+
 
                         </tr>
                     @endforeach

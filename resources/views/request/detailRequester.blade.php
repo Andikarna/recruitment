@@ -67,6 +67,8 @@
     </style>
 @endsection
 
+@section('title-content',"Permintaan SDM")
+
 @section('content')
     <!-- Modal Tambah Permintaan -->
 

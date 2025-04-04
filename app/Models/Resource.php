@@ -30,4 +30,9 @@ class Resource extends Model
     protected $casts = [
         'target_date' => 'datetime',
     ];
+
+    public function resource_detail()
+    {
+        return $this->hasOne(ResourceDetail::class, 'resource_id', 'id');
+    }
 }

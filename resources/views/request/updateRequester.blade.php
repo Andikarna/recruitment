@@ -76,16 +76,18 @@
     </style>
 @endsection
 
+@section('title-content', 'Permintaan SDM')
+
 @section('content')
 
     <div class="modal-content" style="display: flex; flex-direction: column; p-0 m-0">
         <div class="modal-header d-flex justify-content-start align-items-center gap-2">
-            <div>
-                <a href="/requester" class="btn btn-link p-0" aria-label="Back">
-                    <i class="bi bi-arrow-left-circle" style="font-size: 1.5rem;"></i>
-                </a>
-                <h5 class="modal-title" id="addRequestModalLabel">Update Permintaan</h5>
-            </div>
+
+            <a href="/requester" class="btn btn-link p-0" aria-label="Back">
+                <i class="bi bi-arrow-left-circle" style="font-size: 1.5rem;"></i>
+            </a>
+            <h5 class="modal-title" id="addRequestModalLabel">Update Permintaan</h5>
+
         </div>
         <div class="modal-body" style="overflow-y: auto; flex: 1;">
 
@@ -796,7 +798,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const nextButton = document.getElementById('nextButton');

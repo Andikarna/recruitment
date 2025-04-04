@@ -32,6 +32,8 @@
     </style>
 @endsection
 
+@section('title-content',"Database Kandidat")
+
 @section('content')
 
 

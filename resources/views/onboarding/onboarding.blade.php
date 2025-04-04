@@ -16,6 +16,9 @@
     </style>
 @endsection
 
+
+@section('title-content',"Onboarding")
+
 @section('content')
     <div class="row bg-white p-3" style="border-radius: 20px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
         <div class="col-12 d-flex justify-content-between align-items-center">
@@ -67,9 +70,21 @@
                                 {{ $data->resourceDetail->qualification ?? 'Qualification not available' }}</td>
                             <td class="text-center align-middle">
                                 {{ $data->resource->project ?? 'Qualification not available' }}</td>
+
                             <th class="align-middle text-center">
-                                <button class="btn btn-primary btn-md text-white shadow-sm"
-                                    style="width: 100px; font-size: 0.875rem;">{{ $data->status }}</button>
+                                @if ($data->status == 'Baru')
+                                    <button class="btn btn-primary btn-md text-white shadow-sm"
+                                        style="width: 100px; font-size: 0.875rem;">Baru</button>
+                                @elseif($data->status == 'Pengecekan')
+                                    <button class="btn btn-warning btn-md text-white shadow-sm"
+                                        style="width: 100px; font-size: 0.875rem;">Pengecekan</button>
+                                @elseif($data->status == 'Selesai')
+                                    <button class="btn btn-success btn-md text-white shadow-sm"
+                                        style="background-color: #155724; width: 100px; font-size: 0.875rem;">Selesai</button>
+                                @else
+                                    <button class="btn btn-danger btn-md text-white shadow-sm"
+                                        style="width: 100px; font-size: 0.875rem;">Cancel</button>
+                                @endif
                             </th>
 
                             <td class="actions-column align-middle text-center bg-white">
@@ -80,7 +95,7 @@
                                         style="position: absolute; left: -100%; min-width: 200px;">
                                         <li>
                                             <a class="dropdown-item fw-medium"
-                                                href="{{ route('detailCandidate', [$data->id]) }}">
+                                                href="{{ route('detailOnboarding', [$data->id]) }}">
                                                 <i class="bi bi-eye me-2"></i>Lihat Data
                                             </a>
                                         </li>
@@ -93,17 +108,24 @@
                                         </li>
 
                                         <li>
-                                            <a class="dropdown-item text-danger fw-medium" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#inputModal" data-id="{{ $data->id }}">
-                                                <i class="bi bi-x-circle me-2"></i>Cancel Onboarding
-                                            </a>
+                                            <form action="{{ route('cancelOnboarding', [$data->id]) }}" method="POST"
+                                                style="display: inline;">
+                                                @csrf
+                                                <button type="submit" class="dropdown-item text-danger fw-medium"">
+                                                    <i class="bi bi-x-circle me-2"></i>Cancel Onboarding
+                                                </button>
+                                            </form>
                                         </li>
 
                                         <li>
-                                            <a class="dropdown-item text-success fw-medium"
-                                                href="{{ route('unFavouriteCandidate', [$data->id]) }}">
-                                                <i class="bi bi-send me-2"></i>Send to HRM
-                                            </a>
+                                            <form action="{{ route('sendHrm', [$data->id]) }}" method="POST"
+                                                style="display: inline;">
+                                                @csrf
+                                                <button type="submit" class="dropdown-item text-success fw-medium"
+                                                    style="border: none; background: none;">
+                                                    <i class="bi bi-send me-2"></i>Send to HRM
+                                                </button>
+                                            </form>
                                         </li>
 
                                     </ul>

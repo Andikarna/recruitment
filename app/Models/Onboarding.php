@@ -46,6 +46,11 @@ class Onboarding extends Model
         'updated_id',
         'updated_by'
     ];
+
+    public function candidate()
+    {
+        return $this->hasOne(Candidate::class, 'id', 'candidate_id');
+    }
     
     public function resource()
     {

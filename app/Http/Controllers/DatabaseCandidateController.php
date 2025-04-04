@@ -7,6 +7,7 @@ use App\Models\Resource;
 use App\Models\TaksList;
 use App\Models\Candidate;
 use Illuminate\Http\Request;
+use App\Models\Notifications;
 use App\Models\ResourceDetail;
 use Illuminate\Support\Facades\Auth;
 
@@ -114,5 +115,33 @@ class DatabaseCandidateController extends Controller
         $resourceId = $request->input('resource_id');
         $positions = ResourceDetail::where('resource_id', $resourceId)->pluck('position', 'id');
         return response()->json($positions);
+    }
+
+    public function requestCandidate($id)
+    {
+        $candidate = Candidate::find($id);
+
+        $existNotification = Notifications::where('action_id', $id)
+        ->where('type','Request')
+        ->first();
+        
+        if ($existNotification == null) {
+            $notification = new Notifications();
+            $notification->type = "Request";
+            $notification->user_id = $candidate->isFavoriteId;
+            $notification->user_name = $candidate->isFavoriteName;
+            $notification->action_id = $id;
+            $notification->title = "Request Kandidat";
+            $notification->description = Auth::user()->name . " ingin meminta kandidat bernama " . $candidate->name;
+            $notification->isRead = false;
+            $notification->status = "Baru";
+            $notification->created_date = Carbon::now('Asia/Jakarta');
+            $notification->created_id = Auth::user()->id;
+            $notification->created_by = Auth::user()->name;
+            $notification->save();
+        }
+
+
+        return redirect('candidateDatabase');
     }
 }

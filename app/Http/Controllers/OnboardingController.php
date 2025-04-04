@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use view;
 use Carbon\Carbon;
 use App\Models\Skill;
 use App\Models\Family;
@@ -10,6 +11,7 @@ use App\Models\Resource;
 use App\Models\Candidate;
 use App\Models\Interview;
 use App\Models\Languange;
+use App\Models\Reference;
 use App\Models\Onboarding;
 use Illuminate\Http\Request;
 use App\Models\OfferingSalary;
@@ -22,6 +24,7 @@ use App\Models\OfferingFasility;
 use App\Models\WorkingExperience;
 use App\Models\EducationNonFormal;
 use Illuminate\Support\Facades\Auth;
+use App\Models\AdditionalInformation;
 
 class OnboardingController extends Controller
 {
@@ -88,12 +91,37 @@ class OnboardingController extends Controller
             $data->save();
         }
 
-        return route('onboarding');
+        return redirect('onboarding');
     }
 
     public function detailOnboarding($id)
     {
-        return view('onboarding.detailonboarding');
+        $onboarding = Onboarding::find($id);
+        $resource = Resource::where('id', $onboarding->resource_id)->first();
+        $candidate = Candidate::where('id', $onboarding->candidate_id)
+            ->with('emergencyContact')
+            ->with('family')
+            ->with('education_formal')
+            ->with('education_nonformal')
+            ->with('skill')
+            ->with('languange')
+            ->with('working_experience')
+            ->with('reference')
+            ->with('additional_information')
+            ->first();
+        $offering = Offering::where('interview_id', $onboarding->interivew_id)->first();
+
+        $offeringSalary = OfferingSalary::where('offering_id', $offering->id)->first();
+        $offeringFasilitas = OfferingFasility::where('offering_id', $offering->id)->get();
+
+        $family = $candidate->family?->get() ?? collect();;
+        $education_formal = $candidate->education_formal?->get() ?? collect();
+        $education_nonformal = $candidate->education_nonformal?->get() ?? collect();
+        $skill = $candidate->skill?->get() ?? collect();
+        $languange = $candidate->languange?->get() ?? collect();
+        $working_experience = $candidate->working_experience?->get() ?? collect();
+
+        return view('onboarding.detailonboarding', compact('onboarding', 'offeringSalary', 'offeringFasilitas', 'candidate', 'resource', 'family', 'education_formal', 'education_nonformal', 'skill', 'languange','working_experience'));
     }
 
     public function updateOnboarding($id)
@@ -108,6 +136,8 @@ class OnboardingController extends Controller
             ->with('skill')
             ->with('languange')
             ->with('working_experience')
+            ->with('reference')
+            ->with('additional_information')
             ->first();
         $offering = Offering::where('interview_id', $onboarding->interivew_id)->first();
 
@@ -142,10 +172,10 @@ class OnboardingController extends Controller
         $onboarding->mobile_phone = $request->mobile_phone;
         $onboarding->number_id = $request->number_id;
         $onboarding->number_tax = $request->number_tax;
-        //$onboarding->laptop = $request->laptop;
-        // $onboarding->join_date = $request->join_date;
-        // $onboarding->start_contract = $request->start_contract;
-        // $onboarding->end_contract = $request->end_contract;
+        $onboarding->laptop = $request->asset_laptop;
+        $onboarding->join_date = $request->join_date;
+        $onboarding->start_contract = $request->start_contract;
+        $onboarding->end_contract = $request->end_contract;
         // $onboarding->description = $request->description;
         $onboarding->status = "Pengecekan";
         $onboarding->updated_date = Carbon::now('Asia/Jakarta');
@@ -503,7 +533,6 @@ class OnboardingController extends Controller
             ];
         };
 
-        //dd($workingExperience);
 
         if ($workingExperience != null) {
 
@@ -562,47 +591,101 @@ class OnboardingController extends Controller
         }
 
 
+        //refrensi
+        $referensi = Reference::where('candidate_id', $onboarding->candidate_id)->first();
+        if($referensi != null){
+            $referensi->name = $request->source_refrences;
+            $referensi->number = $request->phone_refrences;
+            $referensi->position = $request->position_refrences;
+            $referensi->relation = $request->relation_refrences;
+            $referensi->updated_date = Carbon::now('Asia/Jakarta');
+            $referensi->updated_id = Auth::user()->id;
+            $referensi->updated_by = Auth::user()->name;
+            $referensi->save();
+        }else{
+            $newReference = new Reference();
+            $newReference->candidate_id = $onboarding->candidate_id;
+            $newReference->name = $request->source_refrences;
+            $newReference->number = $request->phone_refrences;
+            $newReference->position = $request->position_refrences;
+            $newReference->relation = $request->relation_refrences;
+            $newReference->created_date = Carbon::now('Asia/Jakarta');
+            $newReference->created_id = Auth::user()->id;
+            $newReference->created_by = Auth::user()->name;
+            $newReference->save();
+        }
 
-        //     "workingId" => array:1 [▼
-        //     0 => "1"
-        //   ]
-        //   "company_name_working" => array:1 [▼
-        //     0 => "PT Adidata Informatika"
-        //   ]
-        //   "industry_working" => array:1 [▼
-        //     0 => "IT"
-        //   ]
-        //   "address_working" => array:1 [▼
-        //     0 => "Jakarta Barat"
-        //   ]
-        //   "status_working" => array:1 [▼
-        //     0 => "Selesai"
-        //   ]
-        //   "start_working" => array:1 [▼
-        //     0 => "2025-02-28"
-        //   ]
-        //   "end_working" => array:1 [▼
-        //     0 => "2025-02-25"
-        //   ]
-        //   "description_working" => array:1 [▼
-        //     0 => "wad awd aw"
-        //   ]
-        //   "allowance_working" => array:1 [▼
-        //     0 => "BPJS BPJSKES LAPTOP MAKAN KACAMATA"
-        //   ]
-        //   "salary_working" => array:1 [▼
-        //     0 => "7500000"
-        //   ]
-        //   "project_working" => array:1 [▼
-        //     0 => "wddwwdwdwdw"
-        //   ]
-        //   "reason_working" => array:1 [▼
-        //     0 => "Selesai Kontrak"
-        //   ]
+
+        //aditional
+        $additional = AdditionalInformation::where('candidate_id', $onboarding->candidate_id)->first();
+        if($additional != null){
+            $additional->source = $request->source_aditional;
+            $additional->been_treated = $request->been_treated_aditional;
+            $additional->disease = $request->been_treated;
+            $additional->strength = $request->strength_aditional;
+            $additional->weakness =  $request->weakness_aditional;  
+            $additional->against_weakness = $request->against_weakness_aditional;
+            $additional->updated_date = Carbon::now('Asia/Jakarta');
+            $additional->updated_id = Auth::user()->id;
+            $additional->updated_by = Auth::user()->name;
+            $additional->save();
+        }else{
+            $newAdditional = new AdditionalInformation();
+            $newAdditional->candidate_id = $onboarding->candidate_id;
+            $newAdditional->source = $request->source_aditional;
+            $newAdditional->been_treated = $request->been_treated_aditional;
+            $newAdditional->disease = $request->been_treated;
+            $newAdditional->strength = $request->strength_aditional;
+            $newAdditional->weakness =  $request->weakness_aditional;  
+            $newAdditional->against_weakness = $request->against_weakness_aditional;
+            $newAdditional->created_date = Carbon::now('Asia/Jakarta');
+            $newAdditional->created_id = Auth::user()->id;
+            $newAdditional->created_by = Auth::user()->name;
+            $newAdditional->save();
+        }
 
         $onboarding->save();
 
 
         return redirect('onboarding');
+    }
+
+    public function cancelOnboarding($id){
+        $onboarding = Onboarding::find($id);
+        $onboarding->status = "Cancel";
+        $onboarding->save();
+
+        return redirect('/onboarding');
+    }
+
+    public function sendHrm($id){
+
+        $onboarding = Onboarding::find($id);
+        $onboarding->status = "Selesai";
+        $onboarding->updated_date = Carbon::now('Asia/Jakarta');
+        $onboarding->updated_id = Auth::user()->id;
+        $onboarding->updated_by = Auth::user()->name;
+        $onboarding->save();
+
+        $interview = Interview::where('id', $onboarding->interivew_id)->first();
+        $interview->status = "Selesai";
+        $interview->updated_date = Carbon::now('Asia/Jakarta');
+        $interview->updated_id = Auth::user()->id;
+        $interview->updated_by = Auth::user()->name;
+        $interview->save();
+
+        $offering = Offering::where('interview_id',$interview->id)->first();
+        $offering->status = "Selesai";
+        $offering->updated_date = Carbon::now('Asia/Jakarta');
+        $offering->updated_id = Auth::user()->id;
+        $offering->updated_by = Auth::user()->name;
+        $offering->save();
+
+        $resourceDetail = ResourceDetail::where('id', $onboarding->resource_detail_id)
+        ->where('resource_id', $onboarding->resource_id)->first();
+        $resourceDetail->fulfilled = ($resourceDetail->fulfilled ?? 0) + 1;
+        $resourceDetail->save();
+
+        return redirect('/onboarding');
     }
 }

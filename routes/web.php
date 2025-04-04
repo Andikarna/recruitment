@@ -8,8 +8,10 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TasklistController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InterviewController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RequesterController;
 use App\Http\Controllers\OnboardingController;
+use Illuminate\Notifications\Notification;
 
 Route::get('/api/user',[LoginController::class, 'user'])->name('user');
 
@@ -20,6 +22,8 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('/', [LoginController::class, 'login']);
 
 Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard')->middleware('auth');
+Route::get('/dashboardhr/getResource', [DashboardController::class, 'getResource'])->name('getResource')->middleware('auth');
+Route::get('/dashboardhr/getRecruiter/{resourceId}', [DashboardController::class, 'getDashboardHr'])->name('getDashboardHr')->middleware('auth');
 
 Route::get(uri: '/requester', action: [RequesterController::class, 'requester'])->name(name: 'requester')->middleware('auth');
 Route::post('/requester', [RequesterController::class, 'addResource'])->name('addResource');
@@ -36,6 +40,7 @@ Route::get('/candidateDatabase/updatedCandidate/{id}', action: [DatabaseCandidat
 Route::post('/candidateDatabase/saveCandidate/{id}', action: [DatabaseCandidateController::class, 'saveCandidate'])->name('saveCandidate')->middleware('auth');
 Route::get('/candidateDatabase/unFavouriteCandidate/{id}', action: [DatabaseCandidateController::class, 'unFavouriteCandidate'])->name('unFavouriteCandidate')->middleware('auth');
 Route::get('/candidateDatabase/inFavouriteCandidate/{id}', action: [DatabaseCandidateController::class, 'inFavouriteCandidate'])->name('inFavouriteCandidate')->middleware('auth');
+Route::get('/requestCandidate/{id}', action: [DatabaseCandidateController::class, 'requestCandidate'])->name('requestCandidate')->middleware('auth');
 
 Route::post('/resourceDetail', [DatabaseCandidateController::class, 'getPositionsByResource'])->name('getPositions')->middleware('auth');
 
@@ -56,3 +61,10 @@ Route::get('/onboarding', [OnboardingController::class, 'onboarding'])->name('on
 Route::get('/onboarding/update/{id}', [OnboardingController::class, 'updateOnboarding'])->name('updateOnboarding')->middleware('auth');
 Route::put('/onboarding/save/{id}', [OnboardingController::class, 'saveOnboarding'])->name('saveOnboarding')->middleware('auth');
 Route::get('/onboarding/detail/{id}', [OnboardingController::class, 'detailOnboarding'])->name('detailOnboarding')->middleware('auth');
+Route::post('/onboarding/sendhrm/{id}', [OnboardingController::class, 'sendHrm'])->name('sendHrm')->middleware('auth');
+Route::post('/onboarding/cancel/{id}', [OnboardingController::class, 'cancelOnboarding'])->name('cancelOnboarding')->middleware('auth');
+
+Route::put('/notification/readall', [NotificationController::class,'read_all'])->name('readAllNotification')->middleware('auth');
+Route::put('/notification/accept/{id}', [NotificationController::class,'accept'])->name('acceptNotification')->middleware('auth');
+Route::put('/notification/reject/{id}', [NotificationController::class,'reject'])->name('rejectNotification')->middleware('auth');
+ 

@@ -145,6 +145,8 @@
     </style>
 @endsection
 
+@section('title-content',"Wawancara Kandidat")
+
 @section('content')
     <div class="row bg-white p-3" style="border-radius: 20px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
         <form id="addRequestForm" action="{{ route('saveInterview', [$interview->id]) }}" method="POST">

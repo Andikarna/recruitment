@@ -145,6 +145,8 @@
     </style>
 @endsection
 
+@section('title-content',"Onboarding")
+
 @section('content')
     <div class="row bg-white p-3" style="border-radius: 20px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
         <form id="saveOnboarding" action="{{ route('saveOnboarding', $onboarding->id) }}" method="POST">
@@ -154,7 +156,7 @@
             <div style="display: flex; flex-direction: column; p-0 m-0">
                 <div class="modal-header d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center gap-2">
-                        <a href="/offering" class="btn btn-link p-0" aria-label="Back">
+                        <a href="/onboarding" class="btn btn-link p-0" aria-label="Back">
                             <i class="bi bi-arrow-left-circle" style="font-size: 1.5rem;"></i>
                         </a>
                         <h5 class="modal-title" id="addRequestModalLabel">Update Onboarding</h5>
@@ -813,13 +815,15 @@
                                                 <label for="company_name_working" class="form-label">Nama
                                                     Perusahaan</label>
                                                 <input type="text" class="form-control" id="company_name_working"
-                                                    name="company_name_working[]" placeholder="Nama Perusahaan" value="{{ $data->name }}">
+                                                    name="company_name_working[]" placeholder="Nama Perusahaan"
+                                                    value="{{ $data->name }}">
                                             </div>
 
                                             <div class="col-md-6">
                                                 <label for="industry_working" class="form-label">Industri</label>
                                                 <input type="text" class="form-control" id="industry_working"
-                                                    name="industry_working[]" placeholder="Industri" value="{{ $data->industry }}">
+                                                    name="industry_working[]" placeholder="Industri"
+                                                    value="{{ $data->industry }}">
                                             </div>
                                         </div>
 
@@ -827,7 +831,8 @@
                                             <div class="col-md-12">
                                                 <label for="address_working" class="form-label">Alamat Perusahan</label>
                                                 <input type="text" class="form-control" id="address_working"
-                                                    name="address_working[]" placeholder="Alamat Perusahaan" value="{{ $data->address }}">
+                                                    name="address_working[]" placeholder="Alamat Perusahaan"
+                                                    value="{{ $data->address }}">
                                             </div>
                                         </div>
 
@@ -842,7 +847,7 @@
                                                             {{ $data->status == 'Bekerja' ? 'selected' : '' }}>Bekerja
                                                         </option>
                                                         <option value="Selesai"
-                                                            {{ $data->status== 'Selesai' ? 'selected' : '' }}>Selesai
+                                                            {{ $data->status == 'Selesai' ? 'selected' : '' }}>Selesai
                                                         </option>
                                                     </select>
                                                     <span class="input-group-text"><i
@@ -856,14 +861,16 @@
                                                 <label for="start_working" class="form-label">Tanggal
                                                     Mulai Kerja</label>
                                                 <input type="date" class="form-control" id="start_working"
-                                                    name="start_working[]" value="{{ $data->start_date ? \Carbon\Carbon::parse($data->start_date)->format('Y-m-d') : '' }}">
+                                                    name="start_working[]"
+                                                    value="{{ $data->start_date ? \Carbon\Carbon::parse($data->start_date)->format('Y-m-d') : '' }}">
                                             </div>
 
                                             <div class="col-md-6 mt-3">
                                                 <label for="end_working" class="form-label">Tanggal
                                                     Selesai Kerja</label>
                                                 <input type="date" class="form-control" id="end_working"
-                                                    name="end_working[]" value="{{ $data->end_date ? \Carbon\Carbon::parse($data->end_date)->format('Y-m-d') : '' }}">
+                                                    name="end_working[]"
+                                                    value="{{ $data->end_date ? \Carbon\Carbon::parse($data->end_date)->format('Y-m-d') : '' }}">
                                             </div>
                                         </div>
 
@@ -880,13 +887,15 @@
                                             <div class="col-md-6">
                                                 <label for="allowance_working" class="form-label">Allowance</label>
                                                 <input type="text" class="form-control" id="allowance_working"
-                                                    name="allowance_working[]" placeholder="Masukan Allowance" value="{{ $data->allowance }}">
+                                                    name="allowance_working[]" placeholder="Masukan Allowance"
+                                                    value="{{ $data->allowance }}">
                                             </div>
 
                                             <div class="col-md-6">
                                                 <label for="salary_working" class="form-label">Gaji</label>
                                                 <input type="text" class="form-control" id="salary_working"
-                                                    name="salary_working[]" placeholder="Masukan Gaji" value="{{ $data->salary }}">
+                                                    name="salary_working[]" placeholder="Masukan Gaji"
+                                                    value="{{ $data->salary }}">
                                             </div>
                                         </div>
 
@@ -902,7 +911,8 @@
                                                 <label for="reason_working" class="form-label">Alasan Keluar
                                                     Perusahaan</label>
                                                 <input type="text" class="form-control" id="reason_working"
-                                                    name="reason_working[]" placeholder="Masukan Alasan" value="{{ $data->reason }}">
+                                                    name="reason_working[]" placeholder="Masukan Alasan"
+                                                    value="{{ $data->reason }}">
                                             </div>
                                         </div>
 
@@ -915,6 +925,159 @@
 
                                     </div>
                                 @endforeach
+                            </div>
+
+                            <div class="pt-4 d-flex justify-content-between">
+                                <h3>Refrensi & Rekomendasi</h3>
+                            </div>
+
+                            <div id="refrences-container">
+                                <div class="reference row mb-3 bordered rounded-lg shadow pt-3 pb-3"
+                                    class="row pt-3 pb-3">
+
+                                    <div class="col-md-6 pt-3">
+                                        <label for="source_refrences" class="form-label">Nama
+                                            Sumber</label>
+                                        <input type="text" class="form-control" id="source_refrences"
+                                            name="source_refrences" placeholder="Masukan Nama Sumber"
+                                            value="{{ $candidate->reference->name ?? '' }}">
+                                    </div>
+
+                                    <div class="col-md-6 pt-3">
+                                        <label for="phone_refrences" class="form-label">Nomor Handphone</label>
+                                        <input type="text" class="form-control" id="phone_refrences"
+                                            name="phone_refrences" placeholder="Masukan Nomor Handphone"
+                                            value="{{ $candidate->reference->number ?? '' }}">
+                                    </div>
+
+
+                                    <div class="col-md-6 pt-3">
+                                        <label for="position_refrences" class="form-label">Posisi</label>
+                                        <input type="text" class="form-control" id="position_refrences"
+                                            name="position_refrences" placeholder="Masukan Posisi"
+                                            value="{{ $candidate->reference->position ?? '' }}">
+                                    </div>
+
+                                    <div class="col-md-6 pt-3">
+                                        <label for="relation_refrences" class="form-label">Hubungan</label>
+                                        <input type="text" class="form-control" id="relation_refrences"
+                                            name="relation_refrences" placeholder="Masukan Hubungan"
+                                            value="{{ $candidate->reference->relation ?? '' }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pt-4 d-flex justify-content-between">
+                                <div>
+                                    <h3>Informasi Tambahan</h3>
+                                    <p>Informasi tambahan mengenai kandidat</p>
+                                </div>
+                            </div>
+
+                            <div id="additionInformation-container">
+                                <div class="working-member row mb-3 bordered rounded-lg shadow pt-3 pb-3">
+                                    <div class="col-md-6 pt-3">
+                                        <label for="source_aditional" class="form-label">Dimana anda menemukan lowongan
+                                            kerja ini?*</label>
+                                        <input type="text" class="form-control" id="source_aditional"
+                                            name="source_aditional" placeholder="Masukan sumber"
+                                            value="{{ $candidate->additional_information->source ?? '' }}">
+                                    </div>
+
+                                    <div class="col-md-6 pt-3">
+                                        <label for="been_treated_aditional" class="form-label">Pernah dirawat di rumah
+                                            sakit / memiliki penyakit serius?*</label>
+                                        <input type="text" class="form-control" id="been_treated_aditional"
+                                            name="been_treated_aditional" placeholder="Ya/Tidak"
+                                            value="{{ $candidate->additional_information->been_treated ?? '' }}">
+                                    </div>
+
+                                    <div class="col-md-12 pt-3">
+                                        <label for="disease_aditional" class="form-label">Beritahu kami penyakit
+                                            anda*</label>
+                                        <input type="text" class="form-control" id="disease_aditional"
+                                            name="been_treated" placeholder="Masukan Penyakit Yang dialami"
+                                            value="{{ $candidate->additional_information->disease ?? '' }}">
+                                    </div>
+
+                                    <div class="col-md-12 pt-3">
+                                        <label for="strength_aditional" class="form-label">Kelebihan anda*</label>
+                                        <textarea type="text" class="form-control" id="strength_aditional" name="strength_aditional"
+                                            placeholder="Masukan Kelebihan anda">{{ $candidate->additional_information->strength ?? '' }}</textarea>
+                                    </div>
+
+
+                                    <div class="col-md-12 pt-3">
+                                        <label for="weakness_aditional" class="form-label">Kelemahan anda*</label>
+                                        <textarea type="text" class="form-control" id="weakness_aditional" name="weakness_aditional"
+                                            placeholder="Masukan Kelemahan anda">{{ $candidate->additional_information->weakness ?? '' }}</textarea>
+                                    </div>
+
+
+                                    <div class="col-md-12 pt-3">
+                                        <label for="against_weakness_aditional" class="form-label">Bagaimana anda melawan
+                                            kelamahan anda?*</label>
+                                        <textarea type="text" class="form-control" id="against_weakness_aditional" name="against_weakness_aditional"
+                                            placeholder="Bagaimana cara anda melawan kelamahan anda">{{ $candidate->additional_information->against_weakness ?? '' }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pt-4 d-flex justify-content-between">
+                                <div>
+                                    <h3>Tanggal OnBoarding</h3>
+                                    <p>Informasi mengenai tanggal masuk kandidat</p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="row mb-3 bordered rounded-lg shadow pt-3 pb-3" class="row pt-3 pb-3">
+
+                                    <div class="col-md-6">
+                                        <label for="source_refrences" class="form-label">Tanggal Masuk kandidat</label>
+                                        <input type="date" class="form-control" id="join_date" name="join_date"
+                                            value="{{ $onboarding->join_date ? \Carbon\Carbon::parse($onboarding->join_date)->format('Y-m-d') : '' }}">
+                                    </div>
+
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Asset</label>
+                                        <div class="d-flex justify-content-center align-middle text-center">
+                                            <div>
+                                                <input type="checkbox" class="form-check-input me-2" id="is_laptop"
+                                                    name="is_laptop" {{ $onboarding->laptop != null ? 'checked' : '' }}>
+                                                <label class="form-check-label me-3" for="is_laptop">Laptop</label>
+                                            </div>
+                                            <div class="custom-select-wrapper">
+                                                <select class="form-control" id="asset_laptop" name="asset_laptop"
+                                                    aria-placeholder="Pilih asset"
+                                                    {{ $onboarding->laptop == null ? 'disabled' : '' }}>
+                                                    <option disabled selected>Pilih assets laptop</option>
+                                                    <option value="Windows"
+                                                        {{ $onboarding->laptop == 'Windows' ? 'selected' : '' }}>Windows
+                                                    </option>
+                                                    <option value="Macbook"
+                                                        {{ $onboarding->laptop == 'Macbook' ? 'selected' : '' }}>Macbook
+                                                    </option>
+                                                </select>
+                                                <i class="fas fa-chevron-down select-icon"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 pt-3">
+                                        <label for="start_contract" class="form-label">Tanggal Kontrak Mulai*</label>
+                                        <input type="date" class="form-control" id="start_contract"
+                                            name="start_contract"
+                                            value="{{ $onboarding->start_contract ? \Carbon\Carbon::parse($onboarding->start_contract)->format('Y-m-d') : '' }}">
+                                    </div>
+
+                                    <div class="col-md-6 pt-3">
+                                        <label for="end_contract" class="form-label">Tanggal Kontrak Berakhir*</label>
+                                        <input type="date" class="form-control" id="end_contract" name="end_contract"
+                                            value="{{ $onboarding->end_contract ? \Carbon\Carbon::parse($onboarding->end_contract)->format('Y-m-d') : '' }}">
+                                    </div>
+                                </div>
                             </div>
 
                         </div>
@@ -1033,11 +1196,6 @@
 
                             </table>
 
-                            <div class="d-flex justify-content-end mb-3">
-                                <button type="button" id="addFasilitasStageButton" class="btn btn-primary mt-2">Tambah
-                                    Fasilitas</button>
-                            </div>
-
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -1082,7 +1240,6 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
-
                             </table>
 
                         </div>
@@ -1235,22 +1392,22 @@
 
                                 <div class="col-md-6">
                                     <label for="education" class="form-label">Pendidikan</label>
-                                    <input type="text" class="form-control" id="education" name="education" disabled
-                                        value="{{ $candidate->education }}">
+                                    <input type="text" class="form-control" id="education" name="education"
+                                        disabled value="{{ $candidate->education }}">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="major" class="form-label">Jurusan</label>
-                                    <input type="text" class="form-control" id="major" name="major" disabled
-                                        value="{{ $candidate->major }}">
+                                    <input type="text" class="form-control" id="major" name="major"
+                                        disabled value="{{ $candidate->major }}">
                                 </div>
 
                                 <div class="col-md-6">
                                     <label for="source" class="form-label">Sumber</label>
-                                    <input type="text" class="form-control" id="source" name="source" disabled
-                                        value="{{ $candidate->source }}">
+                                    <input type="text" class="form-control" id="source" name="source"
+                                        disabled value="{{ $candidate->source }}">
                                 </div>
                             </div>
 
@@ -1355,6 +1512,159 @@
                             <div id="verifikasi_educationNonformal-container">
                             </div>
 
+                            <h3>Skill & Keahlian</h3>
+                            <p>Informasi mengenai skill & keahlian yang dimiliki oleh kandidat</p>
+
+                            <div id="verifikasi_skill-container">
+                            </div>
+
+                            <h3>Bahasa</h3>
+                            <div id="verifikasi_languange-container">
+                            </div>
+
+                            <h3>Pengalaman Bekerja</h3>
+                            <div id="verifikasi_working-container"></div>
+
+                            <h3>Refrensi & Rekomendasi</h3>
+                            <div id="verifikasi_refrences-container">
+                                <div class="row mb-3 bordered rounded-lg shadow pt-3 pb-3" class="row pt-3 pb-3">
+
+                                    <div class="col-md-6 pt-3">
+                                        <label for="source_refrences" class="form-label">Nama
+                                            Sumber</label>
+                                        <input type="text" class="form-control" disabled
+                                            id="verifikasi_source_refrences" name="verifikasi_source_refrences"
+                                            value="{{ $candidate->reference->name }}"">
+                                    </div>
+
+                                    <div class="col-md-6 pt-3">
+                                        <label for="phone_refrences" class="form-label">Nomor Handphone</label>
+                                        <input type="text" class="form-control" name="phone_refrences" disabled
+                                            id="verifikasi_phone_refrences" placeholder="Masukan Nomor Handphone"
+                                            value="{{ $candidate->reference->number }}">
+                                    </div>
+
+
+                                    <div class="col-md-6 pt-3">
+                                        <label for="position_refrences" class="form-label">Posisi</label>
+                                        <input type="text" class="form-control" name="position_refrences" disabled
+                                            id="verifikasi_position_refrences" placeholder="Masukan Posisi"
+                                            value="{{ $candidate->reference->position }}">
+                                    </div>
+
+                                    <div class="col-md-6 pt-3">
+                                        <label for="verifikasi_relation_refrences" class="form-label">Hubungan</label>
+                                        <input type="text" class="form-control"
+                                            name="verifikasi_relation_refrences" disabled
+                                            id="verifikasi_relation_refrences"
+                                            value="{{ $candidate->reference->relation }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h3>Informasi Tambahan</h3>
+                            <p>Informasi tambahan mengenai kandidat</p>
+
+                            <div class="working-member row mb-3 bordered rounded-lg shadow pt-3 pb-3">
+                                <div class="col-md-6 pt-3">
+                                    <label for="source_aditional" class="form-label">Dimana anda menemukan lowongan
+                                        kerja ini?*</label>
+                                    <input type="text" class="form-control" disabled
+                                        id="verifikasi_source_aditional" name="source_aditional"
+                                        placeholder="Masukan sumber"
+                                        value="{{ $candidate->additional_information->source ?? '' }}">
+                                </div>
+
+                                <div class="col-md-6 pt-3">
+                                    <label for="been_treated_aditional" class="form-label">Pernah dirawat di rumah
+                                        sakit / memiliki penyakit serius?*</label>
+                                    <input type="text" class="form-control" disabled
+                                        id="verifikasi_been_treated_aditional" name="been_treated_aditional"
+                                        placeholder="Ya/Tidak"
+                                        value="{{ $candidate->additional_information->been_treated ?? '' }}">
+                                </div>
+
+                                <div class="col-md-12 pt-3">
+                                    <label for="disease_aditional" class="form-label">Beritahu kami penyakit
+                                        anda*</label>
+                                    <input type="text" class="form-control" disabled
+                                        id="verifikasi_disease_aditional" name="been_treated"
+                                        placeholder="Masukan Penyakit Yang dialami"
+                                        value="{{ $candidate->additional_information->disease ?? '' }}">
+                                </div>
+
+                                <div class="col-md-12 pt-3">
+                                    <label for="strength_aditional" class="form-label">Kelebihan anda*</label>
+                                    <textarea type="text" class="form-control" disabled id="verifikasi_strength_aditional"
+                                        name="strength_aditional" placeholder="Masukan Kelebihan anda">{{ $candidate->additional_information->strength ?? '' }}</textarea>
+                                </div>
+
+
+                                <div class="col-md-12 pt-3">
+                                    <label for="weakness_aditional" class="form-label">Kelemahan anda*</label>
+                                    <textarea type="text" class="form-control" disabled id="verifikasi_weakness_aditional"
+                                        name="weakness_aditional" placeholder="Masukan Kelemahan anda">{{ $candidate->additional_information->weakness ?? '' }}</textarea>
+                                </div>
+
+
+                                <div class="col-md-12 pt-3">
+                                    <label for="against_weakness_aditional" class="form-label">Bagaimana anda melawan
+                                        kelamahan anda?*</label>
+                                    <textarea type="text" class="form-control" disabled id="verifikasi_against_weakness_aditional"
+                                        name="against_weakness_aditional" placeholder="Bagaimana cara anda melawan kelamahan anda">{{ $candidate->additional_information->against_weakness ?? '' }}</textarea>
+                                </div>
+                            </div>
+
+                            <h3>Tanggal OnBoarding</h3>
+                            <p>Informasi mengenai tanggal masuk kandidat</p>
+
+                            <div class="row mb-3 bordered rounded-lg shadow pt-3 pb-3" class="row pt-3 pb-3">
+                                <div class="col-md-6">
+                                    <label for="join_date" class="form-label">Tanggal Masuk kandidat</label>
+                                    <input type="date" class="form-control" disabled id="verifikasi_join_date" name="join_date"
+                                        value="{{ $onboarding->join_date ? \Carbon\Carbon::parse($onboarding->join_date)->format('Y-m-d') : '' }}">
+                                </div>
+
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Asset</label>
+                                    <div class="d-flex justify-content-center align-middle text-center">
+                                        <div>
+                                            <input type="checkbox" class="form-check-input me-2" disabled id="verifikasi_is_laptop"
+                                                name="is_laptop" {{ $onboarding->laptop != null ? 'checked' : '' }}>
+                                            <label class="form-check-label me-3" for="is_laptop">Laptop</label>
+                                        </div>
+                                        <div class="custom-select-wrapper">
+                                            <select class="form-control" disabled id="verifikasi_asset_laptop" name="asset_laptop"
+                                                aria-placeholder="Pilih asset"
+                                                {{ $onboarding->laptop == null ? 'disabled' : '' }}>
+                                                <option disabled selected>Pilih assets laptop</option>
+                                                <option value="Windows"
+                                                    {{ $onboarding->laptop == 'Windows' ? 'selected' : '' }}>Windows
+                                                </option>
+                                                <option value="Macbook"
+                                                    {{ $onboarding->laptop == 'Macbook' ? 'selected' : '' }}>Macbook
+                                                </option>
+                                            </select>
+                                            <i class="fas fa-chevron-down select-icon"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 pt-3">
+                                    <label for="start_contract" class="form-label">Tanggal Kontrak Mulai*</label>
+                                    <input type="date" class="form-control" disabled id="verifikasi_start_contract"
+                                        name="start_contract"
+                                        value="{{ $onboarding->start_contract ? \Carbon\Carbon::parse($onboarding->start_contract)->format('Y-m-d') : '' }}">
+                                </div>
+
+                                <div class="col-md-6 pt-3">
+                                    <label for="end_contract" class="form-label">Tanggal Kontrak Berakhir*</label>
+                                    <input type="date" class="form-control" disabled id="verifikasi_end_contract" name="end_contract"
+                                        value="{{ $onboarding->end_contract ? \Carbon\Carbon::parse($onboarding->end_contract)->format('Y-m-d') : '' }}">
+                                </div>
+                            </div>
+
                         </div>
 
                     </div>
@@ -1404,6 +1714,18 @@
 
             const educationformalStages = document.getElementsByClassName('educationformal-member');
             const educationformalContainer = document.getElementById('verifikasi_educationformal-container');
+
+            const eduNonFormalSatges = document.getElementsByClassName('educationNonformal-member');
+            const eduNonFormalContainer = document.getElementById('verifikasi_educationNonformal-container');
+
+            const skillSatges = document.getElementsByClassName('skill-member');
+            const skillContainer = document.getElementById('verifikasi_skill-container');
+
+            const languangeStages = document.getElementsByClassName('languange-member');
+            const languangeContainer = document.getElementById('verifikasi_languange-container');
+
+            const workingStages = document.getElementsByClassName('working-member');
+            const workingContainer = document.getElementById('verifikasi_working-container');
 
             let currentTab = 0;
 
@@ -1537,68 +1859,343 @@
                                             <option value="S3"  ${family_education === 'S3' ? 'selected' : ''}>S3</option>
                                         </select>
                                     </div>
-                                </div>           
+                                </div>
                     `);
                     });
 
                     //educationformal
                     educationformalContainer.innerHTML = '';
                     Array.from(educationformalStages).forEach((educationformalStages, index) => {
-
-                        // const name_institusi = educationformalStages.querySelector('input[name="name_institusi_educationformal[]"]').value;
-                        // const city = educationformalStages.querySelector('select[name="city_educationformal[]"]')
-                        // const major = educationformalStages.querySelector('input[name="major_educationformal[]"]').value;
-                        // const gpa = educationformalStages.querySelector('input[name="gpa_educationformal[]"]').value;
-                        // const start = educationformalStages.querySelector('input[name="start_educationformal[]"]').value;
-                        // const end = educationformalStages.querySelector('input[name="end_institusi_educationformal[]"]').value;
+                        const name_institusi = educationformalStages.querySelector(
+                            'input[name="name_institusi_educationformal[]"]').value;
+                        const city = educationformalStages.querySelector(
+                            'select[name="city_educationformal[]"]')
+                        const major = educationformalStages.querySelector(
+                            'input[name="major_educationformal[]"]').value;
+                        const gpa = educationformalStages.querySelector(
+                            'input[name="gpa_educationformal[]"]').value;
+                        const start = educationformalStages.querySelector(
+                            'input[name="start_educationformal[]"]').value;
+                        const end = educationformalStages.querySelector(
+                            'input[name="end_educationformal[]"]').value;
 
                         educationformalContainer.insertAdjacentHTML('beforeend', `
                             <div class="educationformal-member row mb-3 bordered rounded-lg shadow pt-3 pb-3">
                                         <div class="col-md-6">
                                             <label for="name_institusi_educationformal" class="form-label">Nama Institusi</label>
-                                            <input type="text" class="form-control"
-                                                 placeholder="Nama Institusi" value="${ name_institusi }">
+                                            <input type="text" class="form-control" disabled
+                                                 placeholder="Nama Institusi" value="${name_institusi}">
                                         </div>
 
                                         <div class="col-md-6">
                                             <label for="city_educationformal" class="form-label">Kota</label>
-                                            <input type="text" class="form-control"
-                                                 placeholder="Nama Kota" value="${ city }
-                                            ">
+                                            <input type="text" class="form-control" disabled
+                                                 placeholder="Nama Kota" value="${city}">
                                         </div>
 
                                         <div class="col-md-6 mt-3">
                                             <label for="major_educationformal" class="form-label">Jurusan</label>
-                                            <input type="text" class="form-control" id="major_educationformal"
-                                                name="major_educationformal[]" placeholder="Jurusan"
-                                                value="${ major }">
+                                            <input type="text" class="form-control"
+                                               placeholder="Jurusan" disabled
+                                                value="${major}">
                                         </div>
 
                                         <div class="col-md-6 mt-3">
                                             <label for="gpa_educationformal" class="form-label">GPA</label>
-                                            <input type="text" class="form-control"
-                                                placeholder="GPA"
-                                                value="${ gpa }">
+                                            <input type="text" class="form-control" disabled
+                                                placeholder="GPA" value="${gpa}">
                                         </div>
 
                                         <div class="col-md-6 mt-3">
                                             <label for="start_educationformal" class="form-label">Tanggal Mulai</label>
-                                            <input type="date" class="form-control"
-                                                value="${ start }">
+                                            <input type="date" class="form-control" name="start_educationformal[]" disabled
+                                                value="${start}">
                                         </div>
 
                                         <div class="col-md-6 mt-3">
                                             <label for="end_educationformal" class="form-label">Tanggal Selesai</label>
-                                            <input type="date" class="form-control"
-                                                value="${ end }">
+                                            <input type="date" class="form-control"  name="end_educationformal[]" disabled value="${end}">
                                         </div>
 
-                                    </div>           
+                                    </div>
                     `);
                     });
 
+                    //eduNonFormalContainer
+                    eduNonFormalContainer.innerHTML = '';
+                    Array.from(eduNonFormalSatges).forEach((eduNonFormalSatges, index) => {
+
+                        const name = eduNonFormalSatges.querySelector(
+                            'input[name="name_educationNonformal[]"]').value;
+                        const year = eduNonFormalSatges.querySelector(
+                            'input[name="year_educationNonformal[]"]').value;
+                        const duration = eduNonFormalSatges.querySelector(
+                            'input[name="duration_educationNonformal[]"]').value;
+                        const certificate = eduNonFormalSatges.querySelector(
+                            'input[name="certificate_educationNonformal[]"]').value;
+
+                        eduNonFormalContainer.insertAdjacentHTML('beforeend', `
+                            <div class="educationNonformal-member row mb-3 bordered rounded-lg shadow pt-3 pb-3"
+                                        id="educationNonformal-member">
+                                        <div class="col-md-6">
+                                            <label for="name_educationNonformal" class="form-label">Nama
+                                                Pendidikan</label>
+                                            <input type="text" class="form-control"
+                                                name="name_educationNonformal[]" placeholder="Nama Pendidikan" disabled
+                                                value="${name}">
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label for="year_educationNonformal" class="form-label">Tahun</label>
+                                            <input type="text" class="form-control"
+                                                name="year_educationNonformal[]" placeholder="Tahun Pendidikan" disabled
+                                                value="${year}">
+                                        </div>
+
+                                        <div class="col-md-6 mt-3">
+                                            <label for="duration_educationNonformal"
+                                                class="form-label">Durasi(bulan)</label>
+                                            <input type="text" class="form-control"
+                                                name="duration_educationNonformal[]" placeholder="Durasi Pendidikan" disabled
+                                                value="${duration}">
+                                        </div>
+
+                                        <div class="col-md-6 mt-3">
+                                            <label for="certificate_educationNonformal"
+                                                class="form-label">Sertifikat</label>
+                                            <input type="text" class="form-control"
+                                                name="certificate_educationNonformal[]" disabled
+                                                placeholder="Sertifikat Pendidikan" value="${certificate}">
+                                        </div>
+
+                                    </div>
+                        `);
+                    });
+
+                    //skill
+                    skillContainer.innerHTML = '';
+                    Array.from(skillSatges).forEach((skillSatges, index) => {
+
+                        const name = skillSatges.querySelector('input[name="name_skill[]"]').value;
+
+                        const level = skillSatges.querySelector('select[name="level_skill[]"]').value;
+
+                        skillContainer.insertAdjacentHTML('beforeend', `
+                        <div class="skill-member row mb-3 bordered rounded-lg shadow pt-3 pb-3"
+                                        id="skill-member">
+                                        <div class="col-md-6">
+                                            <label for="name_skill" class="form-label">Nama Keahlian</label>
+                                            <input type="text" class="form-control"
+                                                 placeholder="Nama Keahlian" disabled
+                                                value="${name}">
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label for="level_skill" class="form-label">Level</label>
+                                            <div class="input-group">
+                                                <select class="form-control" disabled>
+                                                    <option selected disabled>${level}</option>
+                                                </select>
+                                                <span class="input-group-text"><i class="fas fa-chevron-down"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                        `);
+                    })
+
+                    //languange
+                    languangeContainer.innerHTML = '';
+                    Array.from(languangeStages).forEach((languangeStages, index) => {
+
+                        const name = languangeStages.querySelector('input[name="name_languange[]"]').value;
+
+                        const write = languangeStages.querySelector('select[name="write_languange[]"]')
+                            .value;
+
+                        const speak = languangeStages.querySelector('select[name="speak_languange[]"]')
+                            .value;
+
+                        const read = languangeStages.querySelector('select[name="read_languange[]"]').value;
+
+                        languangeContainer.insertAdjacentHTML('beforeend', `
+                            <div class="languange-member row mb-3 bordered rounded-lg shadow pt-3 pb-3"
+                                        id="languange-member">
+                                        <div class="col-md-6">
+                                            <label for="name_languange" class="form-label">Bahasa yang dikuasai</label>
+                                            <input type="text" class="form-control" id="name_languange"
+                                                name="name_languange[]" placeholder="Nama Keahlian" disabled
+                                                value="${name}">
+                                        </div>
+
+                                        <div class="row pt-3 pb-3">
+                                            <div class="col-md-4">
+                                                <label for="write_skill" class="form-label">Tertulis</label>
+                                                <div class="input-group">
+                                                    <select class="form-control" id="write_languange[]" disabled
+                                                        name="write_languange[]">
+                                                        <option selected disabled>${write}</option>
+                                                    </select>
+                                                    <span class="input-group-text"><i
+                                                            class="fas fa-chevron-down"></i></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="speak_skill" class="form-label">Berbicara</label>
+                                                <div class="input-group">
+                                                    <select class="form-control" id="speak_languange[]" disabled
+                                                        name="speak_languange[]">
+                                                        <option selected disabled>${speak}</option>
+                                                    </select>
+                                                    <span class="input-group-text"><i
+                                                            class="fas fa-chevron-down"></i></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="read_skill" class="form-label">Membaca</label>
+                                                <div class="input-group">
+                                                    <select class="form-control" id="read_languange[]" disabled
+                                                        name="read_languange[]">
+                                                        <option selected disabled>${read}</option>
+                                                    </select>
+                                                    <span class="input-group-text"><i
+                                                            class="fas fa-chevron-down"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                        `);
+                    });
+
+                    //working
+                    workingContainer.innerHTML = '';
+                    Array.from(workingStages).forEach((workingStages, index) => {
+
+                        const company = workingStages.querySelector('input[name="company_name_working[]"]')
+                            .value;
+                        const industry = workingStages.querySelector('input[name="industry_working[]"]')
+                            .value;
+                        const address = workingStages.querySelector('input[name="address_working[]"]')
+                            .value;
+                        const status = workingStages.querySelector('select[name="status_working[]"]').value;
+                        const start = workingStages.querySelector('input[name="start_working[]"]').value;
+                        const end = workingStages.querySelector('input[name="end_working[]"]').value;
+                        const description = workingStages.querySelector(
+                            'textarea[name="description_working[]"]').value;
+                        const allowance = workingStages.querySelector('input[name="allowance_working[]"]')
+                            .value;
+                        const salary = workingStages.querySelector('input[name="salary_working[]"]').value;
+                        const project = workingStages.querySelector('textarea[name="project_working[]"]')
+                            .value;
+                        const reason = workingStages.querySelector('input[name="reason_working[]"]').value;
+
+                        workingContainer.insertAdjacentHTML('beforeend', `
+                        <div class="working-member row mb-3 bordered rounded-lg shadow pt-3 pb-3"
+                                        id="working-member">
+
+                                        <div class="row pt-3 pb-3">
+                                            <div class="col-md-6">
+                                                <label for="company_name_working" class="form-label">Nama
+                                                    Perusahaan</label>
+                                                <input type="text" class="form-control" placeholder="Nama Perusahaan" disabled
+                                                    value="${company}">
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label for="industry_working" class="form-label">Industri</label>
+                                                <input type="text" class="form-control" placeholder="Industri" disabled
+                                                    value="${industry}">
+                                            </div>
+                                        </div>
+
+                                        <div class="row pt-3 pb-3">
+                                            <div class="col-md-12">
+                                                <label for="address_working" class="form-label">Alamat Perusahan</label>
+                                                <input type="text" class="form-control" placeholder="Alamat Perusahaan" disabled
+                                                    value="${address}">
+                                            </div>
+                                        </div>
+
+                                        <div class="row pt-3 pb-3">
+                                            <div class="col-md-6">
+                                                <label for="status_working" class="form-label">Status</label>
+                                                <div class="input-group">
+                                                    <select class="form-control" disabled>
+                                                        <option selected disabled>${status}</option>
+                                                    </select>
+                                                    <span class="input-group-text"><i
+                                                            class="fas fa-chevron-down"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row pt-3 pb-3">
+                                            <div class="col-md-6 mt-3">
+                                                <label for="start_working" class="form-label">Tanggal
+                                                    Mulai Kerja</label>
+                                                <input type="date" class="form-control" disabled
+                                                    value="${start}">
+                                            </div>
+
+                                            <div class="col-md-6 mt-3">
+                                                <label for="end_working" class="form-label">Tanggal
+                                                    Selesai Kerja</label>
+                                                <input type="date" class="form-control" id="end_working" disabled
+                                                    name="end_working[]"
+                                                    value="${end}">
+                                            </div>
+                                        </div>
 
 
+                                        <div class="row pt-3 pb-3">
+                                            <div class="col-md-12">
+                                                <label for="description_working" class="form-label">Deskripsi
+                                                    Pekerjaan</label>
+                                                <textarea class="form-control" name="description_working[]" id="description_working[]" disabled>${description}</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="row pt-3 pb-3">
+                                            <div class="col-md-6">
+                                                <label for="allowance_working" class="form-label">Allowance</label>
+                                                <input type="text" class="form-control" id="allowance_working"
+                                                    name="allowance_working[]" placeholder="Masukan Allowance" disabled
+                                                    value="${allowance}">
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label for="salary_working" class="form-label">Gaji</label>
+                                                <input type="text" class="form-control" id="salary_working" disabled
+                                                    name="salary_working[]" placeholder="Masukan Gaji"
+                                                    value="${salary}">
+                                            </div>
+                                        </div>
+
+                                        <div class="row pt-3 pb-3">
+                                            <div class="col-md-12">
+                                                <label for="project_working" class="form-label">Project</label>
+                                                <textarea class="form-control" name="project_working[]" id="project_working[]" disabled>${project}</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="row pt-3 pb-3">
+                                            <div class="col-md-12">
+                                                <label for="reason_working" class="form-label">Alasan Keluar
+                                                    Perusahaan</label>
+                                                <input type="text" class="form-control" id="reason_working" disabled
+                                                    name="reason_working[]" placeholder="Masukan Alasan"
+                                                    value="${reason}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    `)
+                    });
+
+                    document.getElementById('verifikasi_join_date').value = document.getElementById(
+                            'join_date')
+                        .value;
+                    
                     //salary
                     document.getElementById('verifikasi_minimalNominal').value = document.getElementById(
                             'minimalNominal')
@@ -1721,7 +2318,7 @@
                     <i class="fas fa-trash-alt removeStageButton"></i>
                 </button>
             </td>
-        </tr>           
+        </tr>
     `;
             container.insertAdjacentHTML('beforeend', newStage);
         });
@@ -1814,7 +2411,7 @@
                                     <div class="col-12 mt-3">
                                         <button type="button" id="remove-member" class="btn btn-danger remove-member">Hapus Anggota</button>
                                     </div>
-                                </div>           
+                                </div>
     `;
             container.insertAdjacentHTML('beforeend', newStage);
         });
@@ -2031,7 +2628,7 @@
                                                             class="fas fa-chevron-down"></i></span>
                                                 </div>
                                             </div>
-                                        </div> 
+                                        </div>
                                     </div>
             `;
             container.insertAdjacentHTML('beforeend', newStage);
@@ -2164,6 +2761,23 @@
             if (e.target.classList.contains('remove-working')) {
                 e.target.closest('.working-member').remove();
             }
+        });
+    </script>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const checkbox = document.getElementById("is_laptop");
+            const select = document.getElementById("asset_laptop");
+
+            checkbox.addEventListener("change", () => {
+                if (checkbox.checked) {
+                    select.disabled = false;
+                } else {
+                    select.disabled = true;
+                    select.value = "Pilih Laptop"
+                }
+            });
         });
     </script>
 

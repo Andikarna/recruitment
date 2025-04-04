@@ -16,6 +16,7 @@ class ResourceDetail extends Model
         'position',
         'skill',
         'quantity',
+        'fulfilled',
         'education',
         'qualification',
         'experience',

@@ -11,9 +11,11 @@
             margin: 0;
             padding: 0;
         }
-        
     </style>
 @endsection
+
+@section('title-content',"Daftar Tugas")
+
 
 @section('content')
     <div class="row bg-white p-3" style="border-radius: 20px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
@@ -76,6 +78,9 @@
                                 @elseif($data->status == 'Penugasan')
                                     <button class="btn btn-warning btn-md text-white shadow-sm"
                                         style="width: 100px; font-size: 0.875rem;">Penugasan</button>
+                                @elseif($data->status == 'Diproses' && $data->resource_detail?->quantity == $data->resource_detail?->fulfilled)
+                                    <button class="btn btn-success btn-md text-white shadow-sm"
+                                        style="background-color: #155724; width: 100px; font-size: 0.875rem;">Selesai</button>
                                 @elseif($data->status == 'Diproses')
                                     <button class="btn btn-warning btn-md text-white shadow-sm"
                                         style="width: 100px; font-size: 0.875rem;">Diproses</button>
@@ -95,15 +100,16 @@
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
                                         style="position: absolute; left: -100%; min-width: 200px;">
                                         <li>
-                                            <a class="dropdown-item" href="{{ route('detailRequester', [$data->resource->id]) }}">
+                                            <a class="dropdown-item"
+                                                href="{{ route('detailRequester', [$data->resource->id]) }}">
                                                 <i class="bi bi-eye me-2"></i>Lihat data detail
                                             </a>
                                         </li>
                                         <li>
-                                          <a class="dropdown-item" href="">
-                                              <i class="bi bi-search me-2"></i>Cari Kandidat
-                                          </a>
-                                      </li>
+                                            <a class="dropdown-item" href="">
+                                                <i class="bi bi-search me-2"></i>Cari Kandidat
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </td>

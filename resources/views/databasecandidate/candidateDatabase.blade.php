@@ -14,6 +14,8 @@
     </style>
 @endsection
 
+@section('title-content',"Database Kandidat")
+
 @section('content')
     <div class="row bg-white p-3" style="border-radius: 20px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
         <div class="col-12 d-flex justify-content-between align-items-center">
@@ -118,7 +120,7 @@
                                         @else
                                             <li>
                                                 <a class="dropdown-item fw-medium text-primary"
-                                                    href="{{ route('detailCandidate', [$data->id]) }}">
+                                                    href="{{ route('requestCandidate', [$data->id]) }}">
                                                     <i class="bi bi-person-down me-2"></i>Request Kandidat
                                                 </a>
                                             </li>

@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Resource;
 use App\Models\TaksList;
+use App\Models\AssignTodo;
+use App\Models\Onboarding;
 use Illuminate\Http\Request;
+use App\Models\Notifications;
 use App\Models\ResourceDetail;
 use App\Models\ResourceSalary;
 use App\Models\ResourceFacility;
@@ -22,13 +25,14 @@ class RequesterController extends Controller
     public function requester()
     {
         $resource = Resource::orderByRaw('COALESCE(updated_date, created_date) DESC')
+            ->with('resource_detail')
             ->paginate(5)
             ->withQueryString();
 
         $stages = Session::get('stages', []);
         $recruiter = TaksList::all();
-        
-        return view('requester', compact('resource', 'stages', 'recruiter'));
+
+        return view('request.requester', compact('resource', 'stages', 'recruiter'));
     }
 
     public function addResource(Request $request)
@@ -106,6 +110,39 @@ class RequesterController extends Controller
                 }
             }
 
+            //setAssignTodo
+            $hrmanager = User::where('role_id', 2)->get();
+            foreach ($hrmanager as $user) {
+
+                $assignTodo = new AssignTodo();
+                $assignTodo->type = "Request";
+                $assignTodo->user_id = $user->id;
+                $assignTodo->user_name = $user->name;
+                $assignTodo->action_id = $newRequest->id;
+                $assignTodo->title = "Permintaan SDM";
+                $assignTodo->description = $request->name;
+                $assignTodo->status = "Baru";
+                $assignTodo->created_date = Carbon::now('Asia/Jakarta');
+                $assignTodo->created_id = Auth::user()->id;
+                $assignTodo->created_by = Auth::user()->name;
+                $assignTodo->save();
+
+                //setNotifications
+                $notification = new Notifications();
+                $notification->type = "Notification";
+                $notification->user_id = $user->id;
+                $notification->user_name = $user->name;
+                $notification->action_id = $newRequest->id;
+                $notification->title = "Permintaan SDM";
+                $notification->description = "Kamu memiliki permintaan baru dengan nama " . $request->name;
+                $notification->isRead = false;
+                $notification->status = "Baru";
+                $notification->created_date = Carbon::now('Asia/Jakarta');
+                $notification->created_id = Auth::user()->id;
+                $notification->created_by = Auth::user()->name;
+                $notification->save();
+            };
+
             return redirect('/requester')->with(['message' => 'Data berhasil ditambahkan!'], 200);
         } catch (\Exception $e) {
             dd([
@@ -124,14 +161,14 @@ class RequesterController extends Controller
         }
         $positionDetail = ResourceDetail::where('resource_id', $resourceDetail->id)->first();
         $interviewDetail = InterviewProgress::where('resource_id', operator: $resourceDetail->id)->get();
-        
+
         $user = User::where('role_id', 3)->get();
         $tasklist = TaksList::where('resource_id', $id)->get();
 
         $salary = ResourceSalary::where('resource_id', $resourceDetail->id)->first();
         $fasilitas = ResourceFacility::where('resource_id', $resourceDetail->id)->get();
 
-        return view('request.detailRequester', compact('resourceDetail', 'positionDetail', 'interviewDetail','user','tasklist', 'fasilitas','salary'));
+        return view('request.detailRequester', compact('resourceDetail', 'positionDetail', 'interviewDetail', 'user', 'tasklist', 'fasilitas', 'salary'));
     }
 
     public function updateRequester($id)
@@ -149,7 +186,7 @@ class RequesterController extends Controller
         $salary = ResourceSalary::where('resource_id', $resourceDetail->id)->first();
         $fasilitas = ResourceFacility::where('resource_id', $resourceDetail->id)->get();
 
-        return view('request.updateRequester', compact('user', 'resourceDetail', 'positionDetail', 'interviewDetail', 'tasklist', 'fasilitas','salary'));
+        return view('request.updateRequester', compact('user', 'resourceDetail', 'positionDetail', 'interviewDetail', 'tasklist', 'fasilitas', 'salary'));
     }
 
     public function saveRequester($id, Request $request)
@@ -158,22 +195,37 @@ class RequesterController extends Controller
         $resourceDetail = ResourceDetail::where('resource_id', $id)->first();
         $salary = ResourceSalary::where('resource_id', $resource->id)->first();
 
+        //setAssignTodo
+        $assignTodo = AssignTodo::where('action_id', $id)->get();
+        foreach ($assignTodo as $data) {
+            $data->status = "Selesai";
+            $data->save();
+        }
+
+        //defaultkanNotification
+        $notification = Notifications::where('action_id', $id)->get();
+        foreach ($notification as $data) {
+            $data->isRead = true;
+            $data->status = "Selesai";
+            $data->save();
+        }
+
         //salary
-        if($salary != null){
-           $salary->min_salary = $request->input('min_salary');
-           $salary->max_salary = $request->input('max_salary');
-           $salary->ket_salary = $request->input('ket_salary');
-           $salary->pph21 = $request->input('pph21') == "on" ? true : false;
-           $salary->ket_pph21 = $request->input('ket_pph21');
-           $salary->bpjs_ket = $request->input('bpjs_ket') == "on" ? true : false;
-           $salary->ket_bpjsket = $request->input('ket_bpjsket');
-           $salary->bpjs_kes = $request->input('bpjs_kes')  == "on" ? true : false;
-           $salary->ket_bpjskes = $request->input('ket_bpjskes');
-           $salary->updated_date = Carbon::now('Asia/Jakarta');
-           $salary->updated_id = Auth::user()->id;
-           $salary->updated_by = Auth::user()->name;
-           $salary->save();            
-        }else{
+        if ($salary != null) {
+            $salary->min_salary = $request->input('min_salary');
+            $salary->max_salary = $request->input('max_salary');
+            $salary->ket_salary = $request->input('ket_salary');
+            $salary->pph21 = $request->input('pph21') == "on" ? true : false;
+            $salary->ket_pph21 = $request->input('ket_pph21');
+            $salary->bpjs_ket = $request->input('bpjs_ket') == "on" ? true : false;
+            $salary->ket_bpjsket = $request->input('ket_bpjsket');
+            $salary->bpjs_kes = $request->input('bpjs_kes')  == "on" ? true : false;
+            $salary->ket_bpjskes = $request->input('ket_bpjskes');
+            $salary->updated_date = Carbon::now('Asia/Jakarta');
+            $salary->updated_id = Auth::user()->id;
+            $salary->updated_by = Auth::user()->name;
+            $salary->save();
+        } else {
             $newSalary = new ResourceSalary();
             $newSalary->resource_id = $resource->id;
             $newSalary->resource_detail_id = $resourceDetail->id;
@@ -196,6 +248,7 @@ class RequesterController extends Controller
         //tasklist
         if ($request->tasklist != null) {
             foreach ($request->tasklist as $task) {
+
                 $user = User::find($task);
 
                 $newTask = TaksList::firstOrNew([
@@ -216,6 +269,28 @@ class RequesterController extends Controller
                     $newTask->created_date = Carbon::now('Asia/Jakarta');
                     $newTask->save();
                 }
+
+                $existNotification = Notifications::where('action_id', $resource->id)->get();
+
+                foreach ($existNotification as $data) {
+                    $data->delete();
+                    $data->save();
+                }
+
+                //notification
+                $notification = new Notifications();
+                $notification->type = "Notification";
+                $notification->user_id = $user->id;
+                $notification->user_name = $user->name;
+                $notification->action_id = $resource->id;
+                $notification->title = "TaskList";
+                $notification->description = "Kamu memiliki tugas baru dengan permintaan " . $resource->name;
+                $notification->isRead = false;
+                $notification->status = "Baru";
+                $notification->created_date = Carbon::now('Asia/Jakarta');
+                $notification->created_id = Auth::user()->id;
+                $notification->created_by = Auth::user()->name;
+                $notification->save();
             }
 
             $tasksToDelete = TaksList::where('resource_id', $resource->id)

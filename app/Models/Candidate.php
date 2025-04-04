@@ -86,7 +86,7 @@ class Candidate extends Model
         return $this->hasOne(AdditionalInformation::class, 'candidate_id', 'id');
     }
 
-    public function refrence()
+    public function reference()
     {
         return $this->hasOne(Reference::class, 'candidate_id', 'id');
     }
