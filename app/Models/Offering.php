@@ -32,5 +32,10 @@ class Offering extends Model
         'updated_id',
         'updated_by'
     ];
+
+    public function offeringApprovals()
+    {
+        return $this->hasMany(OfferingApproval::class, 'offering_id', 'id');
+    }
   
 }

@@ -63,7 +63,7 @@
     </style>
 @endsection
 
-@section('title-content',"Wawancara Kandidat")
+@section('title-content', 'Wawancara Kandidat')
 
 @section('content')
     <div class="row bg-white p-3" style="border-radius: 20px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
@@ -73,18 +73,14 @@
 
         {{-- header tabel --}}
         <div class="col-12 mt-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <select class="form-select" id="filterOption" style="width: 200px;">
-                        <option value="">Filter by...</option>
-                        <option value="1">Option 1</option>
-                        <option value="2">Option 2</option>
-                    </select>
-                </div>
-                <div>
-                    <input type="text" id="searchBox" class="form-control" placeholder="Search..." style="width: 300px;">
-                </div>
+
+            <div class="d-flex justify-content-end align-items-center">
+                <form method="GET" action="{{ route('interview') }}">
+                    <input type="text" name="search" id="searchBox" class="form-control" placeholder="Search..."
+                        style="width: 300px;" value="{{ request('search') }}" onchange="this.form.submit()">
+                </form>
             </div>
+
         </div>
 
         {{-- tabel --}}

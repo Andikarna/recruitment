@@ -30,4 +30,9 @@ class InterviewDetail extends Model
         'updated_id',
         'updated_by',
     ];
+
+    public function resource()
+    {
+        return $this->belongsTo(Interview::class, 'interview_id');
+    }
 }

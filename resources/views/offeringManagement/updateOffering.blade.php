@@ -1,6 +1,6 @@
 @extends('layouts.dashboardLayouts')
 
-@section('ADIDATA', 'Offering')
+@section('ADIDATA', 'Offering Management')
 
 @section('username', Auth::user()->name)
 @section('userid', Auth::user()->id)
@@ -118,10 +118,10 @@
             color: #333;
         }
 
-        .text-muted {
+        /* .text-muted {
             font-size: 0.7rem;
             color: #6c757d;
-        }
+        } */
 
         .bg-success {
             background-color: #28a745 !important;
@@ -142,14 +142,17 @@
         .text-dark {
             color: #343a40 !important;
         }
+        
     </style>
 @endsection
 
-@section('title-content',"Offering")
+@section('title-content',"Offering Management")
+
+@section('title-content', 'Offering')
 
 @section('content')
     <div class="row bg-white p-3" style="border-radius: 20px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
-        <form id="saveOffering" action="{{ route('saveOffering', [$offering->id]) }}" method="POST">
+        <form id="saveOffering" action="{{ route('saveOfferingManagement', [$offering->id]) }}" method="POST">
             @csrf
             <div style="display: flex; flex-direction: column; p-0 m-0">
                 <div class="modal-header d-flex justify-content-between align-items-center">
@@ -360,7 +363,7 @@
                                 <div class="col-md-6">
                                     <label for="uniq_code" class="form-label">Kode Unik</label>
                                     <input type="text" class="form-control" id="uniq_code" name="uniq_code" disabled
-                                        value="{{ $candidate->uniq_code ?? "-"}}">
+                                        value="{{ $candidate->uniq_code ?? "-" }}">
                                 </div>
                             </div>
 
@@ -438,6 +441,7 @@
                                                     <input required type="text" id="offeringSalary"
                                                         class="form-control" name="offeringSalary"
                                                         placeholder="Gaji Pokok"
+                                                        disabled
                                                         value="{{ $offeringSalary->salary ?? '' }}">
                                                 </div>
                                             </div>
@@ -446,7 +450,7 @@
                                         <td class="text-center align-middle">
                                             <input type="text" name="ket_salary" id="ket_offeringSalary"
                                                 class="form-control" placeholder="Masukan Catatan"
-                                                value="{{ $offeringSalary->ket_salary ?? '' }}">
+                                                value="{{ $offeringSalary->ket_salary ?? '' }}" disabled>
                                         </td>
                                     </tr>
 
@@ -459,16 +463,17 @@
                                                 @if (isset($offeringSalary) && $offeringSalary->pph21 !== null)
                                                     <input class="form-check-input" type="checkbox" role="switch"
                                                         {{ $offeringSalary->pph21 == 1 ? 'checked' : '' }}
-                                                        style="width: 50px; height: 25px;" name="pph21" id="pph21">
+                                                        style="width: 50px; height: 25px;" name="pph21" id="pph21" disabled>
                                                 @else
                                                     <input class="form-check-input" type="checkbox" role="switch"
-                                                        name="pph21" id="pph21" style="width: 50px; height: 25px;">
+                                                        name="pph21" id="pph21" style="width: 50px; height: 25px;" disabled>
                                                 @endif
                                             </div>
                                         </td>
                                         <td class="text-center align-middle">
                                             <input type="text" class="form-control" name="ket_pph21" id="ket_pph21"
                                                 placeholder="Masukan Catatan"
+                                                disabled
                                                 value="{{ $offeringSalary->ket_pph21 ?? '' }}">
                                         </td>
                                     </tr>
@@ -481,18 +486,18 @@
                                                 @if (isset($offeringSalary) && $offeringSalary->bpjs_ket !== null)
                                                     <input class="form-check-input" type="checkbox" role="switch"
                                                         name="bpjs_ket" id="bpjs_ket" style="width: 50px; height: 25px;"
-                                                        {{ $offeringSalary->bpjs_ket == 1 ? 'checked' : '' }}>
+                                                        {{ $offeringSalary->bpjs_ket == 1 ? 'checked' : '' }} disabled>
                                                 @else
                                                     <input class="form-check-input" type="checkbox" role="switch"
                                                         name="bpjs_ket" id="bpjs_ket"
-                                                        style="width: 50px; height: 25px;">
+                                                        style="width: 50px; height: 25px;" disabled>
                                                 @endif
                                             </div>
                                         </td>
                                         <td class="text-center align-middle">
                                             <input type="text" class="form-control" name="ket_bpjsket"
                                                 id="ket_bpjsket" placeholder="Masukan Catatan"
-                                                value="{{ $offeringSalary->ket_bpjsket ?? '' }}">
+                                                value="{{ $offeringSalary->ket_bpjsket ?? '' }}" disabled>
                                         </td>
                                     </tr>
                                     <tr>
@@ -504,36 +509,29 @@
                                                 @if (isset($offeringSalary) && $offeringSalary->bpjs_kes !== null)
                                                     <input class="form-check-input" type="checkbox" role="switch"
                                                         name="bpjs_kes" id="bpjs_kes" style="width: 50px; height: 25px;"
-                                                        {{ $offeringSalary->bpjs_kes == 1 ? 'checked' : '' }}>
+                                                        {{ $offeringSalary->bpjs_kes == 1 ? 'checked' : '' }} disabled>
                                                 @else
                                                     <input class="form-check-input" type="checkbox" role="switch"
                                                         name="bpjs_kes" id="bpjs_kes"
-                                                        style="width: 50px; height: 25px;">
+                                                        style="width: 50px; height: 25px;" disabled>
                                                 @endif
                                             </div>
                                         </td class="text-center align-middle">
                                         <td class="text-center align-middle">
                                             <input type="text" class="form-control" name="ket_bpjskes"
                                                 id="ket_bpjskes" placeholder="Masukan Catatan"
-                                                value="{{ $offeringSalary->ket_bpjskes ?? '' }}">
+                                                value="{{ $offeringSalary->ket_bpjskes ?? '' }}" disabled>
                                         </td>
                                     </tr>
                                 </tbody>
 
                             </table>
 
-                            <div class="d-flex justify-content-end mb-3">
-                                <button type="button" id="addFasilitasStageButton" class="btn btn-primary mt-2">Tambah
-                                    Fasilitas</button>
-                            </div>
-
-
                             <table class="table">
                                 <thead>
                                     <tr>
                                         <th class="text-center align-middle">Fasilitas</th>
                                         <th class="text-center align-middle">Catatan</th>
-                                        <th class="text-start align-middle">{{ '' }}</th>
                                     </tr>
                                 </thead>
                                 <tbody id="fasilitasStageContainer">
@@ -541,7 +539,7 @@
                                         <tr class="fasilitas-stage">
                                             <input name="fasilitas_id[]" value="{{ $data->id }}" hidden>
                                             <td class="text-center align-middle ">
-                                                <select class="form-control" name="fasilitas[]">
+                                                <select class="form-control" name="fasilitas[]" disabled>
                                                     <option value="Tunjangan Makan"
                                                         {{ $data->fasilitas_name == 'Tunjangan Makan' ? 'selected' : '' }}>
                                                         Tunjangan Makan</option>
@@ -560,14 +558,9 @@
                                                 </select>
                                             </td>
                                             <td class="text-center align-middle ">
-                                                <input type="text" class="form-control" name="ket_fasilitas[]"
+                                                <input type="text" class="form-control" name="ket_fasilitas[]" disabled
                                                     placeholder="Masukkan keterangan"
                                                     value="{{ $data->ket_fasilitas }}" />
-                                            </td>
-                                            <td class="text-center align-middle">
-                                                <button type="button" class="btn btn-danger removeStageButton">
-                                                    <i class="fas fa-trash-alt removeStageButton"></i>
-                                                </button>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -715,12 +708,23 @@
                                 </div>
 
                                 <div class="form-group mt-4">
-                                    <label for="approval" class="form-label">Status Offering</label>
+                                    <div class="form-group mt-4">
+                                        <label for="message" class="form-label">Message</label>
+                                        <input class="form-control" id="message" rows="3" placeholder="Masukkan pesan di sini..." disabled value="{{ $offeringApprovalMe->message }}">
+                                    </div>
+                                
+                                    <div class="form-group mt-4">
+                                        <label for="feedback" class="form-label">Feedback</label>
+                                        <input class="form-control" name="feedback" id="feedback" rows="3" placeholder="Masukkan feedback di sini..."></input>
+                                    </div>
+                                    
+                                    <label for="approval" class="mt-4 form-label">Status Offering</label>
                                     <select class="form-select w-25" id="approval" name="approval" aria-label="Pilih Status" {{ $offering->status == "Approve" || $offering->status == "Reject"  ? "disabled" : '' }}>
                                         <option disabled selected>Pilih Status</option>
                                         <option value="Approve" {{ $offering->status == "Approve" ? "selected" : '' }}>Approve</option>
                                         <option value="Reject" {{ $offering->status == "Reject" ? "selected" : '' }}>Reject</option>
                                     </select>
+
                                 </div>
                             </div>
                         </div>
@@ -1109,7 +1113,6 @@
                                         <option value="Reject">Reject</option>
                                     </select>
                                 </div>
-
                             </div>
                         </div>
 

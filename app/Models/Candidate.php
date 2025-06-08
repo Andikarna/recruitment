@@ -17,6 +17,7 @@ class Candidate extends Model
         'uniq_code',
         'name',
         'position',
+        'mobile_phone',
         'qualification',
         'education',
         'experience',

@@ -7,7 +7,9 @@ use App\Models\Resource;
 use App\Models\TaksList;
 use App\Models\Candidate;
 use App\Models\Interview;
+use App\Models\AssignTodo;
 use Illuminate\Http\Request;
+use App\Models\Notifications;
 use App\Models\OfferingSalary;
 use App\Models\ResourceDetail;
 use App\Models\ResourceSalary;
@@ -16,14 +18,42 @@ use App\Models\InterviewDetail;
 use App\Models\OfferingFasility;
 use App\Models\ResourceFacility;
 use App\Models\InterviewProgress;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
 
 
 class InterviewController extends Controller
 {
-    public function view()
+    public function view(Request $request)
     {
-        $interview = Interview::orderByRaw('COALESCE(updated_date, created_date) DESC')
+
+        $role = User::where('id', Auth::user()->id)->pluck('role_id')->first();
+        $interview = Interview::with('resource')->orderByRaw('COALESCE(updated_date, created_date) DESC');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $interview->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                    ->orWhere('position', 'LIKE', "%{$search}%")
+                    ->orWhere('qualification', 'LIKE', "%{$search}%")
+                    ->orWhere('interview_progress', 'LIKE', "%{$search}%")
+                    ->orWhere('project', 'LIKE', "%{$search}%")
+                    ->orWhere('status', 'LIKE', "%{$search}%")
+                ;
+            });
+        }
+
+        if ($role == 3) {
+            $interview = $interview->where('created_id', Auth::user()->id);
+        }
+        
+        if ($role == 5) {
+            $interview = $interview->whereHas('resource', function ($query) {
+                $query->where('created_id', Auth::user()->id);
+            });
+        }
+
+        $interview = $interview
             ->paginate(5)
             ->withQueryString();
 
@@ -42,6 +72,7 @@ class InterviewController extends Controller
         $newInterview->resource_detail_id = $resourceDetail->id;
         $newInterview->name = $candidate->name;
         $newInterview->position = $resourceDetail->position;
+        $newInterview->interview_progress = "-";
         $newInterview->qualification = $resourceDetail->qualification;
         $newInterview->project = $resource->project;
         $newInterview->status = "Baru";
@@ -92,15 +123,15 @@ class InterviewController extends Controller
         $interviewDetail = InterviewDetail::where('interview_id', $interview->id)->get();
 
         $lastInterviewDetail = InterviewDetail::where('interview_id', $interview->id)
-        ->latest('id')
-        ->first();
+            ->latest('id')
+            ->first();
 
         $offering = Offering::where('candidate_id', $candidate->id)
-        ->where('resource_id', $resource->id)
-        ->pluck('status')
-        ->first();
+            ->where('resource_id', $resource->id)
+            ->pluck('status')
+            ->first();
 
-        return view('wawancara.detailInterview', compact('interview', 'interviewDetail', 'candidate', 'resource', 'resourceDetail', 'salary', 'fasilitas', 'interviewProgress','lastInterviewDetail','offering'));
+        return view('wawancara.detailInterview', compact('interview', 'interviewDetail', 'candidate', 'resource', 'resourceDetail', 'salary', 'fasilitas', 'interviewProgress', 'lastInterviewDetail', 'offering'));
     }
 
     public function updateInterview($id)
@@ -119,15 +150,15 @@ class InterviewController extends Controller
         $interviewDetail = InterviewDetail::where('interview_id', $interview->id)->get();
 
         $lastInterviewDetail = InterviewDetail::where('interview_id', $interview->id)
-        ->latest('id')
-        ->first();
+            ->latest('id')
+            ->first();
 
         $offering = Offering::where('candidate_id', $candidate->id)
-        ->where('resource_id', $resource->id)
-        ->pluck('status')
-        ->first();
+            ->where('resource_id', $resource->id)
+            ->pluck('status')
+            ->first();
 
-        return view('wawancara.updateInterview', compact('interview', 'interviewDetail', 'candidate', 'resource', 'resourceDetail', 'salary', 'fasilitas', 'interviewProgress','lastInterviewDetail','offering'));
+        return view('wawancara.updateInterview', compact('interview', 'interviewDetail', 'candidate', 'resource', 'resourceDetail', 'salary', 'fasilitas', 'interviewProgress', 'lastInterviewDetail', 'offering'));
     }
 
     public function saveInterview(Request $request, $id)
@@ -163,7 +194,7 @@ class InterviewController extends Controller
         $interviewId->updated_by = Auth::user()->name;
         $interviewId->save();
 
-        if($status == "Diterima" && $interviewId->interview_progress == "Wawancara Final"){
+        if ($status == "Diterima" && $interviewId->interview_progress == "Wawancara Final") {
             $interviewId->status = "Selesai";
             $interviewId->updated_date = Carbon::now('Asia/Jakarta');
             $interviewId->updated_id = Auth::user()->id;
@@ -198,8 +229,7 @@ class InterviewController extends Controller
             $interviewNextStepId->updated_id = Auth::user()->id;
             $interviewNextStepId->updated_by = Auth::user()->name;
             $interviewNextStepId->save();
-
-        }elseif($status == "Diterima"){
+        } elseif ($status == "Diterima") {
 
             $interviewId->interview_progress = "Wawancara Final";
             $interviewId->interview_date = null;
@@ -215,9 +245,9 @@ class InterviewController extends Controller
             $interviewDetail->save();
 
             $lastInterviewDetail = InterviewDetail::where('interview_id', $id)
-            ->latest('id')
-            ->pluck('interview_type_id')
-            ->first();
+                ->latest('id')
+                ->pluck('interview_type_id')
+                ->first();
 
             $interviewType =  $lastInterviewDetail + 1;
 
@@ -248,11 +278,11 @@ class InterviewController extends Controller
             $newOffering->save();
 
             $resourceSalary = ResourceSalary::where('resource_id', $interviewId->resource_id)
-            ->where('resource_detail_id',$interviewId->resource_detail_id)
-            ->first();
+                ->where('resource_detail_id', $interviewId->resource_detail_id)
+                ->first();
             $resourceFacility = ResourceFacility::where('resource_id', $interviewId->resource_id)
-            ->where('resource_detail_id',$interviewId->resource_detail_id)
-            ->get();
+                ->where('resource_detail_id', $interviewId->resource_detail_id)
+                ->get();
 
             $newOfferingSalary = new OfferingSalary();
             $newOfferingSalary->offering_id = $newOffering->id;
@@ -269,7 +299,7 @@ class InterviewController extends Controller
             $newOfferingSalary->created_by = Auth::user()->name;
             $newOfferingSalary->save();
 
-            foreach($resourceFacility as $data){
+            foreach ($resourceFacility as $data) {
                 $newOfferingFacility = new OfferingFasility();
                 $newOfferingFacility->offering_id = $newOffering->id;
                 $newOfferingFacility->fasilitas_name = $data->fasilitas_name;
@@ -279,9 +309,42 @@ class InterviewController extends Controller
                 $newOfferingFacility->created_by = Auth::user()->name;
                 $newOfferingFacility->save();
             }
+
+            //getUserHrManager
+            $userManager = User::where('role_id', 2)->get();
+
+            //notification
+            foreach ($userManager as $user) {
+                $notification = new Notifications();
+                $notification->type = "Notification";
+                $notification->user_id = $user->id;
+                $notification->user_name = $user->name;
+                $notification->action_id = $newOffering->id;
+                $notification->title = "Offering";
+                $notification->description = Auth::user()->name . " meminta melanjutkan tahap offering kandidat bernama " . $interviewId->name;
+                $notification->isRead = false;
+                $notification->status = "Baru";
+                $notification->created_date = Carbon::now('Asia/Jakarta');
+                $notification->created_id = Auth::user()->id;
+                $notification->created_by = Auth::user()->name;
+                $notification->save();
+
+                $assignTodo = new AssignTodo();
+                $assignTodo->type = "Offering";
+                $assignTodo->user_id = $user->id;
+                $assignTodo->user_name = $user->name;
+                $assignTodo->action_id = $newOffering->id;
+                $assignTodo->title = "Permintaan Offering";
+                $assignTodo->description = $interviewId->name . "|" . $interviewId->position;
+                $assignTodo->status = "Baru";
+                $assignTodo->created_date = Carbon::now('Asia/Jakarta');
+                $assignTodo->created_id = Auth::user()->id;
+                $assignTodo->created_by = Auth::user()->name;
+                $assignTodo->save();
+            }
         }
 
-         
+
 
         return redirect('/interview');
     }

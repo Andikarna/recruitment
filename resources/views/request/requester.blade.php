@@ -63,28 +63,37 @@
     </style>
 @endsection
 
-@section('title-content',"Permintaan SDM")
+@section('title-content', 'Permintaan SDM')
 
 @section('content')
     <div class="row bg-white p-3" style="border-radius: 20px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
-        <div class="col-12 d-flex justify-content-between align-items-center">
-            <h5>Permintaan SDM</h5>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addRequestModal">Tambah Permintaan</button>
+        <div class="col-12 d-flex justify-content-between align-items-center py-3 border-bottom">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-users text-primary me-2" style="font-size: 1.5rem;"></i>
+                <h5 class="mb-0">Permintaan SDM</h5>
+            </div>
+
+            {{-- tampilan konfirmasi --}}
+            @if (session('message'))
+                <div class="alert alert-success alert-dismissible fade show w-40 m-2" id="successAlert" role="alert">
+                    {{ session('message') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            <button class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal"
+                data-bs-target="#addRequestModal">
+                <i class="fas fa-plus me-2"></i> Tambah Permintaan
+            </button>
         </div>
 
         {{-- header tabel --}}
         <div class="col-12 mt-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <select class="form-select" id="filterOption" style="width: 200px;">
-                        <option value="">Filter by...</option>
-                        <option value="1">Option 1</option>
-                        <option value="2">Option 2</option>
-                    </select>
-                </div>
-                <div>
-                    <input type="text" id="searchBox" class="form-control" placeholder="Search..." style="width: 300px;">
-                </div>
+            <div class="d-flex justify-content-end align-items-center">
+                <form method="GET" action="{{ route('requester') }}">
+                    <input type="text" name="search" id="searchBox" class="form-control" placeholder="Search..."
+                           style="width: 300px;" value="{{ request('search') }}" onchange="this.form.submit()">
+                </form>
             </div>
         </div>
 
@@ -188,8 +197,6 @@
         <div class="col-12 mt-3">
             {{ $resource->links('vendor.pagination.bootstrap-5') }}
         </div>
-
-
     </div>
 
     <!-- Modal Tambah Permintaan -->
@@ -205,8 +212,9 @@
                     <!-- Tabs Navigation -->
                     <ul class="nav nav-tabs" id="requestTabs" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="details-tab" data-bs-toggle="tab" data-bs-target="#details"
-                                type="button" role="tab" aria-controls="details" aria-selected="true">Umum</button>
+                            <button class="nav-link active" id="details-tab" data-bs-toggle="tab"
+                                data-bs-target="#details" type="button" role="tab" aria-controls="details"
+                                aria-selected="true">Umum</button>
                         </li>
 
                         <li class="nav-item" role="presentation">
@@ -241,18 +249,18 @@
                                 <div class="mb-3 mt-3">
                                     <label for="name" class="form-label">Nama Permintaan</label>
                                     <textarea class="form-control" id="name" name="name" rows="3" style="padding-top: 10px;" required
-                                        autocomplete></textarea>
+                                        placeholder="Masukan nama permintaan" autocomplete></textarea>
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label for="client" class="form-label">Klien</label>
                                         <input type="text" class="form-control" id="client" name="client"
-                                            required>
+                                            required placeholder="Masukan klien">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="project" class="form-label">Proyek</label>
                                         <input type="text" class="form-control" id="project" name="project"
-                                            required>
+                                            required placeholder="Masukan proyek">
                                     </div>
                                 </div>
                                 <div class="row mb-3 mt-3">
@@ -279,7 +287,7 @@
                                         <div class="custom-select-wrapper">
                                             <select class="form-control" id="requirment" name="requirment" required>
                                                 <option value="">Pilih Kebutuhan</option>
-                                                <option value="Recruitment">Recruitment</option>
+                                                <option value="Recruitment">Internal</option>
                                                 <option value="Client">Client</option>
                                             </select>
                                             <i class="fas fa-chevron-down select-icon"></i>
@@ -333,9 +341,6 @@
                                         <div class="custom-select-wrapper">
                                             <select class="form-control" id="education" name="education" required>
                                                 <option value="" disabled selected>Pilih Jenjang Pendidikan</option>
-                                                <option value="SD">Sekolah Dasar (SD)</option>
-                                                <option value="SMP">Sekolah Menengah Pertama (SMP)</option>
-                                                <option value="SMA">Sekolah Menengah Atas (SMA)</option>
                                                 <option value="D3">Diploma 3 (D3)</option>
                                                 <option value="S1">Sarjana (S1)</option>
                                                 <option value="S2">Magister (S2)</option>
@@ -357,7 +362,7 @@
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="contract" class="form-label">Durasi Kontrak</label>
+                                    <label for="contract" class="form-label">Durasi Kontrak (Bulan)</label>
                                     <input type="number" class="form-control" id="contract" name="contract" required>
                                 </div>
                                 <div class="mb-3">
@@ -453,7 +458,7 @@
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="verifikasi_contract" class="form-label">Durasi Kontrak</label>
+                                    <label for="verifikasi_contract" class="form-label">Durasi Kontrak (Bulan)</label>
                                     <input type="text" class="form-control" id="verifikasi_contract" disabled>
                                 </div>
                                 <div class="mb-3">

@@ -54,6 +54,7 @@
 </head>
 
 @php
+    use App\Models\User;
     use App\Models\UserManagement;
     use App\Models\Notifications;
     use Carbon\Carbon;
@@ -107,8 +108,8 @@
 
                 @if (UserManagement::where('role_id', auth()->user()->role_id)->where('menu_id', 2)->exists())
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center {{ request()->routeIs('dashboard') ? 'active' : 'noactive' }}"
-                            href="{{ route('dashboard') }}">
+                        <a class="nav-link d-flex align-items-center {{ request()->routeIs('dashboardmanagement') ? 'active' : 'noactive' }}"
+                            href="{{ route('dashboardmanagement') }}">
                             <i class="bi bi-bar-chart-fill"></i>
                             <span class="ms-2">Dashboard</span>
                         </a>
@@ -117,8 +118,8 @@
 
                 @if (UserManagement::where('role_id', auth()->user()->role_id)->where('menu_id', 3)->exists())
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center {{ request()->routeIs('dashboard') ? 'active' : 'noactive' }}"
-                            href="{{ route('dashboard') }}">
+                        <a class="nav-link d-flex align-items-center {{ request()->routeIs('dashboardrecruiter') ? 'active' : 'noactive' }}"
+                            href="{{ route('dashboardrecruiter') }}">
                             <i class="bi bi-bar-chart-fill"></i>
                             <span class="ms-2">Dashboard</span>
                         </a>
@@ -141,6 +142,16 @@
                             href="{{ route('tasklist') }}">
                             <i class="bi bi-list-check"></i>
                             <span class="ms-2">Daftar Tugas</span>
+                        </a>
+                    </li>
+                @endif
+
+                @if (UserManagement::where('role_id', auth()->user()->role_id)->where('menu_id', 6)->exists())
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center {{ request()->routeIs('globalCandidate') ? 'active' : 'noactive' }}"
+                            href="{{ route('globalCandidate') }}">
+                            <i class="bi bi-globe"></i>
+                            <span class="ms-2">Global Kandidat</span>
                         </a>
                     </li>
                 @endif
@@ -171,6 +182,16 @@
                             href="{{ route('offering') }}">
                             <i class="bi bi-clipboard-data-fill"></i>
                             <span class="ms-2">Offering</span>
+                        </a>
+                    </li>
+                @endif
+
+                @if (UserManagement::where('role_id', auth()->user()->role_id)->where('menu_id', 10)->exists())
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center {{ request()->routeIs('offeringManagement') ? 'active' : 'noactive' }}"
+                            href="{{ route('offeringManagement') }}">
+                            <i class="bi bi-clipboard-data-fill"></i>
+                            <span class="ms-2">Offering Approval</span>
                         </a>
                     </li>
                 @endif
@@ -223,8 +244,9 @@
                                             @if ($data->title == 'Permintaan SDM')
                                                 <a href="{{ route('updateRequester', [$data->action_id]) }}"
                                                     class="dropdown-item d-flex align-items-start @if (!$data->isRead) unread-notification @endif">
-                                                @elseif ($data->title == 'General' || $data->title == "Request Kandidat")
-                                                    <a class="dropdown-item d-flex align-items-start @if (!$data->isRead) unread-notification @endif">
+                                                @elseif ($data->title == 'General' || $data->title == 'Request Kandidat')
+                                                    <a
+                                                        class="dropdown-item d-flex align-items-start @if (!$data->isRead) unread-notification @endif">
                                                     @elseif ($data->title == 'TaskList')
                                                         <a href="{{ route('candidateDatabase') }}"
                                                             class="dropdown-item d-flex align-items-start @if (!$data->isRead) unread-notification @endif">
@@ -234,16 +256,31 @@
                                                             @elseif ($data->title == 'Offering')
                                                                 <a href="{{ route('updateOffering', [$data->action_id]) }}"
                                                                     class="dropdown-item d-flex align-items-start @if (!$data->isRead) unread-notification @endif">
-                                            @endif
+                                                                @elseif ($data->title == 'Offering Management')
+                                                                    <a href="{{ route('updateOfferingManagement', [$data->action_id]) }}"
+                                                                        class="dropdown-item d-flex align-items-start @if (!$data->isRead) unread-notification @endif">
+                                                @endif
                                             <div class="me-3">
-                                                @if ($data->title == 'Permintaan SDM' || $data->title == 'Offering' || $data->title == 'TaskList' || $data->title == 'General' || $data->title == "Request Kandidat")
+                                                @if (
+                                                    $data->title == 'Permintaan SDM' ||
+                                                        $data->title == 'Offering' ||
+                                                        $data->title == 'TaskList' ||
+                                                        $data->title == 'General' ||
+                                                        $data->title == 'Offering Management' ||
+                                                        $data->title == 'Request Kandidat')
                                                     <i class="bi bi-envelope fs-5 text-primary"></i>
                                                 @elseif ($data->title == 'Interview')
                                                     <i class="bi bi-calendar-check fs-5 text-success"></i>
                                                 @endif
                                             </div>
                                             <div>
-                                                @if ($data->title == 'Permintaan SDM' || $data->title == 'TaskList' || $data->title == "General" || $data->title == "Request Kandidat")
+                                                @if (
+                                                    $data->title == 'Permintaan SDM' ||
+                                                        $data->title == 'TaskList' ||
+                                                        $data->title == 'General' ||
+                                                        $data->title == 'Request Kandidat' ||
+                                                        $data->title == 'Offering Management' ||
+                                                        $data->title == 'Offering')
                                                     <p class="mb-0 fw-bold">{{ $data->title }}</p>
                                                     <small class="text-muted">{{ $data->description }}</small>
                                                 @elseif ($data->title == 'Interview')
@@ -334,13 +371,10 @@
                         </ul>
                     </div>
 
-
-
-
                     {{-- username --}}
                     <div class="me-2">
                         <p class="m-0 d-flex justify-content-end fs-6 align-items-center">@yield('username')</p>
-                        <p class="text-muted m-0" style="font-size: smaller">Software Engineer</p>
+                        <p class="text-muted m-0" style="font-size: smaller">{{ Auth::user()->role->name_role }}</p>
                     </div>
 
                     {{-- photo --}}

@@ -22,12 +22,36 @@ use Symfony\Component\Console\Logger\ConsoleLogger;
 
 class RequesterController extends Controller
 {
-    public function requester()
+    public function requester(Request $request)
     {
-        $resource = Resource::orderByRaw('COALESCE(updated_date, created_date) DESC')
-            ->with('resource_detail')
+        $user = User::where('id',Auth::user()->id)->first();
+
+        $resource = Resource::orderByRaw('COALESCE(updated_date, created_date) DESC');
+
+        if ($user->role_id == 5) {
+            $resource->where('created_id', $user->id);
+        }
+
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $resource->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('client', 'LIKE', "%{$search}%")
+                  ->orWhere('project', 'LIKE', "%{$search}%")
+                  ->orWhere('status', 'LIKE', "%{$search}%")
+                  ->orWhere('created_by', 'LIKE', "%{$search}%")
+                  ;
+            });
+        }
+
+        $resource = $resource->with('resource_detail')
             ->paginate(5)
             ->withQueryString();
+
+            // ->with('resource_detail')
+            // ->paginate(5)
+            // ->withQueryString();
 
         $stages = Session::get('stages', []);
         $recruiter = TaksList::all();
@@ -369,6 +393,7 @@ class RequesterController extends Controller
             }, array: $fasilitasDatas);
 
             $fasilitasDelete = ResourceFacility::whereNotIn('id', values: $idFasilitas)
+                ->where('resource_id',$id)
                 ->get();
 
             foreach ($fasilitasDelete as $fasilitas) {
@@ -424,6 +449,7 @@ class RequesterController extends Controller
             }, $datas);
 
             $InterviewProgressDelete = InterviewProgress::whereNotIn('id', $idsInData)
+                ->where('resource_id',$id)
                 ->get();
 
             foreach ($InterviewProgressDelete as $interview) {
@@ -456,6 +482,6 @@ class RequesterController extends Controller
             }
         }
 
-        return redirect('/requester')->with(['message' => 'Data berhasil ditambahkan!'], 200);
+        return redirect('/requester')->with(['message' => 'Data berhasil di Simpan'], 200);
     }
 }

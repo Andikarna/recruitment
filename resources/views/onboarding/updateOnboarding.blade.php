@@ -65,11 +65,6 @@
             /* Agar ikon tidak menghalangi dropdown */
         }
 
-        #tasklist {
-            padding: 10px;
-            transform: translateX(200px) min-height: 38px;
-        }
-
         .table input[type="checkbox"] {
             width: auto;
         }
@@ -119,7 +114,6 @@
         }
 
         .text-muted {
-            font-size: 0.7rem;
             color: #6c757d;
         }
 
@@ -1534,14 +1528,14 @@
                                             Sumber</label>
                                         <input type="text" class="form-control" disabled
                                             id="verifikasi_source_refrences" name="verifikasi_source_refrences"
-                                            value="{{ $candidate->reference->name }}"">
+                                            value="{{ $candidate->reference->name ?? '' }}"">
                                     </div>
 
                                     <div class="col-md-6 pt-3">
                                         <label for="phone_refrences" class="form-label">Nomor Handphone</label>
                                         <input type="text" class="form-control" name="phone_refrences" disabled
                                             id="verifikasi_phone_refrences" placeholder="Masukan Nomor Handphone"
-                                            value="{{ $candidate->reference->number }}">
+                                            value="{{ $candidate->reference->number ?? '' }}">
                                     </div>
 
 
@@ -1549,7 +1543,7 @@
                                         <label for="position_refrences" class="form-label">Posisi</label>
                                         <input type="text" class="form-control" name="position_refrences" disabled
                                             id="verifikasi_position_refrences" placeholder="Masukan Posisi"
-                                            value="{{ $candidate->reference->position }}">
+                                            value="{{ $candidate->reference->position ?? '' }}">
                                     </div>
 
                                     <div class="col-md-6 pt-3">
@@ -1557,7 +1551,7 @@
                                         <input type="text" class="form-control"
                                             name="verifikasi_relation_refrences" disabled
                                             id="verifikasi_relation_refrences"
-                                            value="{{ $candidate->reference->relation }}">
+                                            value="{{ $candidate->reference->relation ?? '' }}">
                                     </div>
                                 </div>
                             </div>

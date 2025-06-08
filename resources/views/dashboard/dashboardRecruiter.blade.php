@@ -1,18 +1,44 @@
 @extends('layouts.dashboardLayouts')
 
-@section('ADIDATA', 'Dashboard Hr')
+@section('ADIDATA', 'Dashboard Recruiter')
 
 @section('username', Auth::user()->name)
 @section('userid', Auth::user()->id)
 
 @section('styles')
     <style>
+        .scrollable-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
 
+        .scrollable-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scrollable-list::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 10px;
+        }
+
+        .scrollable-list::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+
+        .list-group-item:hover {
+            transform: translateY(-5px);
+            background-color: #f1f1f1;
+            cursor: pointer;
+        }
     </style>
 
 @endsection
 
-@section('title-content', 'Dashboard HR Manager')
+@section('title-content', 'Dashboard Recruiter')
 
 @section('content')
     <!-- Container for chat and candidate list -->
@@ -35,101 +61,81 @@
             <div class="card" style="height: 400px; border-radius: 10px;">
                 <div class="card-header bg-primary text-white d-flex align-items-center">
                     <i class="bi bi-list-task me-2" style="font-size: 24px;"></i>
-                    Tugas yang belum diselesaikan
+                    Tugas Hari Ini
                 </div>
                 <div class="card-body overflow-auto">
                     <ul class="list-group">
 
                         @if ($assignTodo->isEmpty())
                             <div style="text-align: center; margin-top: 20px;">
-                                <img src="{{ asset('images/no_data1.jpg') }}" alt="No Data"
-                                    style="width: 60px; height: 60px; margin-bottom: 10px;">
-                                <p style="font-size: 16px; color: #666;">Belum ada Tugas baru yang tersedia</p>
+                                <img src="{{ asset('images/no_data2.jpg') }}" alt="No Data"
+                                    style="width: 150px; height: 130px; margin-bottom: 10px;">
+                                <p style="font-size: 16px; color: #666;">Belum ada Tugas Baru yang tersedia</p>
                             </div>
                         @else
                             @foreach ($assignTodo as $data)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     <div class="d-flex align-items-center gap-2">
-                                        @if ($data->type == 'Request')
-                                            <i class="bi bi-people text-success me-2" style="font-size: 20px;"></i>
-                                        @elseif ($data->type == 'Offering')
-                                            <i class="bi bi-person-check text-warning me-2" style="font-size: 20px;"></i>
-                                        @elseif ($data->type == 'Contract')
-                                            <i class="bi bi-file-earmark-text text-danger me-2"
-                                                style="font-size: 20px;"></i>
-                                        @endif
-
+                                        <i class="bi bi-people text-success me-2" style="font-size: 20px;"></i>
                                         <div>
-                                            <div class="fw-bold">{{ $data->title }}</div>
-                                            <small>{{ $data->description }}</small>
+                                            <div class="fw-bold">{{ $data->name }}</div>
+                                            <small>{{ $data->interview_progress }}</small>
+                                            <br>
+                                            <small>Posisi: <span class="text-muted">{{ $data->position }}</span></small>
+                                            <br>
+                                            <small>Jam Interview: <span
+                                                    class="text-muted">{{ \Carbon\Carbon::parse($data->interview_detail->interview_time)->format('H:i') }}</span></small>
                                         </div>
                                     </div>
 
-                                    @if ($data->type == 'Request')
-                                        <a href="{{ route('updateRequester', [$data->action_id]) }}"
-                                            class="d-flex align-items-center text-primary">
-                                            <i class="bi bi-arrow-right-circle" style="font-size: 20px;"></i>
-                                        </a>
-                                    @elseif ($data->type == 'Offering')
-                                        <a href="{{ route('updateOffering', [$data->action_id]) }}"
-                                            class="d-flex align-items-center text-primary">
-                                            <i class="bi bi-arrow-right-circle" style="font-size: 20px;"></i>
-                                        </a>
-                                    @elseif ($data->type == 'Contract')
-                                        <a href="{{ route('updateOffering', [$data->action_id]) }}"
-                                            class="d-flex align-items-center text-primary">
-                                            <i class="bi bi-arrow-right-circle" style="font-size: 20px;"></i>
-                                        </a>
-                                    @endif
-
+                                    <a href="{{ route('detailInterview', [$data->id]) }}"
+                                        class="d-flex align-items-center text-primary">
+                                        <i class="bi bi-arrow-right-circle" style="font-size: 20px;"></i>
+                                    </a>
                                 </li>
                             @endforeach
                         @endif
+
                     </ul>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-8">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="card text-white bg-primary dashboard-card" style="height: 200px; border-radius: 10px;">
-                        <div class="card-header">Baru</div>
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $interviewNew }}</h5>
-                            <p class="card-text">Kandidat Interview Baru</p>
+        <div class="col-8">
+            <div class="card list-group scrollable-list"
+                style="height: 200px; overflow-y: auto; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                @foreach ($resource as $data)
+                    <div class="list-group-item d-flex justify-content-between align-items-center border-0 shadow-sm mb-3"
+                        style="transition: transform 0.2s ease; border-radius: 8px; padding: 15px;">
+
+                        <div class="d-flex align-items-center">
+                            <img src="https://picsum.photos/id/1/200/300" alt="Profile Picture" class="rounded-circle"
+                                width="50" height="50" style="margin-right: 15px;">
+                            <div class="text-left">
+                                <h5 class="mb-1" style="font-size: 16px; font-weight: bold;">{{ $data->name }}</h5>
+                                <p class="mb-0" style="font-size: 12px; color: #666;">Posisi: <span
+                                        style="font-weight: 600;">{{ $data->resource_detail->position }}</span></p>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card text-white bg-info dashboard-card" style="height: 200px; border-radius: 10px;">
-                        <div class="card-header">Interview</div>
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $interview }}</h5>
-                            <p class="card-text">Kandidat Sedang Interview</p>
+
+                        <div class="text-center">
+                            <p class="mb-0" style="font-size: 14px; color: #666;">
+                                Klien : <span style="font-weight: 600;">{{ $data->client }}</span>
+                            </p>
+                            <p class="mb-0" style="font-size: 14px; color: #666;">
+                                Proyek : <span style="font-weight: 600;">{{ $data->project }}</span>
+                            </p>
                         </div>
+
+                        <!-- Bagian Kanan: Quantity -->
+                        <span
+                            class="badge {{ $data->resource_detail->quantity < 5 ? 'bg-primary' : 'bg-success' }} rounded-pill"
+                            style="font-size: 14px; padding: 6px 12px;">{{ $data->resource_detail->quantity }}</span>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card text-white bg-warning dashboard-card" style="height: 200px; border-radius: 10px;">
-                        <div class="card-header">Offering</div>
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $offering }}</h5>
-                            <p class="card-text">Sedang Dalam Penawaran</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card text-white bg-success dashboard-card" style="height: 200px; border-radius: 10px;">
-                        <div class="card-header">Onboarding</div>
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $onboarding }}</h5>
-                            <p class="card-text">Kandidat Onboard</p>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
+
 
         <div class="col-md-4">
             <div class="card" style="height: 200px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
@@ -188,7 +194,7 @@
             const ctx = document.getElementById("recruiterChart").getContext("2d");
             let recruiterChart;
 
-            fetch('/dashboardhr/getResource')
+            fetch('/dashboard/recruiter/getResource')
                 .then(response => response.json())
                 .then(data => {
                     const last = data.lastId.id;
@@ -213,7 +219,7 @@
             dropdown.addEventListener("change", function() {
                 const selectedId = dropdown.value;
                 if (selectedId) {
-                    fetch(`/dashboardhr/getRecruiter/${selectedId}`)
+                    fetch(`/dashboard/positon/${selectedId}`)
                         .then(response => {
                             if (!response.ok) {
                                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -221,10 +227,9 @@
                             return response.json();
                         })
                         .then(requestData => {
-                            const labels = requestData.labels;
-                            const interview = requestData.interview;
-                            const offering = requestData.offering;
-                            const data = requestData.data;
+                            const labels = [requestData.labels];
+                            const data = [requestData.data];
+                            const data2 = [requestData.max - requestData.data];
                             const max = requestData.max;
 
                             // Perbarui chart
@@ -232,72 +237,27 @@
                                 recruiterChart.destroy();
                             }
 
-                            // const datasets = [{
-                            //         label: 'Interview',
-                            //         data: interview,
-                            //         backgroundColor: '#2196F3',
-                            //         borderColor: '#2196F3',
-                            //         borderWidth: 1,
-                            //         barThickness: 50
-                            //     },
-                            //     {
-                            //         label: 'Offering',
-                            //         data: offering,
-                            //         backgroundColor: '#FFD700',
-                            //         borderColor: '#FFD700',
-                            //         borderWidth: 1,
-                            //         barThickness: 50
-                            //     },
-                            //     {
-                            //         label: 'Onboarding',
-                            //         data: data,
-                            //         backgroundColor: '#2DAA9E',
-                            //         borderColor: '#2DAA9E',
-                            //         borderWidth: 1,
-                            //         barThickness: 50
-                            //     },
-                            // ];
-
-                            const datasets = [];
-
-                            if (interview && interview.some(value => value !== 0)) {
-                                datasets.push({
-                                    label: 'Interview',
-                                    data: interview,
-                                    backgroundColor: '#2196F3',
-                                    borderColor: '#2196F3',
-                                    borderWidth: 1,
-                                    barThickness: 50
-                                });
-                            }
-
-                            if (offering && offering.some(value => value !== 0)) {
-                                datasets.push({
-                                    label: 'Offering',
-                                    data: offering,
-                                    backgroundColor: '#FFD700',
-                                    borderColor: '#FFD700',
-                                    borderWidth: 1,
-                                    barThickness: 50
-                                });
-                            }
-
-                            if (data && data.some(value => value !== 0)) {
-                                datasets.push({
-                                    label: 'Onboarding',
-                                    data: data,
-                                    backgroundColor: '#2DAA9E',
-                                    borderColor: '#2DAA9E',
-                                    borderWidth: 1,
-                                    barThickness: 50
-                                });
-                            }
-
                             recruiterChart = new Chart(ctx, {
                                 type: 'bar',
                                 data: {
                                     labels: labels,
-                                    datasets: datasets,
+                                    datasets: [{
+                                            label: 'Sudah Terpenuhi',
+                                            data: data,
+                                            backgroundColor: '#007bff',
+                                            borderColor: '#007bff',
+                                            borderWidth: 1,
+                                            barThickness: 50
+                                        },
+                                        {
+                                            label: 'Belum Terpenuhi',
+                                            data: data2,
+                                            backgroundColor: '#C0C0C0',
+                                            borderColor: '#C0C0C0',
+                                            borderWidth: 1,
+                                            barThickness: 50
+                                        }
+                                    ]
                                 },
                                 options: {
                                     responsive: true,
@@ -329,6 +289,7 @@
                         });
                 }
             });
+
         });
     </script>
 

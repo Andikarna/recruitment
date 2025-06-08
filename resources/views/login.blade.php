@@ -3,17 +3,51 @@
 @section('ADIDATA', 'Login')
 
 @section('content')
-    <div class="container d-flex justify-content-center align-items-center vh-100">
-        <div class="card shadow" style="width: 350px;">
-            <div class="card-body">
-                <h1 class="text-center mb-4">Login</h1>
+    <style>
+        body {
+            /* background:
+                url('{{ asset('images/bg_1.jpg') }}') no-repeat,
+                url('{{ asset('images/bg_2.jpg') }}') no-repeat; */
+            background-color: #ffffff;
+            /* Warna latar belakang */
+            background-size: 500px, 500px;
+            /* Ukuran gambar */
+            background-attachment: fixed;
+            /* Latar tidak akan bergeser saat scroll */
+            background-position: bottom left, bottom right;
+            /* Atur posisi gambar */
+            color: #333333;
+        }
 
-                <!-- Success Message -->
-                @if (session('success'))
-                    <div class="alert alert-success">
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .btn-primary {
+            background: #4facfe;
+            border-color: #4facfe;
+        }
+
+        .btn-primary:hover {
+            background: #00f2fe;
+            border-color: #00f2fe;
+        }
+    </style>
+
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="card shadow" style="width: 400px;">
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <img src="{{ asset('images/adidata.png') }}" alt="Logo" style="width: 250px; height: auto;">
+                </div>
+
+                {{-- @if (session('success'))
+                    <div class="alert alert-danger">
                         {{ session('success') }}
                     </div>
-                @endif
+                @endif --}}
 
                 <!-- Error Messages -->
                 @if ($errors->any())
@@ -46,8 +80,6 @@
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Login</button>
                 </form>
-
-            
             </div>
         </div>
     </div>

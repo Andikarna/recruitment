@@ -27,4 +27,11 @@ class OfferingApproval extends Model
         'updated_id',
         'updated_by'
     ];
+
+    public function offering()
+    {
+        return $this->belongsTo(Offering::class, 'offering_id', 'id');
+    }
+
+    
 }

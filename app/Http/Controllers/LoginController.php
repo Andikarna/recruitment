@@ -37,7 +37,23 @@ class LoginController extends Controller
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
             session(['user' => $user]);
-            return redirect()->route('dashboard')
+
+            $user = User::where('id',Auth::user()->id)->pluck('role_id')->first();
+            $ridirect = 'dashboard';
+            if($user == 2){
+                $ridirect = 'dashboard';
+            }
+            if($user == 3){
+                $ridirect = 'dashboardrecruiter';
+            }
+            if($user == 4){
+                $ridirect = 'dashboardmanagement';
+            }
+            if($user == 5){
+                $ridirect = 'requester';
+            }
+
+            return redirect()->route($ridirect)
                 ->with('success', 'Kamu berhasil login')
                 ->with('user', $user);
         } else {

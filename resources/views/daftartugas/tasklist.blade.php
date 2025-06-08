@@ -21,21 +21,18 @@
     <div class="row bg-white p-3" style="border-radius: 20px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
         <div class="col-12 d-flex justify-content-between align-items-center">
             <h5>Daftar Tugas</h5>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addRequestModal">Tambah Permintaan</button>
         </div>
 
         {{-- header tabel --}}
         <div class="col-12 mt-3">
             <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <select class="form-select" id="filterOption" style="width: 200px;">
-                        <option value="">Filter by...</option>
-                        <option value="1">Option 1</option>
-                        <option value="2">Option 2</option>
-                    </select>
-                </div>
-                <div>
-                    <input type="text" id="searchBox" class="form-control" placeholder="Search..." style="width: 300px;">
+                <div class="col-12 mt-3">
+                    <div class="d-flex justify-content-end align-items-center">
+                        <form method="GET" action="{{ route('tasklist') }}">
+                            <input type="text" name="search" id="searchBox" class="form-control" placeholder="Search..."
+                                style="width: 300px;" value="{{ request('search') }}" onchange="this.form.submit()">
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -61,16 +58,16 @@
                         <tr>
                             <td class="text-center align-middle text-center">
                                 {{ ($tasklist->currentPage() - 1) * $tasklist->perPage() + $key + 1 }}</td>
-                            <td class="align-middle ">{{ $data->resource->name }}</td>
-                            <td class="text-center align-middle text-center">{{ $data->resource->created_by }}</td>
-                            <td class="text-center align-middle text-wrap">{{ $data->resource->client }}</td>
+                            <td class="align-middle ">{{ $data->resource->name ?? "" }}</td>
+                            <td class="text-center align-middle text-center">{{ $data->resource->created_by ?? ""  }}</td>
+                            <td class="text-center align-middle text-wrap">{{ $data->resource->client ?? "" }}</td>
                             <td class="align-middle"
                                 style="max-width: 200px; break-word; word-wrap: break-word; white-space: normal;">
-                                {{ $data->resource->project }}
+                                {{ $data->resource->project ?? "" }}
                             </td>
-                            <td class="text-center align-middle text-center">{{ $data->resource_detail->quantity }}</td>
+                            <td class="text-center align-middle text-center">{{ $data->resource_detail->quantity ?? "" }}</td>
                             <td class="text-center align-middle text-center">
-                                {{ optional($data->resource->target_date)->format('d M y') ?: '-' }}</td>
+                                {{ optional($data->resource->target_date ?? "")->format('d M y') ?: '-' }}</td>
                             <th class="align-middle text-center">
                                 @if ($data->status == 'Baru')
                                     <button class="btn btn-primary btn-md text-white shadow-sm"
@@ -106,7 +103,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="">
+                                            <a class="dropdown-item" href="{{ route('globalCandidate') }}">
                                                 <i class="bi bi-search me-2"></i>Cari Kandidat
                                             </a>
                                         </li>

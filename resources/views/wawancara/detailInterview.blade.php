@@ -119,7 +119,6 @@
         }
 
         .text-muted {
-            font-size: 0.7rem;
             color: #6c757d;
         }
 
@@ -347,7 +346,7 @@
                                 <div class="col-md-6">
                                     <label for="uniq_code" class="form-label">Kode Unik</label>
                                     <input type="text" class="form-control" id="uniq_code" name="uniq_code" disabled
-                                        value="{{ $candidate->uniq_code }}">
+                                        value="{{ $candidate->uniq_code ?? "-" }}">
                                 </div>
                             </div>
 
@@ -355,7 +354,7 @@
                                 <div class="col-md-6">
                                     <label for="recruiter" class="form-label">Recruiter</label>
                                     <input type="text" class="form-control" id="recruiter" name="recruiter" disabled
-                                        value="{{ $candidate->created_by }}">
+                                        value="{{ $interview->created_by }}">
                                 </div>
                             </div>
 

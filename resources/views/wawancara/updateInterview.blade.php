@@ -119,7 +119,6 @@
         }
 
         .text-muted {
-            font-size: 0.7rem;
             color: #6c757d;
         }
 
@@ -353,7 +352,7 @@
                                 <div class="col-md-6">
                                     <label for="uniq_code" class="form-label">Kode Unik</label>
                                     <input type="text" class="form-control" id="uniq_code" name="uniq_code" disabled
-                                        value="{{ $candidate->uniq_code }}">
+                                        value="{{ $candidate->uniq_code ?? "-" }}">
                                 </div>
                             </div>
 
@@ -361,7 +360,7 @@
                                 <div class="col-md-6">
                                     <label for="recruiter" class="form-label">Recruiter</label>
                                     <input type="text" class="form-control" id="recruiter" name="recruiter" disabled
-                                        value="{{ $candidate->created_by }}">
+                                        value="{{ $interview->created_by }}">
                                 </div>
                             </div>
 
@@ -557,7 +556,7 @@
 
                                             <div class="col-md-4">
                                                 <label for="interview_date" class="form-label">Tanggal Wawancara</label>
-                                                <input class="form-control" type="date" id="interview_date"
+                                                <input class="form-control" type="date" id="interview_date" required
                                                     {{ $data->interview_status == 'Diterima' ? 'disabled' : '' }}
                                                     {{ $offering != 'Approve' && $interview->interview_progress == 'Wawancara Final' ? 'disabled' : '' }}
                                                     name="interview_date"
@@ -566,7 +565,7 @@
 
                                             <div class="col-md-4">
                                                 <label for="interview_time" class="form-label">Jam Wawancara</label>
-                                                <input class="form-control" type="time" id="interview_time"
+                                                <input class="form-control" type="time" id="interview_time" required
                                                     {{ $data->interview_status == 'Diterima' ? 'disabled' : '' }}
                                                     {{ $offering != 'Approve' && $interview->interview_progress == 'Wawancara Final' ? 'disabled' : '' }}
                                                     name="interview_time" value="{{ $data->interview_time }}">
@@ -574,7 +573,7 @@
 
                                             <div class="col-md-4">
                                                 <label for="interview_user" class="form-label">User</label>
-                                                <input class="form-control" type="text" id="interview_user"
+                                                <input class="form-control" type="text" id="interview_user" required
                                                     {{ $data->interview_status == 'Diterima' ? 'disabled' : '' }}
                                                     {{ $offering != 'Approve' && $interview->interview_progress == 'Wawancara Final' ? 'disabled' : '' }}
                                                     name="interview_user" placeholder="Masukan nama user"
@@ -596,7 +595,7 @@
                                                 <label for="interview_client" class="form-label">Klien</label>
                                                 <input class="form-control" type="text" id="interview_client" disabled
                                                     name="interview_client"
-                                                    value="{{ $data->name_progress == 1 ? 'Ya' : 'Tidak' }}">
+                                                    value="{{ $data->interview_type_id == 2 ? 'Ya' : 'Tidak' }}">
                                             </div>
 
                                             <div class="col-md-4">
@@ -977,10 +976,31 @@
                     <button type="button" class="btn btn-secondary" id="backButton"
                         style="display: none;">Kembali</button>
                     <button type="button" class="btn btn-primary" id="nextButton">Lanjut</button>
-                    <button type="submit" class="btn btn-success" form="addRequestForm" id="saveButton"
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmSaveModal" id="saveButton"
                         style="display: none;">Simpan</button>
 
                 </div>
+
+        <div class="modal fade" id="confirmSaveModal" tabindex="-1" aria-labelledby="confirmSaveModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmSaveModalLabel">Konfirmasi Simpan</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img src="{{ asset('images/confirm.jpg') }}" alt="No Data" class="img-fluid mb-3"
+                            style="max-width: 200px; height: auto;">
+                        <p>Apakah Anda yakin ingin menyimpan data ini?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-success" form="addRequestForm">Ya, Simpan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         </form>
     </div>

@@ -1,6 +1,6 @@
 @extends('layouts.dashboardLayouts')
 
-@section('ADIDATA', 'Dashboard Hr')
+@section('ADIDATA', 'Dashboard Management')
 
 @section('username', Auth::user()->name)
 @section('userid', Auth::user()->id)
@@ -12,7 +12,7 @@
 
 @endsection
 
-@section('title-content', 'Dashboard HR Manager')
+@section('title-content', 'Dashboard Management')
 
 @section('content')
     <!-- Container for chat and candidate list -->
@@ -35,29 +35,21 @@
             <div class="card" style="height: 400px; border-radius: 10px;">
                 <div class="card-header bg-primary text-white d-flex align-items-center">
                     <i class="bi bi-list-task me-2" style="font-size: 24px;"></i>
-                    Tugas yang belum diselesaikan
+                    Tugas Hari Ini
                 </div>
                 <div class="card-body overflow-auto">
                     <ul class="list-group">
-
                         @if ($assignTodo->isEmpty())
                             <div style="text-align: center; margin-top: 20px;">
-                                <img src="{{ asset('images/no_data1.jpg') }}" alt="No Data"
-                                    style="width: 60px; height: 60px; margin-bottom: 10px;">
+                                <img src="{{ asset('images/no_data2.jpg') }}" alt="No Data"
+                                    style="width: 150px; height: 130px; margin-bottom: 10px;">
                                 <p style="font-size: 16px; color: #666;">Belum ada Tugas baru yang tersedia</p>
                             </div>
                         @else
                             @foreach ($assignTodo as $data)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     <div class="d-flex align-items-center gap-2">
-                                        @if ($data->type == 'Request')
-                                            <i class="bi bi-people text-success me-2" style="font-size: 20px;"></i>
-                                        @elseif ($data->type == 'Offering')
-                                            <i class="bi bi-person-check text-warning me-2" style="font-size: 20px;"></i>
-                                        @elseif ($data->type == 'Contract')
-                                            <i class="bi bi-file-earmark-text text-danger me-2"
-                                                style="font-size: 20px;"></i>
-                                        @endif
+                                        <i class="bi bi-person-check text-warning me-2" style="font-size: 20px;"></i>
 
                                         <div>
                                             <div class="fw-bold">{{ $data->title }}</div>
@@ -65,22 +57,10 @@
                                         </div>
                                     </div>
 
-                                    @if ($data->type == 'Request')
-                                        <a href="{{ route('updateRequester', [$data->action_id]) }}"
-                                            class="d-flex align-items-center text-primary">
-                                            <i class="bi bi-arrow-right-circle" style="font-size: 20px;"></i>
-                                        </a>
-                                    @elseif ($data->type == 'Offering')
-                                        <a href="{{ route('updateOffering', [$data->action_id]) }}"
-                                            class="d-flex align-items-center text-primary">
-                                            <i class="bi bi-arrow-right-circle" style="font-size: 20px;"></i>
-                                        </a>
-                                    @elseif ($data->type == 'Contract')
-                                        <a href="{{ route('updateOffering', [$data->action_id]) }}"
-                                            class="d-flex align-items-center text-primary">
-                                            <i class="bi bi-arrow-right-circle" style="font-size: 20px;"></i>
-                                        </a>
-                                    @endif
+                                    <a href="{{ route('updateOfferingManagement', [$data->action_id]) }}"
+                                        class="d-flex align-items-center text-primary">
+                                        <i class="bi bi-arrow-right-circle" style="font-size: 20px;"></i>
+                                    </a>
 
                                 </li>
                             @endforeach
@@ -139,33 +119,30 @@
                 </div>
 
                 <div class="card-body" style="overflow-y: auto; padding: 15px;">
-                    <ul id="newCandidatesList" style="list-style: none; padding: 0; margin: 0;">
-                        @if ($newCandidate->isEmpty())
-                            <div style="text-align: center; margin-top: 20px;">
-                                <img src="{{ asset('images/no_data1.jpg') }}" alt="No Data"
-                                    style="width: 60px; height: 60px; margin-bottom: 10px;">
-                                <p style="font-size: 16px; color: #666;">Belum ada kandidat baru yang tersedia</p>
+                    @if ($newCandidate->isEmpty())
+                        <div style="text-align: center; margin-top: 20px;">
+                            <img src="{{ asset('images/no_data1.jpg') }}" alt="No Data"
+                                style="width: 60px; height: 60px; margin-bottom: 10px;">
+                            <p style="font-size: 16px; color: #666;">Belum ada kandidat baru yang tersedia</p>
+                        </div>
+                    @else
+                        @foreach ($newCandidate as $data)
+                            <div style="display: flex; align-items: center; margin-bottom: 15px; gap: 10px;">
+                                <img src="https://picsum.photos/id/{{ $data->candidate_id }}/50/50" alt="Profile Picture"
+                                    class="profile-img" style="border-radius: 50%; margin-right: 15px;">
+                                <div class="candidate-details">
+                                    <h6 style="margin: 0; font-size: 14px; font-weight: bold;">{{ $data->name }}</h6>
+                                    <p class="job-position" style="margin: 2px 0; font-size: 12px; color: #666;">
+                                        {{ $data->resourceDetail->position }}</p>
+                                    <p class="join-date" style="margin: 0; font-size: 12px; color: #999;">Bergabung pada:
+                                        {{ Carbon\Carbon::parse($data->join_date)->translatedFormat('d M Y') }}</p>
+                                </div>
                             </div>
-                        @else
-                            @foreach ($newCandidate as $data)
-                                <li class="candidate-item"
-                                    style="display: flex; align-items: center; justify-content:center;margin-bottom: 15px; gap:10px;">
-                                    <img src="https://picsum.photos/id/{{ $data->candidate_id }}/50/50"
-                                        alt="Profile Picture" class="profile-img"
-                                        style="border-radius: 50%; margin-right: 15px;">
-                                    <div class="candidate-details">
-                                        <h6 style="margin: 0; font-size: 14px; font-weight: bold;">{{ $data->name }}</h6>
-                                        <p class="job-position" style="margin: 2px 0; font-size: 12px; color: #666;">
-                                            {{ $data->resourceDetail->position }}</p>
-                                        <p class="join-date" style="margin: 0; font-size: 12px; color: #999;">Bergabung
-                                            pada:
-                                            {{ Carbon\Carbon::parse($data->join_date)->translatedFormat('d M Y') }}</p>
-                                    </div>
-                                </li>
-                            @endforeach
-                        @endif
-                    </ul>
+                        @endforeach
+                    @endif
                 </div>
+
+
             </div>
         </div>
 
@@ -222,8 +199,6 @@
                         })
                         .then(requestData => {
                             const labels = requestData.labels;
-                            const interview = requestData.interview;
-                            const offering = requestData.offering;
                             const data = requestData.data;
                             const max = requestData.max;
 
@@ -232,72 +207,18 @@
                                 recruiterChart.destroy();
                             }
 
-                            // const datasets = [{
-                            //         label: 'Interview',
-                            //         data: interview,
-                            //         backgroundColor: '#2196F3',
-                            //         borderColor: '#2196F3',
-                            //         borderWidth: 1,
-                            //         barThickness: 50
-                            //     },
-                            //     {
-                            //         label: 'Offering',
-                            //         data: offering,
-                            //         backgroundColor: '#FFD700',
-                            //         borderColor: '#FFD700',
-                            //         borderWidth: 1,
-                            //         barThickness: 50
-                            //     },
-                            //     {
-                            //         label: 'Onboarding',
-                            //         data: data,
-                            //         backgroundColor: '#2DAA9E',
-                            //         borderColor: '#2DAA9E',
-                            //         borderWidth: 1,
-                            //         barThickness: 50
-                            //     },
-                            // ];
-
-                            const datasets = [];
-
-                            if (interview && interview.some(value => value !== 0)) {
-                                datasets.push({
-                                    label: 'Interview',
-                                    data: interview,
-                                    backgroundColor: '#2196F3',
-                                    borderColor: '#2196F3',
-                                    borderWidth: 1,
-                                    barThickness: 50
-                                });
-                            }
-
-                            if (offering && offering.some(value => value !== 0)) {
-                                datasets.push({
-                                    label: 'Offering',
-                                    data: offering,
-                                    backgroundColor: '#FFD700',
-                                    borderColor: '#FFD700',
-                                    borderWidth: 1,
-                                    barThickness: 50
-                                });
-                            }
-
-                            if (data && data.some(value => value !== 0)) {
-                                datasets.push({
-                                    label: 'Onboarding',
-                                    data: data,
-                                    backgroundColor: '#2DAA9E',
-                                    borderColor: '#2DAA9E',
-                                    borderWidth: 1,
-                                    barThickness: 50
-                                });
-                            }
-
                             recruiterChart = new Chart(ctx, {
                                 type: 'bar',
                                 data: {
                                     labels: labels,
-                                    datasets: datasets,
+                                    datasets: [{
+                                        label: 'Pemenuhan',
+                                        data: data,
+                                        backgroundColor: '#2DAA9E',
+                                        borderColor: '#2DAA9E',
+                                        borderWidth: 1,
+                                        barThickness: 50
+                                    }]
                                 },
                                 options: {
                                     responsive: true,
@@ -309,6 +230,14 @@
                                             },
                                         },
                                         y: {
+                                            // title: {
+                                            //     display: true,
+                                            //     text: 'Jumlah Permintaan',
+                                            //     font: {
+                                            //         size: 14
+                                            //     },
+                                            //     color: '#000'
+                                            // },
                                             grid: {
                                                 display: false
                                             },

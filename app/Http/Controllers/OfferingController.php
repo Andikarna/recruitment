@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AssignTodo;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Offering;
@@ -21,11 +22,23 @@ use Illuminate\Support\Facades\Auth;
 
 class OfferingController extends Controller
 {
-    public function offering(){
+    public function offering(Request $request){
         
-        $offeringList = Offering::orderByRaw('COALESCE(updated_date, created_date) DESC')
-        ->paginate(5)
-        ->withQueryString();
+        $offeringList = Offering::orderByRaw('COALESCE(updated_date, created_date) DESC');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $offeringList->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                    ->orWhere('position', 'LIKE', "%{$search}%")
+                    ->orWhere('qualification', 'LIKE', "%{$search}%")
+                    ->orWhere('project', 'LIKE', "%{$search}%")
+                    ->orWhere('status', 'LIKE', "%{$search}%")
+                ;
+            });
+        }
+
+        $offeringList = $offeringList->paginate(5)->withQueryString();
 
         $userManagement = User::where('role_id',4)->get();
 
@@ -47,6 +60,21 @@ class OfferingController extends Controller
         $newOfferingApproval->created_id = Auth::user()->id;
         $newOfferingApproval->created_by = Auth::user()->name;
         $newOfferingApproval->save();
+
+        $assignTodo = new AssignTodo();
+        $assignTodo->type = "Approval";
+        $assignTodo->user_id = $request->userManajemen;
+        $assignTodo->user_name = User::where('id',$request->userManajemen)->pluck('name')->first();
+        $assignTodo->action_id = $id;
+        $assignTodo->title = "Permintaan Offering Approval";
+        $assignTodo->description = $offeringDetail->name . " | " . $offeringDetail->position;
+        $assignTodo->status = "Baru";
+        $assignTodo->created_date =  Carbon::now('Asia/Jakarta');
+        $assignTodo->created_id = Auth::user()->id;
+        $assignTodo->created_by = Auth::user()->name;
+        $assignTodo->save();
+
+        dd($assignTodo->id);
 
         return redirect('/offering');
     }
@@ -184,6 +212,13 @@ class OfferingController extends Controller
             $offering->updated_id = Auth::user()->id;
             $offering->updated_by = Auth::user()->name;
             $offering->save();
+        }
+
+        //setAssignTodo
+        $asignTodo = AssignTodo::where('action_id',$offering->id)->get();
+        foreach ($asignTodo as $data){
+            $data->status = "Selesai";
+            $data->save();
         }
 
         return redirect('/offering');

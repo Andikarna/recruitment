@@ -356,7 +356,7 @@
                                 <div class="col-md-6">
                                     <label for="uniq_code" class="form-label">Kode Unik</label>
                                     <input type="text" class="form-control" id="uniq_code" name="uniq_code" disabled
-                                        value="{{ $candidate->uniq_code }}">
+                                        value="{{ $candidate->uniq_code ?? "-" }}">
                                 </div>
                             </div>
 
@@ -364,7 +364,7 @@
                                 <div class="col-md-6">
                                     <label for="recruiter" class="form-label">Recruiter</label>
                                     <input type="text" class="form-control" id="recruiter" name="recruiter" disabled
-                                        value="{{ $candidate->created_by }}">
+                                        value="{{ $offering->created_by }}">
                                 </div>
                             </div>
 
@@ -699,7 +699,7 @@
                                 </div>
 
                                 <div class="form-group mt-4">
-                                    <label for="approval" class="form-label">Staus Offering</label>
+                                    <label for="approval" class="form-label">Status Offering</label>
                                     <select class="form-select w-25" id="approval"  disabled name="approval"
                                         aria-label="Pilih Status"
                                         {{ $offering->status == 'Approve' || $offering->status == 'Reject' ? 'disabled' : '' }}>

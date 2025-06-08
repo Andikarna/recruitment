@@ -11,12 +11,12 @@ use App\Models\Notifications;
 use App\Models\ResourceDetail;
 use Illuminate\Support\Facades\Auth;
 
-class DatabaseCandidateController extends Controller
+class GlobalCandidateController extends Controller
 {
-    public function candidateDatabase(Request $request)
+    public function globalCandidate(Request $request)
     {
         $candidate  = Candidate::orderByRaw('COALESCE(updated_date, created_date) DESC');
-
+            
         if ($request->filled('search')) {
             $search = $request->search;
             $candidate->where(function ($q) use ($search) {
@@ -27,21 +27,20 @@ class DatabaseCandidateController extends Controller
                     ->orWhere('major', 'LIKE', "%{$search}%")
                     ->orWhere('experience', 'LIKE', "%{$search}%")
                     ->orWhere('status', 'LIKE', "%{$search}%")
-                ;
+                    ;
             });
         }
 
-        $candidate = $candidate
-        ->whereNotNull('uniq_code')
-        ->paginate(5)
-        ->withQueryString();
+        $candidate = $candidate->whereNull('uniq_code')
+            ->paginate(5)
+            ->withQueryString();
 
         $userId = Auth::user()->id;
         $tasklist = TaksList::where('user_id', $userId)->pluck('resource_id');
         $tasklistDetail = TaksList::where('user_id', $userId)->pluck('resource_detail_id');
         $resource = Resource::whereIn('id', $tasklist)->get();
         $resourceDetail = ResourceDetail::whereIn('id', $tasklistDetail)->get();
-        return view('databasecandidate.candidateDatabase', compact('userId', 'candidate', 'resource', 'resourceDetail'));
+        return view('globalcandidate.globalDatabase', compact('userId', 'candidate', 'resource', 'resourceDetail'));
     }
     public function addCandidate(Request $request)
     {
@@ -57,7 +56,6 @@ class DatabaseCandidateController extends Controller
         $newCandidate->name = $request->name;
         $newCandidate->position = $request->position;
         $newCandidate->qualification = $request->qualification;
-        $newCandidate->mobile_phone = $request->numberPhone;
         $newCandidate->education = $request->education;
         $newCandidate->experience = $request->experience;
         $newCandidate->status = "Kandidat";
@@ -73,19 +71,19 @@ class DatabaseCandidateController extends Controller
         $newCandidate->created_by = Auth::user()->name;
         $newCandidate->save();
 
-        return redirect('candidateDatabase');
+        return redirect('globalCandidate');
     }
 
-    public function detailCandidate($id)
+    public function detailGlobal($id)
     {
         $candidate = Candidate::where('id', $id)->first();
-        return view('databasecandidate.detailCandidate', compact('candidate'));
+        return view('globalcandidate.detailCandidate', compact('candidate'));
     }
 
     public function updateCandidate($id)
     {
         $candidate = Candidate::where('id', $id)->first();
-        return view('databasecandidate.editCandidate', compact('candidate'));
+        return view('globalcandidate.editCandidate', compact('candidate'));
     }
 
     public function saveCandidate(Request $request, $id)
@@ -107,7 +105,7 @@ class DatabaseCandidateController extends Controller
         $existCandidate->updated_by = Auth::user()->name;
         $existCandidate->save();
 
-        return redirect('candidateDatabase');
+        return redirect('globalCandidate');
     }
 
     public function inFavouriteCandidate($id)
@@ -116,7 +114,7 @@ class DatabaseCandidateController extends Controller
         $candidate->isFavoriteId = Auth::id();
         $candidate->isFavoriteName = Auth::user()->name;
         $candidate->save();
-        return redirect('candidateDatabase');
+        return redirect('globalCandidate');
     }
 
     public function unFavouriteCandidate($id)
@@ -125,7 +123,7 @@ class DatabaseCandidateController extends Controller
         $candidate->isFavoriteId = null;
         $candidate->isFavoriteName = null;
         $candidate->save();
-        return redirect('candidateDatabase');
+        return redirect('globalCandidate');
     }
 
     public function getPositionsByResource(Request $request)
@@ -135,7 +133,7 @@ class DatabaseCandidateController extends Controller
         return response()->json($positions);
     }
 
-    public function requestCandidate($id)
+    public function requestGlobalCandidate($id)
     {
         $candidate = Candidate::find($id);
 
@@ -160,6 +158,6 @@ class DatabaseCandidateController extends Controller
         }
 
 
-        return redirect('candidateDatabase');
+        return redirect('globalCandidate');
     }
 }

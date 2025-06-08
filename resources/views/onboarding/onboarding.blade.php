@@ -17,28 +17,21 @@
 @endsection
 
 
-@section('title-content',"Onboarding")
+@section('title-content', 'Onboarding')
 
 @section('content')
     <div class="row bg-white p-3" style="border-radius: 20px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
         <div class="col-12 d-flex justify-content-between align-items-center">
             <h5>Onboarding</h5>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addRequestModal">Tambah Kandidat</button>
         </div>
 
         {{-- header tabel --}}
         <div class="col-12 mt-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <select class="form-select" id="filterOption" style="width: 200px;">
-                        <option value="">Filter by...</option>
-                        <option value="1">Option 1</option>
-                        <option value="2">Option 2</option>
-                    </select>
-                </div>
-                <div>
-                    <input type="text" id="searchBox" class="form-control" placeholder="Search..." style="width: 300px;">
-                </div>
+            <div class="d-flex justify-content-end align-items-center">
+                <form method="GET" action="{{ route('onboarding') }}">
+                    <input type="text" name="search" id="searchBox" class="form-control" placeholder="Search..."
+                        style="width: 300px;" value="{{ request('search') }}" onchange="this.form.submit()">
+                </form>
             </div>
         </div>
 
@@ -68,10 +61,9 @@
                                 {{ $data->resourceDetail->position ?? 'Position not available' }}</td>
                             <td class="text-center align-middle">
                                 {{ $data->resourceDetail->qualification ?? 'Qualification not available' }}</td>
+                            <td class="text-center align-middle">{{ $data->resource->project ?? 'Project not available' }}
+                            </td>
                             <td class="text-center align-middle">
-                                {{ $data->resource->project ?? 'Qualification not available' }}</td>
-
-                            <th class="align-middle text-center">
                                 @if ($data->status == 'Baru')
                                     <button class="btn btn-primary btn-md text-white shadow-sm"
                                         style="width: 100px; font-size: 0.875rem;">Baru</button>
@@ -85,8 +77,7 @@
                                     <button class="btn btn-danger btn-md text-white shadow-sm"
                                         style="width: 100px; font-size: 0.875rem;">Cancel</button>
                                 @endif
-                            </th>
-
+                            </td>
                             <td class="actions-column align-middle text-center bg-white">
                                 <div class="dropdown" style="position: relative;">
                                     <i class="bi bi-three-dots hover icon-behind" id="dropdownMenuButton"
@@ -99,42 +90,67 @@
                                                 <i class="bi bi-eye me-2"></i>Lihat Data
                                             </a>
                                         </li>
-
                                         <li>
                                             <a class="dropdown-item fw-medium"
                                                 href="{{ route('updateOnboarding', [$data->id]) }}">
                                                 <i class="bi bi-pencil-square me-2"></i>Edit Data
                                             </a>
                                         </li>
-
                                         <li>
                                             <form action="{{ route('cancelOnboarding', [$data->id]) }}" method="POST"
                                                 style="display: inline;">
                                                 @csrf
-                                                <button type="submit" class="dropdown-item text-danger fw-medium"">
+                                                <button type="submit" class="dropdown-item text-danger fw-medium">
                                                     <i class="bi bi-x-circle me-2"></i>Cancel Onboarding
                                                 </button>
                                             </form>
                                         </li>
-
                                         <li>
-                                            <form action="{{ route('sendHrm', [$data->id]) }}" method="POST"
-                                                style="display: inline;">
-                                                @csrf
-                                                <button type="submit" class="dropdown-item text-success fw-medium"
-                                                    style="border: none; background: none;">
-                                                    <i class="bi bi-send me-2"></i>Send to HRM
-                                                </button>
-                                            </form>
+                                            <button type="button" class="dropdown-item text-success fw-medium"
+                                                style="border: none; background: none;" data-bs-toggle="modal"
+                                                data-bs-target="#confirmSaveModal-{{ $data->id }}">
+                                                <i class="bi bi-send me-2"></i>Send to HRM
+                                            </button>
                                         </li>
-
                                     </ul>
                                 </div>
                             </td>
                         </tr>
+
+                        <!-- Modal for Send to HRM -->
+                        <div class="modal fade" id="confirmSaveModal-{{ $data->id }}" tabindex="-1"
+                            aria-labelledby="confirmSaveModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="confirmSaveModalLabel">Konfirmasi Send To HRM</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <img src="{{ asset('images/confirm.jpg') }}" alt="No Data" class="img-fluid mb-3"
+                                            style="max-width: 200px; height: auto;">
+                                        <p>Apakah Anda yakin ingin mengirim data ini ke HRM?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Batal</button>
+                                        <form action="{{ route('sendHrm', [$data->id]) }}" method="POST"
+                                            style="display: inline;">
+                                            @csrf
+                                            <button type="submit" class="btn btn-success">Ya, Kirim</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     @endforeach
+
                 </tbody>
             </table>
+
+
+
         </div>
 
         <div class="col-12 mt-3">

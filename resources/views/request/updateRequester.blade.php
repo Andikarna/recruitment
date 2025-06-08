@@ -129,18 +129,18 @@
                     <div class="tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
                         <div class="mb-3 mt-3">
                             <label for="name" class="form-label">Nama Permintaan</label>
-                            <textarea class="form-control" id="name" name="name">{{ $resourceDetail->name }}</textarea>
+                            <textarea placeholder="Masukan nama permintaan" class="form-control" id="name" name="name">{{ $resourceDetail->name }}</textarea>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="client" class="form-label">Klien</label>
                                 <input type="text" class="form-control" id="client" name="client"
-                                    value="{{ $resourceDetail->client }}">
+                                    placeholder="Masukan klien" value="{{ $resourceDetail->client }}">
                             </div>
                             <div class="col-md-6">
                                 <label for="project" class="form-label">Proyek</label>
                                 <input type="text" class="form-control" id="project" name="project"
-                                    value="{{ $resourceDetail->project }}">
+                                    placeholder="Masukan project" value="{{ $resourceDetail->project }}">
                             </div>
                         </div>
 
@@ -340,7 +340,7 @@
                             <!-- Table Header -->
                             <!-- Tombol Tambah dan Hapus -->
                             <div class="d-flex justify-content-end mb-3">
-                                <button type="button" id="addInterviewStageButton" class="btn btn-primary mt-2">Tambah
+                                <button type="button" id="addInterviewStageButton" class="btn btn-primary mt-2"> <i class="bi bi-plus"></i> Tambah
                                     Tahap Wawancara</button>
                             </div>
 
@@ -534,8 +534,9 @@
                         </table>
 
                         <div class="d-flex justify-content-end mb-3">
-                            <button type="button" id="addFasilitasStageButton" class="btn btn-primary mt-2">Tambah
-                                Fasilitas</button>
+                            <button type="button" id="addFasilitasStageButton" class="btn btn-primary mt-2">
+                                <i class="bi bi-plus"></i> Tambah Fasilitas
+                            </button>
                         </div>
 
 
@@ -783,10 +784,32 @@
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" id="backButton" style="display: none;">Kembali</button>
             <button type="button" class="btn btn-primary" id="nextButton">Lanjut</button>
-            <button type="submit" class="btn btn-success" form="addRequestForm" id="saveButton"
-                style="display: none;">Simpan</button>
+            <button type="button" class="btn btn-success" id="saveButton" style="display: none;"
+                data-bs-toggle="modal" data-bs-target="#confirmSaveModal">Simpan</button>
 
         </div>
+
+        <div class="modal fade" id="confirmSaveModal" tabindex="-1" aria-labelledby="confirmSaveModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmSaveModalLabel">Konfirmasi Simpan</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img src="{{ asset('images/confirm.jpg') }}" alt="No Data" class="img-fluid mb-3"
+                            style="max-width: 200px; height: auto;">
+                        <p>Apakah Anda yakin ingin menyimpan data ini?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-success" form="addRequestForm">Ya, Simpan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         </form>
 
@@ -1067,7 +1090,7 @@
                         </div>
                         <div class="text-center align-middle"> 
                             <button type="button"
-                            class="btn btn-danger removeStageButton">Hapus</button>
+                            class="btn btn-danger removeStageButton"><i class="fas fa-trash-alt removeStageButton"></i></button>
                         </div>
                     </div>
                 </div>

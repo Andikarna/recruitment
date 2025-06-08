@@ -31,4 +31,13 @@ class Interview extends Model
         'updated_id',
         'updated_by'
     ];
+
+    public function resource(){
+         return $this->belongsTo(Resource::class, 'resource_id', 'id');
+    }
+
+    public function interview_detail()
+    {
+        return $this->hasOne(InterviewDetail::class, 'interview_id', 'id');
+    }
 }

@@ -35,4 +35,9 @@ class Resource extends Model
     {
         return $this->hasOne(ResourceDetail::class, 'resource_id', 'id');
     }
+
+    public function interview(){
+         return $this->hasOne(Interview::class, 'resource_id', 'id');
+    }
+    
 }

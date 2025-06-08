@@ -157,7 +157,7 @@
                         <a href="/offering" class="btn btn-link p-0" aria-label="Back">
                             <i class="bi bi-arrow-left-circle" style="font-size: 1.5rem;"></i>
                         </a>
-                        <h5 class="modal-title" id="addRequestModalLabel">Update Offering</h5>
+                        <h5 class="modal-title" id="addRequestModalLabel">Detail Offering</h5>
                     </div>
 
                     <div class="d-flex justify-content-between align-items-center">
@@ -221,11 +221,7 @@
                                 aria-selected="true">Offering</button>
                         </li>
 
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="additional-tab" data-bs-toggle="tab" data-bs-target="#additional"
-                                type="button" role="tab" aria-controls="additional" aria-selected="false">Verifikasi
-                                Informasi</button>
-                        </li>
+                        
                     </ul>
 
                     <!-- Tab -->
@@ -360,7 +356,7 @@
                                 <div class="col-md-6">
                                     <label for="uniq_code" class="form-label">Kode Unik</label>
                                     <input type="text" class="form-control" id="uniq_code" name="uniq_code" disabled
-                                        value="{{ $candidate->uniq_code ?? "-"}}">
+                                        value="{{ $candidate->uniq_code ?? "-" }}">
                                 </div>
                             </div>
 
@@ -436,7 +432,7 @@
                                                 <div class="input-group w-100">
                                                     <span class="input-group-text">Rp</span>
                                                     <input required type="text" id="offeringSalary"
-                                                        class="form-control" name="offeringSalary"
+                                                        class="form-control" name="offeringSalary" disabled
                                                         placeholder="Gaji Pokok"
                                                         value="{{ $offeringSalary->salary ?? '' }}">
                                                 </div>
@@ -444,7 +440,7 @@
                                         </td>
                                         <td></td>
                                         <td class="text-center align-middle">
-                                            <input type="text" name="ket_salary" id="ket_offeringSalary"
+                                            <input type="text" name="ket_salary" id="ket_offeringSalary" disabled
                                                 class="form-control" placeholder="Masukan Catatan"
                                                 value="{{ $offeringSalary->ket_salary ?? '' }}">
                                         </td>
@@ -457,17 +453,18 @@
                                             <div class="form-check form-switch d-flex justify-content-center"
                                                 style="gap: 10px;">
                                                 @if (isset($offeringSalary) && $offeringSalary->pph21 !== null)
-                                                    <input class="form-check-input" type="checkbox" role="switch"
+                                                    <input disabled class="form-check-input" type="checkbox" role="switch"
                                                         {{ $offeringSalary->pph21 == 1 ? 'checked' : '' }}
                                                         style="width: 50px; height: 25px;" name="pph21" id="pph21">
                                                 @else
                                                     <input class="form-check-input" type="checkbox" role="switch"
+                                                    disabled
                                                         name="pph21" id="pph21" style="width: 50px; height: 25px;">
                                                 @endif
                                             </div>
                                         </td>
                                         <td class="text-center align-middle">
-                                            <input type="text" class="form-control" name="ket_pph21" id="ket_pph21"
+                                            <input disabled type="text" class="form-control" name="ket_pph21" id="ket_pph21"
                                                 placeholder="Masukan Catatan"
                                                 value="{{ $offeringSalary->ket_pph21 ?? '' }}">
                                         </td>
@@ -479,18 +476,18 @@
                                             <div class="form-check form-switch d-flex justify-content-center"
                                                 style="gap: 10px;">
                                                 @if (isset($offeringSalary) && $offeringSalary->bpjs_ket !== null)
-                                                    <input class="form-check-input" type="checkbox" role="switch"
+                                                    <input disabled class="form-check-input" type="checkbox" role="switch"
                                                         name="bpjs_ket" id="bpjs_ket" style="width: 50px; height: 25px;"
                                                         {{ $offeringSalary->bpjs_ket == 1 ? 'checked' : '' }}>
                                                 @else
-                                                    <input class="form-check-input" type="checkbox" role="switch"
+                                                    <input disabled class="form-check-input" type="checkbox" role="switch"
                                                         name="bpjs_ket" id="bpjs_ket"
                                                         style="width: 50px; height: 25px;">
                                                 @endif
                                             </div>
                                         </td>
                                         <td class="text-center align-middle">
-                                            <input type="text" class="form-control" name="ket_bpjsket"
+                                            <input disabled type="text" class="form-control" name="ket_bpjsket"
                                                 id="ket_bpjsket" placeholder="Masukan Catatan"
                                                 value="{{ $offeringSalary->ket_bpjsket ?? '' }}">
                                         </td>
@@ -502,18 +499,18 @@
                                             <div class="form-check form-switch d-flex justify-content-center"
                                                 style="gap: 10px;">
                                                 @if (isset($offeringSalary) && $offeringSalary->bpjs_kes !== null)
-                                                    <input class="form-check-input" type="checkbox" role="switch"
+                                                    <input disabled class="form-check-input" type="checkbox" role="switch"
                                                         name="bpjs_kes" id="bpjs_kes" style="width: 50px; height: 25px;"
                                                         {{ $offeringSalary->bpjs_kes == 1 ? 'checked' : '' }}>
                                                 @else
-                                                    <input class="form-check-input" type="checkbox" role="switch"
+                                                    <input disabled class="form-check-input" type="checkbox" role="switch"
                                                         name="bpjs_kes" id="bpjs_kes"
                                                         style="width: 50px; height: 25px;">
                                                 @endif
                                             </div>
                                         </td class="text-center align-middle">
                                         <td class="text-center align-middle">
-                                            <input type="text" class="form-control" name="ket_bpjskes"
+                                            <input disabled type="text" class="form-control" name="ket_bpjskes"
                                                 id="ket_bpjskes" placeholder="Masukan Catatan"
                                                 value="{{ $offeringSalary->ket_bpjskes ?? '' }}">
                                         </td>
@@ -522,26 +519,18 @@
 
                             </table>
 
-                            <div class="d-flex justify-content-end mb-3">
-                                <button type="button" id="addFasilitasStageButton" class="btn btn-primary mt-2">Tambah
-                                    Fasilitas</button>
-                            </div>
-
-
                             <table class="table">
                                 <thead>
                                     <tr>
                                         <th class="text-center align-middle">Fasilitas</th>
                                         <th class="text-center align-middle">Catatan</th>
-                                        <th class="text-start align-middle">{{ '' }}</th>
                                     </tr>
                                 </thead>
                                 <tbody id="fasilitasStageContainer">
                                     @foreach ($offeringFasilitas as $data)
                                         <tr class="fasilitas-stage">
-                                            <input name="fasilitas_id[]" value="{{ $data->id }}" hidden>
                                             <td class="text-center align-middle ">
-                                                <select class="form-control" name="fasilitas[]">
+                                                <select disabled class="form-control" name="fasilitas[]">
                                                     <option value="Tunjangan Makan"
                                                         {{ $data->fasilitas_name == 'Tunjangan Makan' ? 'selected' : '' }}>
                                                         Tunjangan Makan</option>
@@ -560,14 +549,9 @@
                                                 </select>
                                             </td>
                                             <td class="text-center align-middle ">
-                                                <input type="text" class="form-control" name="ket_fasilitas[]"
+                                                <input disabled type="text" class="form-control" name="ket_fasilitas[]"
                                                     placeholder="Masukkan keterangan"
                                                     value="{{ $data->ket_fasilitas }}" />
-                                            </td>
-                                            <td class="text-center align-middle">
-                                                <button type="button" class="btn btn-danger removeStageButton">
-                                                    <i class="fas fa-trash-alt removeStageButton"></i>
-                                                </button>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -713,403 +697,6 @@
                                         </tbody>
                                     </table>
                                 </div>
-
-                                <div class="form-group mt-4">
-                                    <label for="approval" class="form-label">Status Offering</label>
-                                    <select class="form-select w-25" id="approval" name="approval" aria-label="Pilih Status" {{ $offering->status == "Approve" || $offering->status == "Reject"  ? "disabled" : '' }}>
-                                        <option disabled selected>Pilih Status</option>
-                                        <option value="Approve" {{ $offering->status == "Approve" ? "selected" : '' }}>Approve</option>
-                                        <option value="Reject" {{ $offering->status == "Reject" ? "selected" : '' }}>Reject</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Tab Verifikasi --}}
-                        <div class="tab-pane fade show" id="additional" role="tabpanel"
-                            aria-labelledby="additional-tab">
-
-                            <h3 class="pt-4">Informasi Kandidat</h3>
-                            <p>Informasi mengenai kandidat yang akan direkrut</p>
-
-                            <div class="row mb-3">
-
-                                <div class="col-md-6">
-                                    <label for="name" class="form-label">Nama</label>
-                                    <input class="form-control" type="text" id="name" name="name" disabled
-                                        value="{{ $offering->name }}">
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="gender" class="form-label">Jenis Kelamin</label>
-                                    <div class="custom-select-wrapper">
-                                        <select class="form-control" id="gender" name="gender" disabled>
-                                            <option value="Laki Laki"
-                                                {{ $candidate->gender == 'Laki Laki' ? 'selected' : '' }}>
-                                                Laki
-                                                Laki</option>
-                                            <option value="Perempuan"
-                                                {{ $candidate->gender == 'Perempuan' ? 'selected' : '' }}>
-                                                Perempuan</option>
-                                        </select>
-                                        <i class="fas fa-chevron-down select-icon"></i>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="row mb-3">
-
-                                <div class="col-md-6">
-                                    <label for="project" class="form-label">Pengalaman (Tahun)</label>
-                                    <input type="text" class="form-control" id="experience" name="experience"
-                                        disabled value="{{ $candidate->experience }}">
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="education" class="form-label">Pendidikan</label>
-                                    <div class="input-group">
-                                        <select class="form-control" id="education" name="education" disabled>
-                                            <option value="SD" {{ $candidate->education == 'SD' ? 'selected' : '' }}>
-                                                SD</option>
-                                            <option value="SMP" {{ $candidate->education == 'SMP' ? 'selected' : '' }}>
-                                                SMP</option>
-                                            <option value="SMA" {{ $candidate->education == 'SMA' ? 'selected' : '' }}>
-                                                SMA</option>
-                                            <option value="D3" {{ $candidate->education == 'D3' ? 'selected' : '' }}>
-                                                D3</option>
-                                            <option value="S1" {{ $candidate->education == 'S1' ? 'selected' : '' }}>
-                                                S1</option>
-                                            <option value="S2" {{ $candidate->education == 'S2' ? 'selected' : '' }}>
-                                                S2</option>
-                                            <option value="S3" {{ $candidate->education == 'S3' ? 'selected' : '' }}>
-                                                S3</option>
-                                        </select>
-                                        <i class="fas fa-chevron-down select-icon"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-
-                                <div class="col-md-6">
-                                    <label for="major" class="form-label">Jurusan</label>
-                                    <input type="text" class="form-control" id="major" name="major" disabled
-                                        value="{{ $candidate->major }}">
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="source" class="form-label">Sumber</label>
-                                    <input type="text" class="form-control" id="source" name="source" disabled
-                                        value="{{ $candidate->source }}">
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-
-                                <div class="col-md-6">
-                                    <label for="project" class="form-label">Proyek</label>
-                                    <input type="text" class="form-control" id="project" name="project" disabled
-                                        value="{{ $resource->project }}">
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="position" class="form-label">Posisi</label>
-                                    <input type="text" class="form-control" id="position" name="position" disabled
-                                        value="{{ $resourceDetail->position }}">
-                                </div>
-
-                            </div>
-
-                            <div class="row mb-3">
-
-                                <div class="col-md-12">
-                                    <label for="url" class="form-label">Url</label>
-                                    <input type="text" class="form-control" id="url" name="url" disabled
-                                        value="{{ $candidate->url }}">
-                                </div>
-
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Khusus</label>
-                                        <div class="p-2 d-flex gap-3 ml-3">
-                                            <div class="verifikasi-form-check">
-                                                <input class="form-check-input" type="radio" value="yes"
-                                                    {{ $candidate->isSpecial === 1 ? 'checked' : '' }} disabled required>
-                                                <label class="form-check-label" for="special_candidate">Ya</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" value="no"
-                                                    {{ $candidate->isSpecial === 0 ? 'checked' : '' }} disabled>
-                                                <label class="form-check-label" for="special_candidate_no">Tidak</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="uniq_code" class="form-label">Kode Unik</label>
-                                    <input type="text" class="form-control" id="uniq_code" name="uniq_code" disabled
-                                        value="{{ $candidate->uniq_code }}">
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="recruiter" class="form-label">Recruiter</label>
-                                    <input type="text" class="form-control" id="recruiter" name="recruiter" disabled
-                                        value="{{ $candidate->created_by }}">
-                                </div>
-                            </div>
-
-                            {{-- gaji fasilitas --}}
-                            <div class="pt-3">
-                                <h3>Gaji & Fasilitas</h3>
-                                <p>Informasi Gaji & Fasilitas yang akan didapatkan kandidat jika direkrut</p>
-                            </div>
-
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>{{ '' }}</th>
-                                        <th class="text-center align-middle">Nominal</th>
-                                        <th class="text-center align-middle">Gross|Nett</th>
-                                        <th class="text-center align-middle">Keterangan</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="align-middle">Range Pokok</td>
-                                        <td class="d-flex align-items-center justify-content-center gap-2">
-                                            <!-- Input Minimal Nominal -->
-                                            <div class="nominal-container">
-                                                <div class="input-group">
-                                                    <span class="input-group-text">Rp</span>
-                                                    <input type="text" id="verifikasi_minimalNominal"
-                                                        class="form-control" placeholder="Minimal Nominal" disabled>
-                                                </div>
-                                            </div>
-
-                                            <!-- Tanda "-" -->
-                                            <div>
-                                                <span class="d-flex align-items-center justify-content-center">-</span>
-                                            </div>
-
-                                            <!-- Input Maximal Nominal -->
-                                            <div class="nominal-container">
-                                                <div class="input-group">
-                                                    <span class="input-group-text">Rp</span>
-                                                    <input type="text" id="verifikasi_maximalNominal"
-                                                        class="form-control" placeholder="Maximal Nominal" disabled>
-                                                </div>
-                                            </div>
-                                        </td>
-
-                                        <td class="text-center align-middle">{{ '' }}</td>
-                                        <td class="text-center align-middle">
-                                            <input type="text" id="verifikasi_ket_salary" class="form-control"
-                                                placeholder="Masukan Catatan" disabled>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="align-middle">Gaji Pokok</td>
-                                        <td class="d-flex align-items-center justify-content-center align-middle">
-                                            <div class="nominal-container">
-                                                <div class="input-group w-100">
-                                                    <span class="input-group-text">Rp</span>
-                                                    <input type="text" id="verifikasi_offeringSalary"
-                                                        class="form-control" disabled name="salary"
-                                                        placeholder="Gaji Pokok">
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td></td>
-                                        <td class="text-center align-middle">
-                                            <input type="text" name="ket_salary" id="verifikasi_ket_offeringSalary"
-                                                class="form-control" placeholder="Masukan Catatan" disabled>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="align-middle">PPH 21</td>
-                                        <td>{{ '' }}</td>
-                                        <td class="text-center align-middle">
-                                            <div class="form-check form-switch d-flex justify-content-center"
-                                                style="gap: 10px;">
-                                                <input class="form-check-input" type="checkbox" role="switch"
-                                                    id="verifikasi_pph21" style="width: 50px; height: 25px;" disabled>
-                                            </div>
-                                        </td>
-                                        <td class="text-center align-middle">
-                                            <input type="text" class="form-control" id="verifikasi_ket_pph21"
-                                                placeholder="Masukan Catatan" disabled>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="align-middle">BPJS Ketenagakerjaan</td>
-                                        <td class="text-center align-middle">{{ '' }}</td>
-                                        <td class="text-center align-middle">
-                                            <div class="form-check form-switch d-flex justify-content-center"
-                                                style="gap: 10px;">
-                                                <input class="form-check-input" type="checkbox" role="switch"
-                                                    id="verifikasi_bpjs_ket" style="width: 50px; height: 25px;" disabled>
-                                            </div>
-                                        </td>
-                                        <td class="text-center align-middle">
-                                            <input type="text" class="form-control" id="verifikasi_ket_bpjsket"
-                                                placeholder="Masukan Catatan" disabled>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="align-middle">BPJS Kesehatan</td>
-                                        <td>{{ '' }}</td>
-                                        <td class="text-center align-middle">
-                                            <div class="form-check form-switch d-flex justify-content-center"
-                                                style="gap: 10px;">
-                                                <input class="form-check-input" type="checkbox" role="switch"
-                                                    id="verifikasi_bpjs_kes" style="width: 50px; height: 25px;" disabled>
-                                            </div>
-                                        </td class="text-center align-middle">
-                                        <td class="text-center align-middle">
-                                            <input type="text" class="form-control" id="verifikasi_ket_bpjskes"
-                                                placeholder="Masukan Catatan" disabled>
-                                        </td>
-                                    </tr>
-                                </tbody>
-
-                            </table>
-
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th class="text-start align-middle">Fasilitas</th>
-                                        <th class="text-center align-middle">Catatan</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="fasilitasStageContainerVerification">
-                                </tbody>
-                            </table>
-
-                            {{-- wawancara --}}
-                            <div>
-                                <h3 class="pt-4">Wawancara</h3>
-                                <p>Tahapan yang akan dilalui oleh kandidat</p>
-                                @foreach ($interviewDetail as $data)
-                                    @if ($data->interview_status == 'Baru' || $data->interview_status == 'Diterima')
-                                        <h5 class="pt-2">{{ $data->name_progress }}</h5>
-                                        <div class="section-line"></div>
-                                        <div class="row mb-3">
-
-                                            <div class="col-md-4">
-                                                <label for="interview_date" class="form-label">Tanggal Wawancara</label>
-                                                <input class="form-control" type="date" id="interview_date" disabled
-                                                    name="interview_date" disabled
-                                                    value="{{ $data->interview_date ? \Carbon\Carbon::parse($data->interview_date)->format('Y-m-d') : '' }}">
-                                            </div>
-
-                                            <div class="col-md-4">
-                                                <label for="interview_time" class="form-label">Jam Wawancara</label>
-                                                <input class="form-control" type="time" id="interview_time" disabled
-                                                    disabled name="interview_time" value="{{ $data->interview_time }}">
-                                            </div>
-
-                                            <div class="col-md-4">
-                                                <label for="interview_user" class="form-label">User</label>
-                                                <input class="form-control" type="text" id="interview_user" disabled
-                                                    disabled name="interview_user" placeholder="Masukan nama user"
-                                                    value="{{ $data->user }}">
-                                            </div>
-                                        </div>
-
-                                        <div class="row mb-3">
-
-                                            <div class="col-md-4">
-                                                <label for="interview_file" class="form-label">Dokumen</label>
-                                                <input class="form-control" type="file" id="interview_file" disabled
-                                                    disabled name="interview_file" value="{{ $data->file }}">
-                                            </div>
-
-                                            <div class="col-md-4">
-                                                <label for="interview_client" class="form-label">Klien</label>
-                                                <input class="form-control" type="text" id="interview_client" disabled
-                                                    name="interview_client"
-                                                    value="{{ $data->name_progress == 1 ? 'Ya' : 'Tidak' }}">
-                                            </div>
-
-                                            <div class="col-md-4">
-                                                <label for="interview_link" class="form-label">Url Link</label>
-                                                <input class="form-control" type="text" id="interview_link" disabled
-                                                    disabled name="interview_link" placeholder="Masukan Link Url"
-                                                    value="{{ $data->url }}">
-                                            </div>
-                                        </div>
-
-                                        @if ($data->interview_date != null)
-                                            <div class="row mb-3">
-                                                <div class="col-md-4">
-                                                    <label for="interview_status" class="form-label">Status
-                                                        Wawancara</label>
-                                                    <div class="custom-select-wrapper">
-                                                        <select class="form-control" id="interview_status" disabled
-                                                            name="interview_status" disabled>
-                                                            <option value="Pilih status wawancara" selected>Pilih status
-                                                                wawancara
-                                                            </option>
-                                                            <option value="Ditolak"
-                                                                {{ $data->interview_status == 'Ditolak' ? 'selected' : '' }}>
-                                                                Ditolak</option>
-                                                            <option value="Reschedule"
-                                                                {{ $data->interview_status == 'Reschedule' ? 'selected' : '' }}>
-                                                                Reschedule</option>
-                                                            <option value="Setuju"
-                                                                {{ $data->interview_status == 'Setuju' ? 'selected' : '' }}>
-                                                                Setuju</option>
-                                                            <option value="Diterima"
-                                                                {{ $data->interview_status == 'Diterima' ? 'selected' : '' }}>
-                                                                Diterima</option>
-                                                        </select>
-                                                        <i class="fas fa-chevron-down select-icon"></i>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-4" style="display: none;" id="value_wrapper">
-                                                    <label for="interview_value" class="form-label">Nilai</label>
-                                                    <input class="form-control" type="text" id="interview_value"
-                                                        name="interview_value" value="" disabled>
-                                                </div>
-                                            </div>
-                                        @endif
-
-                                        <div class="row mb-3">
-                                            <div class="col-md-12">
-                                                <label for="interview_ket" class="form-label">Keterangan</label>
-                                                <input class="form-control" type="text" id="interview_ket"
-                                                    name="interview_ket" disabled value="{{ $data->description }}">
-                                            </div>
-                                        </div>
-                                    @endif
-                                @endforeach
-                            </div>
-
-                            {{-- offering --}}
-                            <div>
-                                <h3 class="pt-4">Offering</h3>
-                                <p class="mb-4">Informasi approval manajemen untuk kandidat</p>
-
-                                <div class="form-group mt-4">
-                                    <label for="managerApproval" class="form-label">Status Offering</label>
-                                    <select class="form-select w-25" id="verifikasi_approval" aria-label="Pilih Status"
-                                        disabled>
-                                        <option disabled selected>Pilih Status</option>
-                                        <option value="Approve">Approve</option>
-                                        <option value="Reject">Reject</option>
-                                    </select>
-                                </div>
-
                             </div>
                         </div>
 
@@ -1122,8 +709,8 @@
                     <button type="button" class="btn btn-secondary" id="backButton"
                         style="display: none;">Kembali</button>
                     <button type="button" class="btn btn-primary" id="nextButton">Lanjut</button>
-                    <button type="submit" class="btn btn-success" form="saveOffering" id="saveButton"
-                        style="display: none;">Simpan</button>
+                    {{-- <button type="submit" class="btn btn-success" form="saveOffering" id="saveButton"
+                        style="display: none;">Selesai</button> --}}
 
                 </div>
 

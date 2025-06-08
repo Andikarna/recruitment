@@ -1,6 +1,6 @@
 @extends('layouts.dashboardLayouts')
 
-@section('ADIDATA', 'Database Kandidat')
+@section('ADIDATA', 'Global Kandidat')
 
 @section('username', Auth::user()->name)
 @section('userid', Auth::user()->id)
@@ -14,13 +14,12 @@
     </style>
 @endsection
 
-@section('title-content',"Database Kandidat")
+@section('title-content',"Global Kandidat")
 
 @section('content')
     <div class="row bg-white p-3" style="border-radius: 20px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
         <div class="col-12 d-flex justify-content-between align-items-center">
-            <h5>Database Kandidat</h5>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addRequestModal">Tambah Kandidat</button>
+            <h5>Global Kandidat</h5>
         </div>
 
         {{-- header tabel --}}
@@ -28,7 +27,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div class="col-12 mt-3">
                     <div class="d-flex justify-content-end align-items-center">
-                        <form method="GET" action="{{ route('candidateDatabase') }}">
+                        <form method="GET" action="{{ route('globalCandidate') }}">
                             <input type="text" name="search" id="searchBox" class="form-control" placeholder="Search..."
                                 style="width: 300px;" value="{{ request('search') }}" onchange="this.form.submit()">
                         </form>
@@ -43,7 +42,6 @@
                 <thead>
                     <tr>
                         <th class="text-center">{{ '' }}</th>
-                        <th class="text-center">Kode Unik</th>
                         <th class="text-center">Nama</th>
                         <th class="text-center">Posisi</th>
                         <th class="text-center">Kualifikasi</th>
@@ -63,7 +61,6 @@
                                         alt="Profile Picture" class="rounded-circle shadow" width="40" height="40">
                                 @endif
                             </td>
-                            <td class="text-center align-middle">{{ $data->uniq_code }}</td>
                             <td class="text-center align-middle">{{ $data->name }}</td>
                             <td class="text-center align-middle">{{ $data->position }}</td>
                             <td class="text-center align-middle">{{ $data->qualification }}</td>
@@ -83,7 +80,7 @@
                                         style="position: absolute; left: -100%; min-width: 200px;">
                                         <li>
                                             <a class="dropdown-item fw-medium"
-                                                href="{{ route('detailCandidate', [$data->id]) }}">
+                                                href="{{ route('detailGlobal', [$data->id]) }}">
                                                 <i class="bi bi-eye me-2"></i>Lihat Data
                                             </a>
                                         </li>
@@ -198,12 +195,6 @@
                                         <label for="name" class="form-label">Nama</label>
                                         <input type="text" class="form-control" id="name" name="name"
                                             placeholder="Masukan nama lengkap kandidat" required>
-                                    </div>
-
-                                     <div class="mb-3">
-                                        <label for="position" class="form-label">Nomor Telepon</label>
-                                        <input type="text" class="form-control" id="numberPhone" name="numberPhone"
-                                            placeholder="Masukan Nomor Kandidat">
                                     </div>
 
                                     <div class="mb-3">

@@ -63,7 +63,7 @@
     </style>
 @endsection
 
-@section('title-content',"Offering")
+@section('title-content', 'Offering')
 
 @section('content')
     <div class="row bg-white p-3" style="border-radius: 20px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
@@ -73,11 +73,17 @@
 
         {{-- header tabel --}}
         <div class="col-12 mt-3">
-            <div class="d-flex justify-content-end align-items-center">
-                <form method="GET" action="{{ route('offering') }}">
-                    <input type="text" name="search" id="searchBox" class="form-control" placeholder="Search..."
-                        style="width: 300px;" value="{{ request('search') }}" onchange="this.form.submit()">
-                </form>
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <select class="form-select" id="filterOption" style="width: 200px;">
+                        <option value="">Filter by...</option>
+                        <option value="1">Option 1</option>
+                        <option value="2">Option 2</option>
+                    </select>
+                </div>
+                <div>
+                    <input type="text" id="searchBox" class="form-control" placeholder="Search..." style="width: 300px;">
+                </div>
             </div>
         </div>
 
@@ -98,18 +104,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($offeringList as $key => $data)
+                    @foreach ($offeringApproval as $key => $data)
                         <tr>
                             <td class="nowrap align-middle text-center">
                                 {{ ($offeringList->currentPage() - 1) * $offeringList->perPage() + $key + 1 }}</td>
-                            <td class="nowrap align-middle ">{{ $data->name }}</td>
-                            <td class="nowrap align-middle">{{ $data->position }}</td>
-                            <td class="nowrap align-middle">{{ $data->qualification }}</td>
+                            <td class="nowrap align-middle ">{{ $data->offering->name }}</td>
+                            <td class="nowrap align-middle">{{ $data->offering->position }}</td>
+                            <td class="nowrap align-middle">{{ $data->offering->qualification }}</td>
                             <td class="align-middle"
                                 style="max-width: 200px; break-word; word-wrap: break-word; white-space: normal;">
-                                {{ $data->project }}
+                                {{ $data->offering->project }}
                             </td>
-                            <td class="nowrap align-middle text-center">{{ $data->interview_progress ?: '-' }}</td>
+                            <td class="nowrap align-middle text-center">{{ $data->offering->interview_progress ?: '-' }}
+                            </td>
                             <td class="nowrap align-middle text-center">
                                 {{ $data->created_date ? \Carbon\Carbon::parse($data->created_date)->format('d M Y') : '-' }}
                             </td>
@@ -145,21 +152,19 @@
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
                                         style="position: absolute; left: -100%; min-width: 200px;">
                                         <li>
-                                            <a class="dropdown-item" href="{{ route('detailOffering', [$data->id]) }}">
+                                            <a class="dropdown-item"
+                                                href="{{ route('detailofferingManagement', [$data->offering_id]) }}">
                                                 <i class="bi bi-eye me-2"></i>Lihat data detail
                                             </a>
                                         </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#inputModal">
-                                                <i class="bi bi-envelope me-2"></i>Minta Persetujuan
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="{{ route('updateOffering', [$data->id]) }}">
-                                                <i class="bi bi-pencil me-2"></i>Edit data
-                                            </a>
-                                        </li>
+                                        @if ($data->status == 'Baru')
+                                            <li>
+                                                <a class="dropdown-item"
+                                                    href="{{ route('updateOfferingManagement', [$data->offering_id]) }}">
+                                                    <i class="bi bi-pencil me-2"></i>Edit data
+                                                </a>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </div>
                             </td>

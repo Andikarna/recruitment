@@ -51,7 +51,7 @@ class Onboarding extends Model
     {
         return $this->hasOne(Candidate::class, 'id', 'candidate_id');
     }
-    
+
     public function resource()
     {
         return $this->hasOne(Resource::class, 'id', 'resource_id');
@@ -61,8 +61,4 @@ class Onboarding extends Model
     {
         return $this->hasOne(ResourceDetail::class, 'id', 'resource_detail_id');
     }
-
-    
-
-
 }

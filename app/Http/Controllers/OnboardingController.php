@@ -23,16 +23,39 @@ use App\Models\OfferingApproval;
 use App\Models\OfferingFasility;
 use App\Models\WorkingExperience;
 use App\Models\EducationNonFormal;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
 use App\Models\AdditionalInformation;
 
 class OnboardingController extends Controller
 {
-    public function onboarding()
+    public function onboarding(Request $request)
     {
+        $role = User::where('id', Auth::user()->id)->pluck('id')->first();
+        
         $onboarding  = Onboarding::with('resource', 'resourceDetail')
-            ->orderByRaw('COALESCE(updated_date, created_date) DESC')
-            ->paginate(5)
+            ->orderByRaw('COALESCE(updated_date, created_date) DESC');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $onboarding->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                    ->orWhere('status', 'LIKE', "%{$search}%");
+            })
+                ->orWhereHas('resourceDetail', function ($q) use ($search) {
+                    $q->where('position', 'LIKE', "%{$search}%")
+                        ->orWhere('qualification', 'LIKE', "%{$search}%");
+                })
+                ->orWhereHas('resource', function ($q) use ($search) {
+                    $q->where('project', 'LIKE', "%{$search}%");
+                });
+        }
+
+        if ($role != 2) {
+            $onboarding = $onboarding->where('created_id', Auth::user()->id);
+        }
+
+        $onboarding = $onboarding->paginate(5)
             ->withQueryString();
 
         $userId = Auth::user()->id;
@@ -121,7 +144,7 @@ class OnboardingController extends Controller
         $languange = $candidate->languange?->get() ?? collect();
         $working_experience = $candidate->working_experience?->get() ?? collect();
 
-        return view('onboarding.detailonboarding', compact('onboarding', 'offeringSalary', 'offeringFasilitas', 'candidate', 'resource', 'family', 'education_formal', 'education_nonformal', 'skill', 'languange','working_experience'));
+        return view('onboarding.detailonboarding', compact('onboarding', 'offeringSalary', 'offeringFasilitas', 'candidate', 'resource', 'family', 'education_formal', 'education_nonformal', 'skill', 'languange', 'working_experience'));
     }
 
     public function updateOnboarding($id)
@@ -151,7 +174,7 @@ class OnboardingController extends Controller
         $languange = $candidate->languange?->get() ?? collect();
         $working_experience = $candidate->working_experience?->get() ?? collect();
 
-        return view('onboarding.updateOnboarding', compact('onboarding', 'offeringSalary', 'offeringFasilitas', 'candidate', 'resource', 'family', 'education_formal', 'education_nonformal', 'skill', 'languange','working_experience'));
+        return view('onboarding.updateOnboarding', compact('onboarding', 'offeringSalary', 'offeringFasilitas', 'candidate', 'resource', 'family', 'education_formal', 'education_nonformal', 'skill', 'languange', 'working_experience'));
     }
 
     public function saveOnboarding(Request $request, $id)
@@ -206,7 +229,7 @@ class OnboardingController extends Controller
 
         //family
         $family = [];
-        $family_id = $request->input('familiId');
+        $family_id = $request->input('familiId') ?? [];
         $familyName = $request->input('name_family');
         $familyGender = $request->input('gender_family');
         $familyWorking  = $request->input('work_family');
@@ -265,7 +288,7 @@ class OnboardingController extends Controller
 
         //educationformal
         $educationformal = [];
-        $educationformal_id = $request->input('educationformalId');
+        $educationformal_id = $request->input('educationformalId') ?? [];
         $educationformal_name = $request->input('name_institusi_educationformal');
         $educationformal_city = $request->input('city_educationformal');
         $educationformal_major  = $request->input('major_educationformal');
@@ -332,7 +355,7 @@ class OnboardingController extends Controller
 
         //nonformal
         $nonformal = [];
-        $nonformall_id = $request->input('educationNonformalId');
+        $nonformall_id = $request->input('educationNonformalId') ?? [];
         $nonformal_name = $request->input('name_educationNonformal');
         $nonformal_year = $request->input('year_educationNonformal');
         $nonformal_duration  = $request->input('duration_educationNonformal');
@@ -391,7 +414,7 @@ class OnboardingController extends Controller
 
         //skill
         $skill = [];
-        $skill_id = $request->input('skillId');
+        $skill_id = $request->input('skillId') ?? [];
         $skill_name = $request->input('name_skill');
         $skill_level = $request->input('level_skill');
 
@@ -443,7 +466,7 @@ class OnboardingController extends Controller
 
         //bahasa
         $languange = [];
-        $languange_id = $request->input('langaungeId');
+        $languange_id = $request->input('langaungeId') ?? [];
         $languange_name = $request->input('name_languange');
         $languange_write = $request->input('write_languange');
         $languange_speak  = $request->input('speak_languange');
@@ -502,7 +525,7 @@ class OnboardingController extends Controller
 
         //working
         $workingExperience = [];
-        $workingExperience_id = $request->input('workingId');
+        $workingExperience_id = $request->input('workingId') ?? [];
         $workingExperience_company = $request->input('company_name_working');
         $workingExperience_industry = $request->input('industry_working');
         $workingExperience_address  = $request->input('address_working');
@@ -565,8 +588,6 @@ class OnboardingController extends Controller
                     $existWorkingExperience->updated_id =  Auth::user()->id;
                     $existWorkingExperience->updated_by = Auth::user()->name;
                     $existWorkingExperience->save();
-
-
                 } else {
 
                     $workingExperience = new WorkingExperience();
@@ -593,7 +614,7 @@ class OnboardingController extends Controller
 
         //refrensi
         $referensi = Reference::where('candidate_id', $onboarding->candidate_id)->first();
-        if($referensi != null){
+        if ($referensi != null) {
             $referensi->name = $request->source_refrences;
             $referensi->number = $request->phone_refrences;
             $referensi->position = $request->position_refrences;
@@ -602,7 +623,7 @@ class OnboardingController extends Controller
             $referensi->updated_id = Auth::user()->id;
             $referensi->updated_by = Auth::user()->name;
             $referensi->save();
-        }else{
+        } else {
             $newReference = new Reference();
             $newReference->candidate_id = $onboarding->candidate_id;
             $newReference->name = $request->source_refrences;
@@ -618,25 +639,25 @@ class OnboardingController extends Controller
 
         //aditional
         $additional = AdditionalInformation::where('candidate_id', $onboarding->candidate_id)->first();
-        if($additional != null){
+        if ($additional != null) {
             $additional->source = $request->source_aditional;
             $additional->been_treated = $request->been_treated_aditional;
             $additional->disease = $request->been_treated;
             $additional->strength = $request->strength_aditional;
-            $additional->weakness =  $request->weakness_aditional;  
+            $additional->weakness =  $request->weakness_aditional;
             $additional->against_weakness = $request->against_weakness_aditional;
             $additional->updated_date = Carbon::now('Asia/Jakarta');
             $additional->updated_id = Auth::user()->id;
             $additional->updated_by = Auth::user()->name;
             $additional->save();
-        }else{
+        } else {
             $newAdditional = new AdditionalInformation();
             $newAdditional->candidate_id = $onboarding->candidate_id;
             $newAdditional->source = $request->source_aditional;
             $newAdditional->been_treated = $request->been_treated_aditional;
             $newAdditional->disease = $request->been_treated;
             $newAdditional->strength = $request->strength_aditional;
-            $newAdditional->weakness =  $request->weakness_aditional;  
+            $newAdditional->weakness =  $request->weakness_aditional;
             $newAdditional->against_weakness = $request->against_weakness_aditional;
             $newAdditional->created_date = Carbon::now('Asia/Jakarta');
             $newAdditional->created_id = Auth::user()->id;
@@ -650,7 +671,8 @@ class OnboardingController extends Controller
         return redirect('onboarding');
     }
 
-    public function cancelOnboarding($id){
+    public function cancelOnboarding($id)
+    {
         $onboarding = Onboarding::find($id);
         $onboarding->status = "Cancel";
         $onboarding->save();
@@ -658,8 +680,8 @@ class OnboardingController extends Controller
         return redirect('/onboarding');
     }
 
-    public function sendHrm($id){
-
+    public function sendHrm($id)
+    {
         $onboarding = Onboarding::find($id);
         $onboarding->status = "Selesai";
         $onboarding->updated_date = Carbon::now('Asia/Jakarta');
@@ -674,7 +696,7 @@ class OnboardingController extends Controller
         $interview->updated_by = Auth::user()->name;
         $interview->save();
 
-        $offering = Offering::where('interview_id',$interview->id)->first();
+        $offering = Offering::where('interview_id', $interview->id)->first();
         $offering->status = "Selesai";
         $offering->updated_date = Carbon::now('Asia/Jakarta');
         $offering->updated_id = Auth::user()->id;
@@ -682,7 +704,7 @@ class OnboardingController extends Controller
         $offering->save();
 
         $resourceDetail = ResourceDetail::where('id', $onboarding->resource_detail_id)
-        ->where('resource_id', $onboarding->resource_id)->first();
+            ->where('resource_id', $onboarding->resource_id)->first();
         $resourceDetail->fulfilled = ($resourceDetail->fulfilled ?? 0) + 1;
         $resourceDetail->save();
 
